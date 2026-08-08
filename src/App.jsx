@@ -8,7 +8,7 @@ import Home from './pages/home/Home'
 function App() {
 
   return (
-    <div className="App">
+    <div className="App " dir='rtl'>
       <Routes>
         {/* login route */}
         <Route path='/login' element={<InverseProtected>

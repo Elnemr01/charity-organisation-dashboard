@@ -2,10 +2,15 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+    --color-primary: var(--primary);
+    --color-secondary: var(--secondary);
+    --color-tertiary: var(--secondary);
+    --color-neutral: var(--secondary);
     --font-heading: var(--font-sans);
     --font-sans: 'Geist Variable', sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
@@ -49,6 +54,10 @@
 }
 
 :root {
+    --primary: '#5EC401';
+    --secondary: '#1E6D01';
+    --tertiary: '#F4F9F1';
+    --neutral: '#F4F9F1';
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
@@ -127,4 +136,17 @@
   html {
     @apply font-sans;
     }
+}
+
+
+.container {
+  @apply w-full px-4 mx-auto sm:w-[620px] md:w-[768px] lg:w-[1024px] xl:w-[1280px] 2xl:w-[1536px];
+}
+
+a.active {
+  @apply text-blue-600;
+}
+
+body {
+  font-family: "Cairo", sans-serif;
 }
