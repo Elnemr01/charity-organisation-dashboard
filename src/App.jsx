@@ -4,11 +4,13 @@ import InverseProtected from './protectedRoute/InverseProtected'
 import Login from './pages/login/Login'
 import DashboardRoutes from './protectedRoute/DashboardRoutes'
 import Home from './pages/home/Home'
+import { Toaster } from 'react-hot-toast'
 
 function App() {
 
   return (
     <div className="App " dir='rtl'>
+      <Toaster/>
       <Routes>
         {/* login route */}
         <Route path='/login' element={<InverseProtected>

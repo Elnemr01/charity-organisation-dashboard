@@ -1,16 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
     --color-primary: var(--primary);
     --color-secondary: var(--secondary);
-    --color-tertiary: var(--secondary);
-    --color-neutral: var(--secondary);
+    --color-tertiary: var(--tertiary);
+    --color-neutral: var(--neutral);
     --font-heading: var(--font-sans);
     --font-sans: 'Geist Variable', sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
@@ -54,20 +54,19 @@
 }
 
 :root {
-    --primary: '#5EC401';
-    --secondary: '#1E6D01';
-    --tertiary: '#F4F9F1';
-    --neutral: '#F4F9F1';
+    --primary: #5EC401;
+    --primary-foreground: #ffffff;
+    --secondary: #1E6D01;
+    --secondary-foreground: #ffffff;
+    --tertiary: #F4F9F1;
+    --tertiary-foreground: #1E6D01;
+    --neutral: #2D3436;
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
     --accent: oklch(0.97 0 0);
@@ -84,8 +83,8 @@
     --radius: 0.625rem;
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-primary: #5EC401;
+    --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: oklch(0.97 0 0);
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
@@ -99,10 +98,10 @@
     --card-foreground: oklch(0.985 0 0);
     --popover: oklch(0.205 0 0);
     --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
+    --primary: #5EC401;
+    --primary-foreground: #1E6D01;
+    --secondary: #F4F9F1;
+    --secondary-foreground: #1E6D01;
     --muted: oklch(0.269 0 0);
     --muted-foreground: oklch(0.708 0 0);
     --accent: oklch(0.269 0 0);
@@ -118,8 +117,8 @@
     --chart-5: oklch(0.269 0 0);
     --sidebar: oklch(0.205 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-primary: #5EC401;
+    --sidebar-primary-foreground: #1E6D01;
     --sidebar-accent: oklch(0.269 0 0);
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
@@ -137,7 +136,6 @@
     @apply font-sans;
     }
 }
-
 
 .container {
   @apply w-full px-4 mx-auto sm:w-[620px] md:w-[768px] lg:w-[1024px] xl:w-[1280px] 2xl:w-[1536px];
