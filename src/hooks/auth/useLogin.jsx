@@ -15,9 +15,9 @@ const useLogin = () => {
 
         onSuccess: (res)=> {
             console.log(res);
-            setUser(res.data.user);
-            localStorage.setItem('zadToken', res?.data?.accessToken);
-            localStorage.setItem('zadUser', JSON.stringify(res?.data?.user));
+            setUser(res.data);
+            localStorage.setItem('zadToken', res?.data?.token);
+            localStorage.setItem('zadUser', JSON.stringify(res?.data));
             toast.success('تم تسجيل الدخول بنجاح');
             navigate('/');
         },
