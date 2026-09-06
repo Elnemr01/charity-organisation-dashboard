@@ -6,7 +6,7 @@ const InverseProtected = ({children}) => {
     const location=useLocation();
     const {zadUser}=useAuth();
 
-    if(localStorage.getItem("zadToken") || user) {
+    if(localStorage.getItem("zadToken") || zadUser) {
         return <Navigate to="/" state={{from:location}} replace />
     }
     return (

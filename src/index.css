@@ -142,7 +142,7 @@
 }
 
 a.active {
-  @apply text-blue-600;
+  @apply text-tertiary bg-secondary;
 }
 
 body {
