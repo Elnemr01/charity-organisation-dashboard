@@ -2,11 +2,11 @@ import { getAllAidCategoriesFn } from '@/services/categories/aid/services'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 
-const useGetAllAidCategories = () => {
+const useGetAllAidCategories = (data) => {
     
     const {data : aidCategories,isLoading,isError,error} = useQuery({
-        queryKey: ['aidCategories'],
-        queryFn: getAllAidCategoriesFn
+        queryKey: ['aidCategories',data.page],
+        queryFn: ()=> getAllAidCategoriesFn(data.page)
     })
     
     return {

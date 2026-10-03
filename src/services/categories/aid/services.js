@@ -2,7 +2,8 @@ import client from "@/api/axiosGlobals";
 
 
 
-export const getAllAidCategoriesFn = async () => await client.get('/api/AidCategories').then(res => res.data)
+
+export const getAllAidCategoriesFn = async (page) => await client.get(`/api/AidCategories?page=${page}`).then(res => res.data)
 
 
 export const addNewAidCategoryFn = async (data) => await client.post('/api/AidCategories',data).then(res => res.data)

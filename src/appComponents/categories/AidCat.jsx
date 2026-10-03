@@ -9,11 +9,13 @@ import { useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import useDeleteAidCategory from '@/hooks/categories/aid/useDeleteAidCategory'
 import DeleteModel from '@/components/customUI/DeleteModel'
+import Pagination from '../pagination/Pagination'
 
 const AidCat = () => {
+  const [page,setPage]=useState(1);
   const [editData,setEditData]=useState({});
   const [edit,setEdit]=useState(false);
-  const {aidCategories,isLoading} = useGetAllAidCategories()
+  const {aidCategories,isLoading} = useGetAllAidCategories({page})
   const {addNewAidCategory,isPending : addPending} = useAddNewAidCategory();
   const {updateAidCategory,isPending : editPending} = useUpdateAidCategory();
   const {deleteAidCategory,isPending : deletePending} = useDeleteAidCategory();
@@ -65,34 +67,37 @@ const AidCat = () => {
           <Loading />
         </div>
         :
-        <div className="aid-items bg-white p-4 rounded-md shadow-md mt-2 flex flex-wrap gap-4">
-          {
-            aidCategories?.items.map((item)=> (
-            <div key={item.id} className="catogery flex items-center justify-between rounded-full border w-fit
-            gap-8 px-2 py-1 border-neutral">
-              
-              <p className=''>{item.name}</p>
-              <div className="btns flex items-center justify-between gap-2">
-                <DeleteModel
-                deleteFun={()=> deleteAidCategory(item.id,{
-                  onSuccess: ()=> {
-                    queryClient.invalidateQueries({queryKey: ['aidCategories']})
-                  }
-                })}
-                  wait={deletePending}
-                  message="هل أنت متأكد من حذف هذا العنصر">
-                  <Trash2 size={17} className='text-red-500 cursor-pointer'/>
-                </DeleteModel>
-                <Pen size={17} className='text-neutral cursor-pointer' onClick={()=> {
-                  console.log(formik.values)
-                  setEdit(old=> true)
-                  setEditData(item)
-                  formik.setFieldValue('name',item.name)
-                }}/>
+        <div className="bg-white p-4 rounded-md shadow-md mt-2">
+          <div className="aid-items flex flex-wrap gap-4">
+            {
+              aidCategories?.items.map((item)=> (
+              <div key={item.id} className="catogery flex items-center justify-between rounded-full border w-fit
+              gap-8 px-2 py-1 border-neutral">
+                
+                <p className=''>{item.name}</p>
+                <div className="btns flex items-center justify-between gap-2">
+                  <DeleteModel
+                  deleteFun={()=> deleteAidCategory(item.id,{
+                    onSuccess: ()=> {
+                      queryClient.invalidateQueries({queryKey: ['aidCategories']})
+                    }
+                  })}
+                    wait={deletePending}
+                    message="هل أنت متأكد من حذف هذا العنصر">
+                    <Trash2 size={17} className='text-red-500 cursor-pointer'/>
+                  </DeleteModel>
+                  <Pen size={17} className='text-neutral cursor-pointer' onClick={()=> {
+                    console.log(formik.values)
+                    setEdit(old=> true)
+                    setEditData(item)
+                    formik.setFieldValue('name',item.name)
+                  }}/>
+                </div>
               </div>
-            </div>
-            ))
-          }
+              ))
+            }
+          </div>
+          <Pagination response={aidCategories} setPage={setPage}/>
         </div>
       }
       {
