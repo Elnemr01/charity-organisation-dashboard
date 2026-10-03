@@ -1,4 +1,4 @@
-import { Home } from "lucide-react";
+import { Home, Layers2, Settings } from "lucide-react";
 
 export const sidebarBtns = [
     {
@@ -7,4 +7,16 @@ export const sidebarBtns = [
       href: '/',
       isParent: false,
     },
+    {
+      label: 'الاعدادات',
+      icon: Settings,
+      isParent: true,
+      children: [
+        {
+          label: 'التصنيفات',
+          href: '/categories',
+          icon: Layers2
+        }
+      ]
+    }
   ]

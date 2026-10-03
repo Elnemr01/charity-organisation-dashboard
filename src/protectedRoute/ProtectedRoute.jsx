@@ -4,7 +4,7 @@ import { Navigate, useLocation } from 'react-router'
 const ProtectedRoute = ({children}) => {
     const location=useLocation();
 
-    if(!localStorage.getItem("zadToken")) {
+    if(!localStorage.getItem("zadUser")) {
         return <Navigate to="/login" state={{from:location}} replace />
     }
     return (

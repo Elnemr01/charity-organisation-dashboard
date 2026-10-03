@@ -10,6 +10,12 @@ import {
 import { sidebarBtns } from "@/constants/data/SidbarBtns"
 import { useMemo } from "react"
 import { NavLink } from "react-router"
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
 
 
 
@@ -28,14 +34,37 @@ export function MySidebar() {
 
                             if(!btn.isParent) {
                                 return (
-                                    <NavLink key={index} to={btn.href} className="flex items-center gap-2 p-2 rounded font-semibold ">
+                                    <NavLink key={index} to={btn.href} className="flex items-center text-base gap-2 p-2 rounded font-semibold ">
                                         <Icon className="w-5 h-5"/>
                                         <span>{btn.label}</span>
                                     </NavLink>
                                 )
                             }
                             else {
-                                
+                                return (
+                                <Accordion dir="rtl" key={index} className={'flex justify-between w-full'}>
+                                    <AccordionItem>
+                                        <AccordionTrigger className={"cursor-pointer "}>
+                                            <Icon className="w-5 h-5"/>
+                                            <span>{btn.label}</span>
+                                        </AccordionTrigger>
+                                        <AccordionContent >
+                                            {
+                                                btn.children.map((childBtn,childIndex)=> {
+                                                    const ChildIcon = childBtn.icon
+                                                    return (
+                                                        <NavLink key={childIndex} to={childBtn.href} className=" 
+                                                        flex items-center text-sm gap-2 p-2 rounded font-semibold ">
+                                                            <ChildIcon className="w-4 h-4"/>
+                                                            <span>{childBtn.label}</span>
+                                                        </NavLink>
+                                                    )
+                                                })
+                                            }
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                    </Accordion>
+                                )
                             }
                         })
                     }

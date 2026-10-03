@@ -1,4 +1,4 @@
-import { loginValidation } from '@/constants/schema';
+import { loginValidation } from '@/constants/schemas/schema';
 import useLogin from '@/hooks/auth/useLogin';
 import { Formik, useFormik } from 'formik'
 import { Eye, LockIcon, Mail } from 'lucide-react';
