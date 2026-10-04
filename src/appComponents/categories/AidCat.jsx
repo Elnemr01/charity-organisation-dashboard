@@ -14,7 +14,7 @@ import Empty from '../models/Empty'
 import Error from '../models/Error'
 
 const AidCat = () => {
-  
+
   const [page,setPage]=useState(1);
   const [editData,setEditData]=useState({});
   const [edit,setEdit]=useState(false);
