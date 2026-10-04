@@ -15,14 +15,14 @@ const Categories = () => {
     return (
         <Layout headerText="التصنيفات">
             <div className="container mt-8">
-                <div className="title flex items-center gap-4">
+                <div className="title flex sm:items-center gap-4 flex-col sm:flex-row items-start">
                     <h2 className='text-2xl font-semibold'>اختر نوع التصنيفات : </h2>
-                    <div className="items flex gap-4">
+                    <div className="items flex gap-4 flex-wrap">
                         {
                             categoryBtns.map((item,index)=>(
                                 <button
                                 key={index}
-                                className={` px-2 py-1 cursor-pointer text-white font-semibold border rounded-full w-fit ${category===item.value ? "bg-secondary" : "bg-primary"}`}
+                                className={` px-2 py-1 text-sm sm:text-base cursor-pointer text-white font-semibold border rounded-full w-fit ${category===item.value ? "bg-secondary" : "bg-primary"}`}
                                 onClick={()=>setCategory(item.value)}>{item.name}</button>
                             ))
                         }

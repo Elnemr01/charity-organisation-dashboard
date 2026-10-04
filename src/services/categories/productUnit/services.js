@@ -2,7 +2,7 @@ import client from "@/api/axiosGlobals";
 
 
 
-export const getAllProductUnitsFn = async (page) => await client.get(`/api/ProductUnits?page=${page}`).then(res => res.data)
+export const getAllProductUnitsFn = async (page) => await client.get(`/api/ProductUnits?pageNumber=${page}`).then(res => res.data)
 
 
 

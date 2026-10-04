@@ -138,7 +138,7 @@
 }
 
 .container {
-  @apply w-full px-4 mx-auto sm:w-[620px] md:w-[768px] lg:w-[1024px] xl:w-[1280px] 2xl:w-[1536px];
+  @apply w-full px-4 mx-auto sm:w-[620px] md:w-[768px] lg:w-[1024px] xl:w-[1200px] 2xl:w-[1400px];
 }
 
 a.active {

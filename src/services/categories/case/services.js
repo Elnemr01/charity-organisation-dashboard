@@ -2,7 +2,7 @@ import client from "@/api/axiosGlobals";
 
 
 
-export const getAllCaseCategoriesFn = async (page) => await client.get(`/api/CaseCategories?page=${page}`).then(res => res.data)
+export const getAllCaseCategoriesFn = async (page) => await client.get(`/api/CaseCategories?pageNumber=${page}`).then(res => res.data)
 
 
 export const addNewCaseCategoryFn = async (data) => await client.post('/api/CaseCategories',data).then(res => res.data)
