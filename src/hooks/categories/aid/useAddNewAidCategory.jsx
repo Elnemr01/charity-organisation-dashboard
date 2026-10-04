@@ -8,7 +8,7 @@ const useAddNewAidCategory = () => {
 
     const {mutate: addNewAidCategory,isPending,isError,error} = useMutation({
         mutationKey:['addNewAidCategory'],
-        mutationFn: (id)=> addNewAidCategoryFn(id),
+        mutationFn: (data)=> addNewAidCategoryFn(data),
         onError : ()=> {
             toast.error('حدث خطأ برجاء المحاولة لاحقا')
         },
