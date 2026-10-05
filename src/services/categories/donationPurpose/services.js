@@ -2,7 +2,12 @@ import client from "@/api/axiosGlobals";
 
 
 
-export const getAllDonationPursposesFn = async (page) => await client.get(`/api/DonationPurposes?pageNumber=${page}`).then(res => res.data)
+export const getAllDonationPursposesFn = async (page) => await client.get(`/api/DonationPurposes`,{
+    params: {
+        pageNumber: page.page,
+        name: page.debounceValue
+    }
+}).then(res => res.data)
 
 
 

@@ -6,8 +6,8 @@ import React from 'react'
 const useGetAllDonationPurposes = (data) => {
     
     const {data : donationPursposes,isLoading,isError,error} = useQuery({
-        queryKey: ['donationPursposes',data.page],
-        queryFn: ()=> getAllDonationPursposesFn(data.page)
+        queryKey: ['donationPursposes',data.page,data.debounceValue],
+        queryFn: ()=> getAllDonationPursposesFn(data)
     })
     
     return {

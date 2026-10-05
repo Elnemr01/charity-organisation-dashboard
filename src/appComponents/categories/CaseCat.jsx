@@ -12,14 +12,15 @@ import useAddNewCaseCategory from '@/hooks/categories/case/useAddNewCaseCategory
 import useUpdateCaseCategory from '@/hooks/categories/case/useUpdateCaseCategory'
 import useDeleteCaseCategory from '@/hooks/categories/case/useDeleteCaseCategory'
 import useGetAllCaseCategories from '@/hooks/categories/case/useGetAllCaseCategories'
+import TextSearch from '../search/TextSearch'
 
 
 const CaseCat = () => {
-
+  const [debounceValue, setDebounceValue] = useState('');
   const [page,setPage]=useState(1);
   const [editData,setEditData]=useState({});
   const [edit,setEdit]=useState(false);
-  const {caseCategories,isLoading,isError} = useGetAllCaseCategories({page})
+  const {caseCategories,isLoading,isError} = useGetAllCaseCategories({page,debounceValue})
   const {addNewCaseCategory,isPending : addPending} = useAddNewCaseCategory();
   const {updateCaseCategory,isPending : editPending} = useUpdateCaseCategory();
   const {deleteCaseCategory,isPending : deletePending} = useDeleteCaseCategory();
@@ -65,6 +66,7 @@ const CaseCat = () => {
   return (
     <div className='case-category'>
       <h3 className='font-semibold text-lg'>التصنيفات الموجوده حاليا : </h3>
+        <TextSearch setDebounceValue={setDebounceValue} />
         <div className="bg-white p-4 rounded-md shadow-md mt-2">
           {
             isLoading ?

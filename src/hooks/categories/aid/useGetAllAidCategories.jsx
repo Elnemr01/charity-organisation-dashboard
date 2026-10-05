@@ -5,8 +5,8 @@ import React from 'react'
 const useGetAllAidCategories = (data) => {
     
     const {data : aidCategories,isLoading,isError,error} = useQuery({
-        queryKey: ['aidCategories',data.page],
-        queryFn: ()=> getAllAidCategoriesFn(data.page)
+        queryKey: ['aidCategories',data.page,data.debounceValue],
+        queryFn: ()=> getAllAidCategoriesFn(data)
     })
     
     return {

@@ -12,13 +12,14 @@ import DeleteModel from '@/components/customUI/DeleteModel'
 import Pagination from '../pagination/Pagination'
 import Empty from '../models/Empty'
 import Error from '../models/Error'
+import TextSearch from '../search/TextSearch'
 
 const AidCat = () => {
-
+  const [debounceValue, setDebounceValue] = useState('');
   const [page,setPage]=useState(1);
   const [editData,setEditData]=useState({});
   const [edit,setEdit]=useState(false);
-  const {aidCategories,isLoading,isError} = useGetAllAidCategories({page})
+  const {aidCategories,isLoading,isError} = useGetAllAidCategories({page,debounceValue})
   const {addNewAidCategory,isPending : addPending} = useAddNewAidCategory();
   const {updateAidCategory,isPending : editPending} = useUpdateAidCategory();
   const {deleteAidCategory,isPending : deletePending} = useDeleteAidCategory();
@@ -63,6 +64,7 @@ const AidCat = () => {
   return (
     <div className='aid-category'>
       <h3 className='font-semibold text-lg'>التصنيفات الموجوده حاليا : </h3>
+      <TextSearch setDebounceValue={setDebounceValue} />
         <div className="bg-white p-4 rounded-md shadow-md mt-2">
           {
             isLoading ?
@@ -76,35 +78,37 @@ const AidCat = () => {
           aidCategories?.items.length === 0 ?
             <Empty/>
           :
-            <div className="aid-items flex flex-wrap gap-4">
-            {
-                aidCategories?.items.map((item)=> (
-                <div key={item.id} className="catogery flex items-center justify-between rounded-full border w-fit
-                gap-8 px-2 py-1 border-neutral">
-                    
-                    <p className=''>{item.name}</p>
-                    <div className="btns flex items-center justify-between gap-2">
-                    <DeleteModel
-                    deleteFun={()=> deleteAidCategory(item.id,{
-                        onSuccess: ()=> {
-                        queryClient.invalidateQueries({queryKey: ['aidCategories']})
-                        }
-                    })}
-                        wait={deletePending}
-                        message="هل أنت متأكد من حذف هذا العنصر">
-                        <Trash2 size={17} className='text-red-500 cursor-pointer'/>
-                    </DeleteModel>
-                    <Pen size={17} className='text-neutral cursor-pointer'
-                    onClick={()=> {
-                        setEdit(old=> true)
-                        setEditData(item)
-                        formik.setFieldValue('name', item.name)
-                    }}/>
-                    </div>
-                </div>
-                ))
-                }
-            </div>
+          <div>
+              <div className="aid-items flex flex-wrap gap-4">
+              {
+                  aidCategories?.items.map((item)=> (
+                  <div key={item.id} className="catogery flex items-center justify-between rounded-full border w-fit
+                  gap-8 px-2 py-1 border-neutral">
+                      
+                      <p className=''>{item.name}</p>
+                      <div className="btns flex items-center justify-between gap-2">
+                      <DeleteModel
+                      deleteFun={()=> deleteAidCategory(item.id,{
+                          onSuccess: ()=> {
+                          queryClient.invalidateQueries({queryKey: ['aidCategories']})
+                          }
+                      })}
+                          wait={deletePending}
+                          message="هل أنت متأكد من حذف هذا العنصر">
+                          <Trash2 size={17} className='text-red-500 cursor-pointer'/>
+                      </DeleteModel>
+                      <Pen size={17} className='text-neutral cursor-pointer'
+                      onClick={()=> {
+                          setEdit(old=> true)
+                          setEditData(item)
+                          formik.setFieldValue('name', item.name)
+                      }}/>
+                      </div>
+                  </div>
+                  ))
+                  }
+              </div>
+          </div>
           }
           <Pagination response={aidCategories} setPage={setPage}/>
         </div>

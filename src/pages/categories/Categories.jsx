@@ -13,7 +13,7 @@ const Categories = () => {
     const categoryBtns=useMemo(()=> categories,[])
 
     return (
-        <Layout headerText="التصنيفات">
+        <Layout headerText=" اداره التصنيفات">
             <div className="container mt-8">
                 <div className="title flex sm:items-center gap-4 flex-col sm:flex-row items-start">
                     <h2 className='text-2xl font-semibold'>اختر نوع التصنيفات : </h2>

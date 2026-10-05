@@ -5,8 +5,8 @@ import React from 'react'
 const useGetAllProductCategories = (data) => {
     
     const {data : productCategories,isLoading,isError,error} = useQuery({
-        queryKey: ['productCategories',data.page],
-        queryFn: ()=> getAllProductCategoriesFn(data.page)
+        queryKey: ['productCategories',data.page,data.debounceValue],
+        queryFn: ()=> getAllProductCategoriesFn(data)
     })
     
     return {

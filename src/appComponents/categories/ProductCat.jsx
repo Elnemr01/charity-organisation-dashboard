@@ -12,13 +12,14 @@ import useGetAllProductCategories from '@/hooks/categories/products/useGetAllPro
 import useAddNewProductCategory from '@/hooks/categories/products/useAddNewProductCategory'
 import useUpdateProductCategory from '@/hooks/categories/products/useUpdateProductCategory'
 import useDeleteProductCategory from '@/hooks/categories/products/useDeleteProductCategory'
+import TextSearch from '../search/TextSearch'
 
 const ProductCat = () => {
-
+    const [debounceValue, setDebounceValue] = useState('');
     const [page,setPage]=useState(1);
     const [editData,setEditData]=useState({});
     const [edit,setEdit]=useState(false);
-    const {productCategories,isLoading,isError} = useGetAllProductCategories({page})
+    const {productCategories,isLoading,isError} = useGetAllProductCategories({page,debounceValue})
     const {addNewProductCategory,isPending : addPending} = useAddNewProductCategory();
     const {updateProductCategory,isPending : editPending} = useUpdateProductCategory();
     const {deleteProductCategory,isPending : deletePending} = useDeleteProductCategory();
@@ -63,6 +64,7 @@ const ProductCat = () => {
     return (
         <div className='aid-category'>
         <h3 className='font-semibold text-lg'>التصنيفات الموجوده حاليا : </h3>
+        <TextSearch setDebounceValue={setDebounceValue} />
             <div className="bg-white p-4 rounded-md shadow-md mt-2">
             {
                 isLoading ?

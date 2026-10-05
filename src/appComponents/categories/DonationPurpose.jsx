@@ -1,5 +1,5 @@
 import { useFormik } from 'formik'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Loading from '../models/Loading'
 import { Pen, Trash2 } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -12,13 +12,14 @@ import useGetAllDonationPurposes from '@/hooks/categories/donationPurpose/useGet
 import useAddNewDonationPurpose from '@/hooks/categories/donationPurpose/useAddNewDonationPurpose'
 import useUpdateDonationPurpose from '@/hooks/categories/donationPurpose/useUpdateDonationPurpose'
 import useDeleteDonationPurpose from '@/hooks/categories/donationPurpose/useDeleteDonationPurpose'
+import TextSearch from '../search/TextSearch'
 
 const DonationPurpose = () => {
-
+  const [debounceValue, setDebounceValue] = useState('');
   const [page,setPage]=useState(1);
   const [editData,setEditData]=useState({});
   const [edit,setEdit]=useState(false);
-  const {donationPursposes,isLoading,isError} = useGetAllDonationPurposes({page})
+  const {donationPursposes,isLoading,isError} = useGetAllDonationPurposes({page,debounceValue})
   const {addNewDonationPurpose,isPending : addPending} = useAddNewDonationPurpose();
   const {updateDonationPurpose,isPending : editPending} = useUpdateDonationPurpose();
   const {deleteDonationPurpose,isPending : deletePending} = useDeleteDonationPurpose();
@@ -63,6 +64,7 @@ const DonationPurpose = () => {
   return (
     <div className='aid-category'>
       <h3 className='font-semibold text-lg'>التصنيفات الموجوده حاليا : </h3>
+      <TextSearch setDebounceValue={setDebounceValue} />
         <div className="bg-white p-4 rounded-md shadow-md mt-2">
           {
             isLoading ?
