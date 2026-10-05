@@ -5,7 +5,7 @@ import client from "@/api/axiosGlobals";
 export const getAllProductCategoriesFn = async (page) => await client.get(`/api/ProductCategories`,{
     params: {
         pageNumber: page.page,
-        name: page.debounceValue
+        searchValue: page.debounceValue
     }
 }).then(res => res.data)
 

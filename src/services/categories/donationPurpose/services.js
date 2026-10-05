@@ -5,7 +5,7 @@ import client from "@/api/axiosGlobals";
 export const getAllDonationPursposesFn = async (page) => await client.get(`/api/DonationPurposes`,{
     params: {
         pageNumber: page.page,
-        name: page.debounceValue
+        searchValue: page.debounceValue
     }
 }).then(res => res.data)
 

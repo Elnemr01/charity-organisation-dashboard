@@ -5,7 +5,7 @@ import client from "@/api/axiosGlobals";
 export const getAllCaseCategoriesFn = async (page) => await client.get(`/api/CaseCategories`,{
     params: {
         pageNumber: page.page,
-        name: page.debounceValue
+        searchValue: page.debounceValue
     }
 }).then(res => res.data)
 
