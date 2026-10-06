@@ -2,7 +2,7 @@ import Layout from '@/appComponents/layout/Layout';
 import Loading from '@/appComponents/models/Loading';
 import Pagination from '@/appComponents/pagination/Pagination';
 import TextSearch from '@/appComponents/search/TextSearch';
-import useGetAllProductItems from '@/hooks/banks/useGetAllProductItems'
+import useGetAllProductItems from '@/hooks/banks/products/useGetAllProductItems'
 import React, { useMemo, useState } from 'react'
 import {
     Table,
@@ -17,15 +17,26 @@ import Empty from '@/appComponents/models/Empty';
 import { Link } from 'react-router';
 import { Eye, Pen, Trash2 } from 'lucide-react';
 import DeleteModel from '@/components/customUI/DeleteModel';
-import useDeleteProductItem from '@/hooks/banks/useDeleteProductItem';
+import useDeleteProductItem from '@/hooks/banks/products/useDeleteProductItem';
+import CategoryListFilter from '@/components/customUI/CategoryListFilter';
+import useGetAllProductCategories from '@/hooks/categories/products/useGetAllProductCategories';
 
 const Products = () => {
     const [page, setPage] = useState(1);
+    const [catPage,setCatPage] = useState(1);
+    const [categoryId, setCategoryId] = useState(null);
     const [debounceValue, setDebounceValue] = useState('');
-    const {productItems, isLoading, isError} = useGetAllProductItems({page,debounceValue});
+    const {productItems, isLoading, isError} = useGetAllProductItems({
+        pageNumber : page,
+        categoryId,
+        SearchValue : debounceValue
+    });
     const {deleteProductItem, isPending} = useDeleteProductItem();
     const tablehead= useMemo(()=> productTablehead,[])
-    // console.log(productItems)
+
+    const {productCategories, isLoading: isLoadingCategories, isError: isErrorCategories} = useGetAllProductCategories({
+        page: catPage,
+    });
 
     return (
         <Layout headerText={'اداره المخازن'}>
@@ -34,8 +45,15 @@ const Products = () => {
                     <h2 className='text-xl font-semibold'>
                         مخزن العينيات :
                     </h2>
-                    <div className="search">
+                    <div className="search flex items-center justify-between gap-4">
                         <TextSearch setDebounceValue={setDebounceValue} />
+                        <CategoryListFilter
+                            setId={setCategoryId}
+                            response={productCategories}
+                            isLoading={isLoadingCategories}
+                            isError={isErrorCategories}
+                            setPage={setCatPage}
+                        />
                     </div>
                 </div>
                 <div className="product-items bg-white rounded-md shadow p-4">
@@ -73,9 +91,9 @@ const Products = () => {
                                                 {/* <Link to={`/banks/products/${product.id}`}>
                                                     <Eye size={16} className='text-primary'/>
                                                 </Link> */}
-                                                <Link to={`/banks/products/add`} state={{edit: true,data: product}}>
+                                                {/* <Link to={`/banks/products/add`} state={{edit: true,data: product}}>
                                                     <Pen size={16} className='text-secondary'/>
-                                                </Link>
+                                                </Link> */}
                                                 <DeleteModel
                                                 message="هل أنت متأكد من حذف هذا المنتج؟"
                                                 wait={isPending}

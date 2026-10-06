@@ -2,11 +2,11 @@ import { getAllProductItemsFn } from '@/services/banks/services'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 
-const useGetAllProductItems = () => {
+const useGetAllProductItems = (data) => {
 
     const {data: productItems, isLoading, isError} = useQuery({
-        queryKey: ['productItems'],
-        queryFn: ()=> getAllProductItemsFn()
+        queryKey: ['productItems',data.pageNumber,data.categoryId,data.SearchValue],
+        queryFn: ()=> getAllProductItemsFn(data)
 
     })
         
