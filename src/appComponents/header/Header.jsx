@@ -3,7 +3,7 @@ import React from 'react'
 
 const Header = ({headerText}) => {
     return (
-        <div className='flex items-center justify-center p-4 '>
+        <header className='flex items-center justify-center p-4 shadow-sm shadow-primary'>
             <div className="container flex items-center justify-between">
                 <h1 className='font-semibold text-2xl text-neutral'>
                     {headerText}
@@ -12,7 +12,7 @@ const Header = ({headerText}) => {
                     <User size={17} className='text-tertiary'/>
                 </div>
             </div>
-        </div>
+        </header>
     )
 }
 

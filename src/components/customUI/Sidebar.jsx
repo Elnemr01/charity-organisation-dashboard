@@ -27,7 +27,7 @@ export function MySidebar() {
                 <div className="logo w-20 flex items-center justify-center mx-auto">
                     <img src="./zad-logo.jpeg" alt="zad logo" loading='lazy'/>
                 </div>
-                <div className="links flex flex-col gap-2 mt-6">
+                <div className="links flex flex-col gap mt-6">
                     {
                         btns.map((btn,index)=> {
                             const Icon = btn.icon
@@ -80,7 +80,7 @@ export function SidebarLayout({ children }) {
         <SidebarProvider className={"bg-white"}>
             <MySidebar />
             <main >
-                <SidebarTrigger className={'absolute right-5 top-12 p-4 rounded-full bg-primary/20 hover:bg-primary cursor-pointer'}/>
+                <SidebarTrigger className={'absolute right-5 top-20 p-4 rounded-full bg-primary/20 hover:bg-primary cursor-pointer'}/>
                 {children}
             </main>
         </SidebarProvider>

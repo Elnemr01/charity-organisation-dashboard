@@ -47,11 +47,9 @@ const Products = () => {
     const {equelProductItem, isPending: isEquelPending} = useEquelProductItem();
 
 
-
-
     return (
         <Layout headerText={'اداره المخازن'}>
-            <div className="container">
+            <div className="container py-10">
                 <div className="title flex flex-col gap-4 my-8">
                     <h2 className='text-xl font-semibold'>
                         مخزن العينيات :

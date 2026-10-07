@@ -21,7 +21,12 @@ export const equlProductItemsFn = async (data)=> await client.post(`/api/Product
 // money
 
 
-export const getAllCashInvertoriesFn = async (data)=> await client.get("/api/CashInventories").then((res)=>res.data);
+export const getAllCashInventoriesFn = async (data)=> await client.get("/api/CashInventories", {
+    params: data
+}).then((res)=>res.data);
 
 
-// export const deleteCashInvertoriesFn = async (id)=> await client.delete(`/api/CashInventories/${id}`);
+export const deleteCashInventoryFn = async (id)=> await client.delete(`/api/CashInventories/${id}`);
+
+
+export const equelCashInventoryFn = async (data)=> await client.post(`/api/CashInventories/${data.id}/adjust`,data.data);
