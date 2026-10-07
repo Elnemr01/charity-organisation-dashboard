@@ -1,3 +1,4 @@
+import { assets } from '@/assets/assets'
 import { User } from 'lucide-react'
 import React from 'react'
 
@@ -8,8 +9,8 @@ const Header = ({headerText}) => {
                 <h1 className='font-semibold text-2xl text-neutral'>
                     {headerText}
                 </h1>
-                <div className="bg-secondary text-tertiary rounded-full p-2">
-                    <User size={17} className='text-tertiary'/>
+                <div className="rounded-md w-10 h-10">
+                    <img src={assets.zadLogo} alt="zad logo" loading='lazy' className='w-full'/>
                 </div>
             </div>
         </header>

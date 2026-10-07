@@ -16,6 +16,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion"
+import { assets } from "@/assets/assets"
 
 
 
@@ -25,7 +26,7 @@ export function MySidebar() {
         <Sidebar className="bg-white">
             <div className="butns bg-white h-full p-4 ">
                 <div className="logo w-20 flex items-center justify-center mx-auto">
-                    <img src="./zad-logo.jpeg" alt="zad logo" loading='lazy'/>
+                    <img src={assets.zadLogo} alt="zad logo" loading='lazy'/>
                 </div>
                 <div className="links flex flex-col gap mt-6">
                     {

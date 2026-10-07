@@ -1,3 +1,4 @@
+import { assets } from '@/assets/assets';
 import { loginValidation } from '@/constants/schemas/schema';
 import useLogin from '@/hooks/auth/useLogin';
 import { Formik, useFormik } from 'formik'
@@ -24,7 +25,7 @@ const Login = () => {
                 <form onSubmit={formik.handleSubmit} className="login-form shadow-sm flex flex-col gap-4 p-6 max-w-110
                 mx-4 rounded-md bg-white">
                     <div className="logo w-20 flex items-center justify-center mx-auto">
-                        <img src="./zad-logo.jpeg" alt="zad logo" loading='lazy'/>
+                        <img src={assets.zadLogo} alt="zad logo" loading='lazy'/>
                     </div>
                     <h1 className="text-center text-2xl font-bold text-neutral">
                         تسجيل الدخول الى لوحه تحكم جمعيه زاد الأخره
