@@ -2,13 +2,10 @@ import client from "@/api/axiosGlobals";
 
 
 
-export const getAllProductCategoriesFn = async (page) => await client.get(`/api/ProductCategories`,{
-    params: {
-        pageNumber: page.page,
-        searchValue: page.debounceValue
-    }
+export const getAllProductCategoriesFn = async (data) => await client.get(`/api/ProductCategories`,{
+    params: data
 }).then(res => res.data)
-
+    
 
 
 export const addNewProductCategoryFn = async (data) => await client.post('/api/ProductCategories',data).then(res => res.data)

@@ -9,8 +9,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 import Pagination from '@/appComponents/pagination/Pagination'
 import Loading from '@/appComponents/models/Loading'
+import TextSearch from '@/appComponents/search/TextSearch'
+import Error from '@/appComponents/models/Error'
+import Empty from '@/appComponents/models/Empty'
 
-const CategoryListFilter = ({setId,response,isLoading,isError,setPage}) => {
+const CategoryListFilter = ({setCategoryName,response,isLoading,isError,setPage,setCatDebounceValue}) => {
     const [val,setVal]=useState(null)
     return (
         <DropdownMenu dir='rtl'>
@@ -18,15 +21,9 @@ const CategoryListFilter = ({setId,response,isLoading,isError,setPage}) => {
             className={" hover:text-secondary rounded-full text-secondary border-secondary border"}>
                 {val ? val :'تصفيه'}
             </Button>} />
-            <DropdownMenuContent className="w-40" align="center">
+            <DropdownMenuContent className="w-40" align="center" dir='rtl'>
+                <TextSearch setDebounceValue={setCatDebounceValue}/>
                 <DropdownMenuGroup className={'flex flex-col gap-2 p-2 justify-center items-center w-full'}>
-                    <DropdownMenuItem className={'py-2 flex justify-center items-center cursor-pointer'}
-                    onClick={()=>{
-                                setId(null)
-                                setVal(null)
-                            }}>
-                        الكل
-                    </DropdownMenuItem>
                     {
                         isLoading ?
                         <Loading/>
@@ -37,15 +34,24 @@ const CategoryListFilter = ({setId,response,isLoading,isError,setPage}) => {
                         response?.items?.length ===0 ?
                         <Empty/>
                         :
-                        response?.items?.map((item,index)=>(
-                            <DropdownMenuItem key={index} className={'py-2 flex justify-center items-center cursor-pointer'}
+                        <>
+                            <DropdownMenuItem className={'py-2 flex justify-center items-center cursor-pointer'}
                             onClick={()=>{
-                                setId(item.id)
-                                setVal(item.name)
-                            }}>
-                                {item.name}
+                                        setCategoryName(null)
+                                        setVal(null)
+                                    }}>
+                                الكل
                             </DropdownMenuItem>
-                        ))
+                            {response?.items?.map((item,index)=>(
+                                <DropdownMenuItem key={index} className={'py-2 flex justify-center items-center cursor-pointer'}
+                                onClick={()=>{
+                                    setCategoryName(item.name)
+                                    setVal(item.name)
+                                }}>
+                                    {item.name}
+                                </DropdownMenuItem>
+                            ))}
+                        </>
                     }
                 </DropdownMenuGroup>
                 <Pagination setPage={setPage} response={response}/>

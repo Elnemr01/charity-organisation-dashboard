@@ -20,23 +20,34 @@ import DeleteModel from '@/components/customUI/DeleteModel';
 import useDeleteProductItem from '@/hooks/banks/products/useDeleteProductItem';
 import CategoryListFilter from '@/components/customUI/CategoryListFilter';
 import useGetAllProductCategories from '@/hooks/categories/products/useGetAllProductCategories';
+import EquelModel from '@/components/customUI/EquelModel';
+import useEquelProductItem from '@/hooks/banks/products/useEquelProductItem';
+import { useQueryClient } from '@tanstack/react-query';
+import { format } from 'date-fns';
 
 const Products = () => {
     const [page, setPage] = useState(1);
     const [catPage,setCatPage] = useState(1);
-    const [categoryId, setCategoryId] = useState(null);
+    const [newAmount, setNewAmount] = useState(0);
+    const [categoryName, setCategoryName] = useState(null);
     const [debounceValue, setDebounceValue] = useState('');
+    const [catDebounceValue, setCatDebounceValue] = useState('');
     const {productItems, isLoading, isError} = useGetAllProductItems({
         pageNumber : page,
-        categoryId,
-        SearchValue : debounceValue
+        SearchValue : debounceValue || categoryName
     });
     const {deleteProductItem, isPending} = useDeleteProductItem();
     const tablehead= useMemo(()=> productTablehead,[])
 
     const {productCategories, isLoading: isLoadingCategories, isError: isErrorCategories} = useGetAllProductCategories({
         page: catPage,
+        searchValue: catDebounceValue
     });
+    const queryClient = useQueryClient();
+    const {equelProductItem, isPending: isEquelPending} = useEquelProductItem();
+
+
+
 
     return (
         <Layout headerText={'اداره المخازن'}>
@@ -48,7 +59,8 @@ const Products = () => {
                     <div className="search flex items-center justify-between gap-4">
                         <TextSearch setDebounceValue={setDebounceValue} />
                         <CategoryListFilter
-                            setId={setCategoryId}
+                            setCatDebounceValue={setCatDebounceValue}
+                            setCategoryName={setCategoryName}
                             response={productCategories}
                             isLoading={isLoadingCategories}
                             isError={isErrorCategories}
@@ -69,7 +81,7 @@ const Products = () => {
                         productItems?.items?.length === 0 ?
                         <Empty/>
                         :
-                        <div className='bg-white rounded-md shadow p-4'>
+                        <div className=''>
                             <Table className={'p-4 '}>
                                 <TableHeader>
                                     <TableRow>
@@ -82,10 +94,12 @@ const Products = () => {
                                     {productItems?.items?.map((product) => (
                                     <TableRow key={product.id} className="text-center">
                                         <TableCell className={'p-6'}>{product?.id}</TableCell>
-                                        <TableCell className={'p-6'}>{product?.amount || 5}</TableCell>
-                                        <TableCell className={'p-6'}>{product?.unitName}</TableCell>
-                                        <TableCell className={'p-6'}>{product?.categoryName}</TableCell>
-                                        <TableCell className={'p-6'}>{product?.purposeName}</TableCell>
+                                        <TableCell className={'p-6'}>{product?.amount || 0}</TableCell>
+                                        <TableCell className={'p-6'}>{product?.productItem.unitName}</TableCell>
+                                        <TableCell className={'p-6'}>{product?.productItem.categoryName}</TableCell>
+                                        <TableCell className={'p-6'}>{product?.productItem.purposeName}</TableCell>
+                                        <TableCell className={'p-6'}>{format(new Date(product?.lastUpdated), 'yyyy-MM-dd')}</TableCell>
+                                        <TableCell className={'p-6'}>{format(new Date(product?.lastUpdated), 'yyyy-MM-dd')}</TableCell>
                                         <TableCell>
                                             <div className="flex items-center gap-4 justify-center">
                                                 {/* <Link to={`/banks/products/${product.id}`}>
@@ -97,10 +111,31 @@ const Products = () => {
                                                 <DeleteModel
                                                 message="هل أنت متأكد من حذف هذا المنتج؟"
                                                 wait={isPending}
-                                                deleteFun={() => deleteProductItem(product.id)}
+                                                deleteFun={() => {
+                                                    deleteProductItem(product.id,{
+                                                        onSuccess: ()=> {
+                                                            queryClient.invalidateQueries({queryKey: ['productItems']})
+                                                        }
+                                                    })
+                                                }}
                                                 >
                                                     <Trash2 size={16} className='text-red-500'/>
                                                 </DeleteModel>
+                                                <EquelModel
+                                                message="هل تريد تسويه هذا المنتج بعد عمليه الجرد؟"
+                                                wait={isEquelPending}
+                                                onChange={setNewAmount}
+                                                amount={product?.amount}
+                                                equelFun={() => {
+                                                    equelProductItem({id: product.id,data:{newAmount}}, {
+                                                        onSuccess: ()=> {
+                                                            queryClient.invalidateQueries({queryKey: ['productItems']})
+                                                        }
+                                                    })
+                                                }}
+                                                >
+                                                    <Pen size={16} className='text-secondary'/>
+                                                </EquelModel>
                                             </div>
                                         </TableCell>
                                     </TableRow>
