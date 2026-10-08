@@ -9,6 +9,10 @@ export const getAllProductItemsFn = async (data)=> await client.get("/api/Produc
 }).then((res)=>res.data);
 
 
+export const getProductItemByIdFn = async (id)=>
+    await client.get(`/api/ProductInventories/${id}`).then((res)=>res.data);
+
+
 export const deleteProductItemsFn = async (id)=> await client.delete(`/api/ProductInventories/${id}`);
 
 // export const addProductItemsFn = async (data)=> await client.post(`/api/ProductInventories`,data);
@@ -16,6 +20,11 @@ export const deleteProductItemsFn = async (id)=> await client.delete(`/api/Produ
 // export const editProductItemsFn = async (data)=> await client.put(`/api/ProductInventories/${data.id}`,data.data);
 
 export const equlProductItemsFn = async (data)=> await client.post(`/api/ProductInventories/${data.id}/adjust`,data.data);
+
+
+export const convertProductItemsFn = async (data)=>
+    await client.post(`/api/ProductInventories/${data.id}/convert-unit`,data.data);
+
 
 
 // money
@@ -30,3 +39,7 @@ export const deleteCashInventoryFn = async (id)=> await client.delete(`/api/Cash
 
 
 export const equelCashInventoryFn = async (data)=> await client.post(`/api/CashInventories/${data.id}/adjust`,data.data);
+
+
+export const transferCashInventoryFn = async (data)=> await client.post(`/api/CashInventories/transfer`,data.data);
+

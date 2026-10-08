@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 const useGetAllCashInventories = (data) => {
 
     const {data: cashInventories, isLoading, isError} = useQuery({
-        queryKey: ['cashInventories', data.pageNumber, data.SearchValue],
+        queryKey: ['cashInventories', data],
         queryFn: ()=> getAllCashInventoriesFn(data)
 
     })

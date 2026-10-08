@@ -28,6 +28,23 @@ export const moneyInventories = {
     "Bank": 'البنك'
 }
 
+
+export const moneyInventoryTypes = [
+    {
+        "id": "Charity",
+        "name": 'الحميعيه'
+    },
+    {
+        "id": "Treasurer",
+        "name": 'الامين'
+    },
+    {
+        "id": "Bank",
+        "name": 'البنك'
+    }
+]
+
+
 export const moneyInventoryStyle = {
     "Charity": 'bg-secondary text-white',
     "Treasurer": 'bg-primary text-white',

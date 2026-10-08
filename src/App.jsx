@@ -8,6 +8,8 @@ import { Toaster } from 'react-hot-toast'
 import Categories from './pages/categories/Categories'
 import Money from './pages/banks/money/Money'
 import Products from './pages/banks/products/Products'
+import Transfer from './pages/banks/money/Transfer'
+import ConvertUnit from './pages/banks/products/ConvertUnit'
 
 function App() {
 
@@ -27,8 +29,10 @@ function App() {
           <Route path='/categories' element={<Categories/>}/>
 
           <Route path='/banks/money' element={<Money/>}/>
+          <Route path='/banks/money/transfer' element={<Transfer/>}/>
 
           <Route path='/banks/products' element={<Products/>}/>
+          <Route path='/banks/products/convert-unit/:id' element={<ConvertUnit/>}/>
 
         </Route>
       </Routes>

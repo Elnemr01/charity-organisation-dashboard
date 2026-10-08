@@ -5,7 +5,7 @@ import React from 'react'
 const useGetAllProductUnits = (data) => {
     
     const {data : productUnits,isLoading,isError,error} = useQuery({
-        queryKey: ['productUnits',data.page,data.debounceValue],
+        queryKey: ['productUnits',data.pageNumber,data.SearchValue],
         queryFn: ()=> getAllProductUnitsFn(data)
     })
     

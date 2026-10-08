@@ -13,13 +13,15 @@ import TextSearch from '@/appComponents/search/TextSearch'
 import Error from '@/appComponents/models/Error'
 import Empty from '@/appComponents/models/Empty'
 
-const CategoryListFilter = ({setCategoryName,response,isLoading,isError,setPage,setCatDebounceValue}) => {
+const CategoryListFilter = ({setCategoryName,response,isLoading,isError,setPage,setCatDebounceValue
+    ,text
+}) => {
     const [val,setVal]=useState(null)
     return (
         <DropdownMenu dir='rtl'>
             <DropdownMenuTrigger render={<Button variant="outline"
             className={" hover:text-secondary rounded-full text-secondary border-secondary border"}>
-                {val ? val :'تصفيه'}
+                {val ? val : text ? text : 'تصفيه'}
             </Button>} />
             <DropdownMenuContent className="w-40" align="center" dir='rtl'>
                 <TextSearch setDebounceValue={setCatDebounceValue}/>
@@ -35,17 +37,17 @@ const CategoryListFilter = ({setCategoryName,response,isLoading,isError,setPage,
                         <Empty/>
                         :
                         <>
-                            <DropdownMenuItem className={'py-2 flex justify-center items-center cursor-pointer'}
+                            {(text ==='تصفيه' || text === undefined) && <DropdownMenuItem className={'py-2 flex justify-center items-center cursor-pointer'}
                             onClick={()=>{
-                                        setCategoryName(null)
+                                        setCategoryName({})
                                         setVal(null)
                                     }}>
                                 الكل
-                            </DropdownMenuItem>
+                            </DropdownMenuItem>}
                             {response?.items?.map((item,index)=>(
                                 <DropdownMenuItem key={index} className={'py-2 flex justify-center items-center cursor-pointer'}
                                 onClick={()=>{
-                                    setCategoryName(item.name)
+                                    setCategoryName(item)
                                     setVal(item.name)
                                 }}>
                                     {item.name}

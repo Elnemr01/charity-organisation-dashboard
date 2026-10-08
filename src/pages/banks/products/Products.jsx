@@ -15,7 +15,7 @@ import {
 import { productTablehead } from '@/constants/banks/bankConst';
 import Empty from '@/appComponents/models/Empty';
 import { Link } from 'react-router';
-import { Eye, Pen, Trash2 } from 'lucide-react';
+import { ArrowLeftRightIcon, Eye, Pen, Trash2 } from 'lucide-react';
 import DeleteModel from '@/components/customUI/DeleteModel';
 import useDeleteProductItem from '@/hooks/banks/products/useDeleteProductItem';
 import CategoryListFilter from '@/components/customUI/CategoryListFilter';
@@ -29,12 +29,12 @@ const Products = () => {
     const [page, setPage] = useState(1);
     const [catPage,setCatPage] = useState(1);
     const [newAmount, setNewAmount] = useState(0);
-    const [categoryName, setCategoryName] = useState(null);
+    const [categoryName, setCategoryName] = useState({});
     const [debounceValue, setDebounceValue] = useState('');
     const [catDebounceValue, setCatDebounceValue] = useState('');
     const {productItems, isLoading, isError} = useGetAllProductItems({
         pageNumber : page,
-        SearchValue : debounceValue || categoryName
+        SearchValue : debounceValue || categoryName.name
     });
     const {deleteProductItem, isPending} = useDeleteProductItem();
     const tablehead= useMemo(()=> productTablehead,[])
@@ -96,16 +96,16 @@ const Products = () => {
                                         <TableCell className={'p-6'}>{product?.productItem.unitName}</TableCell>
                                         <TableCell className={'p-6'}>{product?.productItem.categoryName}</TableCell>
                                         <TableCell className={'p-6'}>{product?.productItem.purposeName}</TableCell>
-                                        <TableCell className={'p-6'}>{format(new Date(product?.lastUpdated), 'yyyy-MM-dd')}</TableCell>
+                                        <TableCell className={'p-6'}>{format(new Date(product?.createdOn), 'yyyy-MM-dd')}</TableCell>
                                         <TableCell className={'p-6'}>{format(new Date(product?.lastUpdated), 'yyyy-MM-dd')}</TableCell>
                                         <TableCell>
                                             <div className="flex items-center gap-4 justify-center">
                                                 {/* <Link to={`/banks/products/${product.id}`}>
                                                     <Eye size={16} className='text-primary'/>
                                                 </Link> */}
-                                                {/* <Link to={`/banks/products/add`} state={{edit: true,data: product}}>
-                                                    <Pen size={16} className='text-secondary'/>
-                                                </Link> */}
+                                                <Link to={`/banks/products/convert-unit/${product.id}`}>
+                                                    <ArrowLeftRightIcon size={16} className='text-secondary'/>
+                                                </Link>
                                                 <DeleteModel
                                                 message="هل أنت متأكد من حذف هذا المنتج؟"
                                                 wait={isPending}
