@@ -19,7 +19,10 @@ const ProductUnits = () => {
     const [page,setPage]=useState(1);
     const [editData,setEditData]=useState({});
     const [edit,setEdit]=useState(false);
-    const {productUnits,isLoading,isError} = useGetAllProductUnits({page,debounceValue})
+    const {productUnits,isLoading,isError} = useGetAllProductUnits({
+        pageNumber: page,
+        SearchValue: debounceValue
+    })
     const {addNewProductUnit,isPending : addPending} = useAddNewProductUnit();
     const {updateProductUnit,isPending : editPending} = useUpdateProductUnit();
     const {deleteProductUnit,isPending : deletePending} = useDeleteProductUnit();

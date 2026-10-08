@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input'
 import { ArrowLeftRight, Banknote, Loader2 } from 'lucide-react'
 import { useNavigate } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
+import useAddNewDonationPurpose from '@/hooks/categories/donationPurpose/useAddNewDonationPurpose'
 
 const Transfer = () => {
     const [sourceCatPage, setSourceCatPage] = useState(1)
@@ -30,6 +31,8 @@ const Transfer = () => {
         page: targetCatPage,
         searchValue: targetDebounceValue
     })
+
+    const {addNewDonationPurpose,isPending:addIsPending}=useAddNewDonationPurpose();
 
     const { transferCashInventory, isPending } = useTransferCashInventory()
 
@@ -189,6 +192,10 @@ const Transfer = () => {
                                             isLoading={isTargetLoading}
                                             isError={isTargetError}
                                             setPage={setTargetCatPage}
+                                            add={true}
+                                            addNewItem={addNewDonationPurpose}
+                                            queryKey="donationPursposes"
+                                            addWait={addIsPending}
                                         />
                                         <input 
                                             type="hidden" 

@@ -20,7 +20,10 @@ const CaseCat = () => {
   const [page,setPage]=useState(1);
   const [editData,setEditData]=useState({});
   const [edit,setEdit]=useState(false);
-  const {caseCategories,isLoading,isError} = useGetAllCaseCategories({page,debounceValue})
+  const {caseCategories,isLoading,isError} = useGetAllCaseCategories({
+    pageNumber: page,
+    SearchValue: debounceValue
+  })
   const {addNewCaseCategory,isPending : addPending} = useAddNewCaseCategory();
   const {updateCaseCategory,isPending : editPending} = useUpdateCaseCategory();
   const {deleteCaseCategory,isPending : deletePending} = useDeleteCaseCategory();

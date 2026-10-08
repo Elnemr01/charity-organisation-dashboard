@@ -19,7 +19,10 @@ const ProductCat = () => {
     const [page,setPage]=useState(1);
     const [editData,setEditData]=useState({});
     const [edit,setEdit]=useState(false);
-    const {productCategories,isLoading,isError} = useGetAllProductCategories({page,searchValue:debounceValue})
+    const {productCategories,isLoading,isError} = useGetAllProductCategories({
+        pageNumber: page,
+        SearchValue: debounceValue
+    })
     const {addNewProductCategory,isPending : addPending} = useAddNewProductCategory();
     const {updateProductCategory,isPending : editPending} = useUpdateProductCategory();
     const {deleteProductCategory,isPending : deletePending} = useDeleteProductCategory();

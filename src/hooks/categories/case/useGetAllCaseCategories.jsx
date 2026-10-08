@@ -5,7 +5,7 @@ import React from 'react'
 const useGetAllCaseCategories = (data) => {
     
     const {data : caseCategories,isLoading,isError,error} = useQuery({
-        queryKey: ['caseCategories',data.page,data.debounceValue],
+        queryKey: ['caseCategories',data],
         queryFn: ()=> getAllCaseCategoriesFn(data)
     })
     

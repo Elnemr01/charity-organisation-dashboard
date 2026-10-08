@@ -19,7 +19,10 @@ const DonationPurpose = () => {
   const [page,setPage]=useState(1);
   const [editData,setEditData]=useState({});
   const [edit,setEdit]=useState(false);
-  const {donationPursposes,isLoading,isError} = useGetAllDonationPurposes({page,debounceValue})
+  const {donationPursposes,isLoading,isError} = useGetAllDonationPurposes({
+    pageNumber: page,
+    SearchValue: debounceValue
+  })
   const {addNewDonationPurpose,isPending : addPending} = useAddNewDonationPurpose();
   const {updateDonationPurpose,isPending : editPending} = useUpdateDonationPurpose();
   const {deleteDonationPurpose,isPending : deletePending} = useDeleteDonationPurpose();

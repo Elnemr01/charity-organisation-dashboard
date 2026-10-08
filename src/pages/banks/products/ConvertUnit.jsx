@@ -14,6 +14,7 @@ import { ArrowLeftRight, Loader2, Trash2, Package } from 'lucide-react'
 import { Link, useParams, useNavigate } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
 import Error from '@/appComponents/models/Error'
+import useAddNewProductUnit from '@/hooks/categories/productUnit/useAddNewProductUnit'
 
 const ConvertUnit = () => {
 
@@ -31,6 +32,8 @@ const ConvertUnit = () => {
         pageNumber: catPage,
         SearchValue : debounceValue
     })
+
+    const {isPendging: isAddPending, addNewProductUnit} = useAddNewProductUnit();
 
     const handleDelete = () => {
         deleteProductItem(id, {
@@ -158,6 +161,10 @@ const ConvertUnit = () => {
                                         isLoading={isUnitsLoading}
                                         isError={isUnitsError}
                                         setPage={setCatPage}
+                                        add={true}
+                                        queryKey={'productUnits'}
+                                        addNewItem={addNewProductUnit}
+                                        addWait={isAddPending}
                                     />
                                     <input 
                                         type="hidden" 

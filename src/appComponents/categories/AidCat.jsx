@@ -19,7 +19,10 @@ const AidCat = () => {
   const [page,setPage]=useState(1);
   const [editData,setEditData]=useState({});
   const [edit,setEdit]=useState(false);
-  const {aidCategories,isLoading,isError} = useGetAllAidCategories({page,debounceValue})
+  const {aidCategories,isLoading,isError} = useGetAllAidCategories({
+    pageNumber: page,
+    SearchValue: debounceValue
+  })
   const {addNewAidCategory,isPending : addPending} = useAddNewAidCategory();
   const {updateAidCategory,isPending : editPending} = useUpdateAidCategory();
   const {deleteAidCategory,isPending : deletePending} = useDeleteAidCategory();

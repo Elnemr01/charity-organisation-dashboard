@@ -4,10 +4,7 @@ import client from "@/api/axiosGlobals";
 
 
 export const getAllAidCategoriesFn = async (data) => await client.get(`/api/AidCategories`,{
-    params : {
-        pageNumber: data.page,
-        searchValue: data.debounceValue
-    }
+    params : data
 }).then(res => res.data)
 
 
