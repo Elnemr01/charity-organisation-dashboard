@@ -1,4 +1,3 @@
-import './App.css'
 import { Route, Routes } from 'react-router'
 import InverseProtected from './protectedRoute/InverseProtected'
 import Login from './pages/login/Login'
@@ -10,6 +9,8 @@ import Money from './pages/banks/money/Money'
 import Products from './pages/banks/products/Products'
 import Transfer from './pages/banks/money/Transfer'
 import ConvertUnit from './pages/banks/products/ConvertUnit'
+import Donations from './pages/donations/Donations'
+import AddDonation from './pages/donations/AddDonation'
 
 function App() {
 
@@ -33,6 +34,8 @@ function App() {
 
           <Route path='/banks/products' element={<Products/>}/>
           <Route path='/banks/products/convert-unit/:id' element={<ConvertUnit/>}/>
+          <Route path='/donations' element={<Donations/>}/>
+          <Route path='/donations/add' element={<AddDonation/>}/>
 
         </Route>
       </Routes>
