@@ -1,4 +1,4 @@
-import { HandCoinsIcon, Home, Layers2, Settings, Store, Wallet, Wallet2 } from "lucide-react";
+import { HandCoinsIcon, Home, Layers2, Settings, Store, User, Wallet, Wallet2 } from "lucide-react";
 
 export const sidebarBtns = [
     {
@@ -12,6 +12,12 @@ export const sidebarBtns = [
       icon: HandCoinsIcon,
       isParent: false,
       href: '/donations'
+    },
+    {
+      label: 'المتبرعين',
+      icon: User,
+      isParent: false,
+      href: '/doners'
     },
     {
       label: 'المخازن',

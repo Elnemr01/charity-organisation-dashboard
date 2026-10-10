@@ -11,6 +11,9 @@ import Transfer from './pages/banks/money/Transfer'
 import ConvertUnit from './pages/banks/products/ConvertUnit'
 import Donations from './pages/donations/Donations'
 import AddDonation from './pages/donations/AddDonation'
+import Doners from './pages/doners/Doners'
+import AddDoner from './pages/doners/AddDoner'
+import DonerDetails from './pages/doners/DonerDetails'
 
 function App() {
 
@@ -34,8 +37,13 @@ function App() {
 
           <Route path='/banks/products' element={<Products/>}/>
           <Route path='/banks/products/convert-unit/:id' element={<ConvertUnit/>}/>
+          
           <Route path='/donations' element={<Donations/>}/>
           <Route path='/donations/add' element={<AddDonation/>}/>
+
+          <Route path='/doners' element={<Doners/>}/>
+          <Route path='/doners/add' element={<AddDoner/>}/>
+          <Route path='/doners/:id' element={<DonerDetails/>}/>
 
         </Route>
       </Routes>

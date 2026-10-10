@@ -10,6 +10,7 @@ import CategoryListFilter from '@/components/customUI/CategoryListFilter';
 import useGetAllProductCategories from '@/hooks/categories/products/useGetAllProductCategories';
 import useGetAllProductUnits from '@/hooks/categories/productUnit/useGetAllProductUnits';
 import useGetAllDonationPurposes from '@/hooks/categories/donationPurpose/useGetAllDonationPurposes';
+import useGetAllDoners from '@/hooks/doners/useGetAllDoners';
 import useAddDonation from '@/hooks/donations/useAddDonation';
 import { moneyInventoryTypes, moneyInventoryStyle } from '@/constants/banks/bankConst';
 import toast from 'react-hot-toast';
@@ -22,6 +23,8 @@ const AddDonation = () => {
     const [unitDebounceValue, setUnitDebounceValue] = useState('');
     const [purposePage, setPurposePage] = useState(1);
     const [purposeDebounceValue, setPurposeDebounceValue] = useState('');
+    const [donerPage, setDonerPage] = useState(1);
+    const [donerDebounceValue, setDonerDebounceValue] = useState('');
 
     const { productCategories, isLoading: isLoadingCategories, isError: isErrorCategories } = useGetAllProductCategories({
         page: catPage,
@@ -38,6 +41,11 @@ const AddDonation = () => {
         searchValue: purposeDebounceValue
     });
 
+    const { doners, isLoading: isLoadingDoners, isError: isErrorDoners } = useGetAllDoners({
+        pageNumber: donerPage,
+        SearchValue: donerDebounceValue
+    });
+
     const { addDonation, isPending } = useAddDonation();
 
     const initialProductItem = {
@@ -49,7 +57,7 @@ const AddDonation = () => {
 
     const formik = useFormik({
         initialValues: {
-            donorName: '',
+            donorId: '',
             donationDeliverer: '',
             receiptNumber: '',
             notes: '',
@@ -63,7 +71,7 @@ const AddDonation = () => {
         validationSchema: donationSchema,
         onSubmit: (values) => {
             const submitData = {
-                donorName: values.donorName,
+                donorId: Number(values.donorId),
                 donationDeliverer: values.donationDeliverer,
                 receiptNumber: values.receiptNumber,
                 notes: values.notes,
@@ -137,14 +145,62 @@ const AddDonation = () => {
                 <form onSubmit={formik.handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6" dir="rtl">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label htmlFor="donorName" className="block mb-2">اسم المتبرع *</label>
-                            <Input
-                                id="donorName"
-                                {...formik.getFieldProps('donorName')}
-                                className={formik.touched.donorName && formik.errors.donorName ? 'border-red-500' : ''}
-                            />
-                            {formik.touched.donorName && formik.errors.donorName && (
-                                <p className="text-red-500 text-sm mt-1">{formik.errors.donorName}</p>
+                            <label htmlFor="donorId" className="block mb-2">اسم المتبرع *</label>
+                            <div className="mb-2">
+                                <Input
+                                    id="donerSearch"
+                                    type="text"
+                                    placeholder="ابحث عن متبرع..."
+                                    value={donerDebounceValue}
+                                    onChange={(e) => {
+                                        setDonerDebounceValue(e.target.value);
+                                        setDonerPage(1);
+                                    }}
+                                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary"
+                                />
+                            </div>
+                            <select
+                                id="donorId"
+                                {...formik.getFieldProps('donorId')}
+                                className={`w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary ${formik.touched.donorId && formik.errors.donorId ? 'border-red-500' : ''}`}
+                                disabled={isLoadingDoners}
+                            >
+                                <option value="">اختر المتبرع</option>
+                                {isLoadingDoners && <option disabled>جاري التحميل...</option>}
+                                {isErrorDoners && <option disabled>خطأ في تحميل المتبرعين</option>}
+                                {!isLoadingDoners && !isErrorDoners && doners?.items?.map((doner) => (
+                                    <option key={doner.id} value={doner.id}>
+                                        {doner.name} - {doner.phone}
+                                    </option>
+                                ))}
+                            </select>
+                            {formik.touched.donorId && formik.errors.donorId && (
+                                <p className="text-red-500 text-sm mt-1">{formik.errors.donorId}</p>
+                            )}
+                            {!isLoadingDoners && !isErrorDoners && doners && (
+                                <div className="flex items-center justify-between mt-2">
+                                    <span className="text-sm text-gray-500">
+                                        صفحة {donerPage} من {doners.totalPages || 1} - إجمالي {doners.totalItems || 0} متبرع
+                                    </span>
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => setDonerPage(p => Math.max(1, p - 1))}
+                                            disabled={donerPage <= 1 || isLoadingDoners}
+                                        >
+                                            السابق
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => setDonerPage(p => p + 1)}
+                                            disabled={donerPage >= (doners.totalPages || 1) || isLoadingDoners}
+                                        >
+                                            التالي
+                                        </Button>
+                                    </div>
+                                </div>
                             )}
                         </div>
 

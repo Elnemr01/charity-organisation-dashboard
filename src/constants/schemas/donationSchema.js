@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 
 export const donationSchema = yup.object().shape({
-  donorName: yup.string().required('اسم المتبرع مطلوب'),
+  donorId: yup.number().required('اسم المتبرع مطلوب'),
   donationDeliverer: yup.string().required('مقدم التبرع مطلوب'),
   receiptNumber: yup.string().required('رقم الإيصال مطلوب'),
   notes: yup.string(),
