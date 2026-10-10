@@ -66,7 +66,7 @@ const AddDoner = () => {
     });
 
     return (
-        <Layout headerText={'إضافة متبرع جديد'}>
+        <Layout headerText={edit ? 'تعديل بيانات المتبرع' : 'إضافة متبرع جديد'}>
             <div className="container py-10">
                 <div className="flex items-center gap-4 mb-8">
                     <Link to="/doners" className="flex items-center gap-2 text-secondary hover:text-primary">

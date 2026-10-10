@@ -35,7 +35,7 @@ export function MySidebar() {
 
                             if(!btn.isParent) {
                                 return (
-                                    <NavLink key={index} to={btn.href} className="flex items-center text-base gap-2 p-2 rounded font-semibold ">
+                                    <NavLink key={index} to={btn.href} className="flex items-center mt-2 text-base gap-2 p-2 rounded font-semibold ">
                                         <Icon className="w-5 h-5"/>
                                         <span>{btn.label}</span>
                                     </NavLink>
@@ -43,9 +43,9 @@ export function MySidebar() {
                             }
                             else {
                                 return (
-                                <Accordion dir="rtl" key={index} className={'flex justify-between w-full'}>
+                                <Accordion dir="rtl" key={index} className={'flex justify-between w-full p-0'}>
                                     <AccordionItem>
-                                        <AccordionTrigger className={"cursor-pointer "}>
+                                        <AccordionTrigger className={"cursor-pointer p-0 mt-2"}>
                                             <Icon className="w-5 h-5"/>
                                             <span>{btn.label}</span>
                                         </AccordionTrigger>

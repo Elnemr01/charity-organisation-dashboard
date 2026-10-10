@@ -3,7 +3,7 @@ import Loading from '@/appComponents/models/Loading';
 import Pagination from '@/appComponents/pagination/Pagination';
 import TextSearch from '@/appComponents/search/TextSearch';
 import useGetAllDoners from '@/hooks/doners/useGetAllDoners'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
     Table,
     TableBody,
@@ -12,7 +12,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { donerTablehead } from '@/constants/doners/donerConst';
+import { donerEnumFilter, donerTablehead, filterVals } from '@/constants/doners/donerConst';
 import Empty from '@/appComponents/models/Empty';
 import { Link } from 'react-router';
 import { Eye, Pen, Plus, Trash2 } from 'lucide-react';
@@ -22,21 +22,24 @@ import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import EnumFilter from '@/components/customUI/EnumFilter';
+import FilterVals from '@/components/customUI/FilterVals';
 
 const Doners = () => {
     const [page, setPage] = useState(1);
     const [debounceValue, setDebounceValue] = useState('');
+    const [searchColumn, setSearchColumn] = useState({});
     const [filter,setFilter]=useState({})
-    const [subscripers,setSub]=useState(false)
     const { doners, isLoading, isError } = useGetAllDoners({
         pageNumber: page,
         SearchValue: debounceValue,
+        searchColumn: debounceValue ? searchColumn?.id : undefined,
         Filter: filter,
     });
     const { deleteDoner, isPending } = useDeleteDoner();
     const tablehead = useMemo(() => donerTablehead, [])
     const queryClient = useQueryClient();
-
+    const donerEnumFilterArr=useMemo(()=> donerEnumFilter,[])
+    const filterValsArr=useMemo(()=> filterVals,[])
 
     return (
         <Layout headerText={'اداره المتبرعين'}>
@@ -55,13 +58,19 @@ const Doners = () => {
                     </div>
                     <div className="search flex items-center justify-between gap-4">
                         <TextSearch setDebounceValue={setDebounceValue} />
-                        <div className="filters">
+                        <div className="filters flex items-center gap-4">
                             <EnumFilter
-                                data={[{id:null,name:'الكل'},{id:true,name:'المشتركين'},{id:false,name:'غير المشتركين'}]}
+                                data={donerEnumFilterArr}
                                 text={'المشتركين'}
                                 setFilter={setFilter}
                                 filter={filter}
                                 propertyName={'isSubscriber'}
+                            />
+
+                            <FilterVals
+                                data={filterValsArr}
+                                value={searchColumn}
+                                setFilter={setSearchColumn}
                             />
                             
                         </div>
