@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import { donationSchema } from '@/constants/schemas/donationSchema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import CategoryListFilter from '@/components/customUI/CategoryListFilter';
@@ -17,12 +17,16 @@ import toast from 'react-hot-toast';
 
 const AddDonation = () => {
     const navigate = useNavigate();
+    const [donationType, setDonationType] = useState('عينى');
     const [catPage, setCatPage] = useState(1);
     const [catDebounceValue, setCatDebounceValue] = useState('');
+
     const [unitPage, setUnitPage] = useState(1);
     const [unitDebounceValue, setUnitDebounceValue] = useState('');
+
     const [purposePage, setPurposePage] = useState(1);
     const [purposeDebounceValue, setPurposeDebounceValue] = useState('');
+
     const [donerPage, setDonerPage] = useState(1);
     const [donerDebounceValue, setDonerDebounceValue] = useState('');
 
@@ -43,17 +47,20 @@ const AddDonation = () => {
 
     const { doners, isLoading: isLoadingDoners, isError: isErrorDoners } = useGetAllDoners({
         pageNumber: donerPage,
+        searchColumn: 'name',
         SearchValue: donerDebounceValue
     });
 
     const { addDonation, isPending } = useAddDonation();
 
-    const initialProductItem = {
-        categoryId: '',
-        unitId: '',
-        purposeId: '',
-        amount: '',
-    };
+    const initialProductItem = useMemo(()=> {
+        return {
+            categoryId: null,
+            unitId: null,
+            purposeId: null,
+            amount: null,
+        };
+    },[])
 
     const formik = useFormik({
         initialValues: {
@@ -61,45 +68,26 @@ const AddDonation = () => {
             donationDeliverer: '',
             receiptNumber: '',
             notes: '',
-            donationType: 'عينى',
-            productItems: [initialProductItem],
+            productItems: [],
             paymentMethod: 'Cash',
             cashAmount: '',
             cashDonationPurposeId: '',
             cashInventoryType: 'Charity',
         },
-        validationSchema: donationSchema,
+        // validationSchema: donationSchema,
         onSubmit: (values) => {
-            const submitData = {
-                donorId: Number(values.donorId),
-                donationDeliverer: values.donationDeliverer,
-                receiptNumber: values.receiptNumber,
-                notes: values.notes,
-            };
 
-            if (values.donationType === 'عينى') {
-                submitData.productItems = values.productItems.map(item => ({
-                    categoryId: Number(item.categoryId),
-                    unitId: Number(item.unitId),
-                    purposeId: Number(item.purposeId),
-                    amount: Number(item.amount),
-                }));
-            } else {
-                submitData.paymentMethod = values.paymentMethod;
-                submitData.cashAmount = Number(values.cashAmount);
-                submitData.cashDonationPurposeId = Number(values.cashDonationPurposeId);
-                submitData.cashInventoryType = values.cashInventoryType;
-            }
-
-            addDonation(submitData, {
-                onSuccess: () => {
-                    toast.success('تم إضافة التبرع بنجاح');
-                    navigate('/donations');
-                },
-                onError: () => {
-                    toast.error('حدث خطأ برجاء المحاولة لاحقا');
-                }
-            });
+            console.log(values)
+            
+        //     addDonation(values, {
+        //         onSuccess: () => {
+        //             toast.success('تم إضافة التبرع بنجاح');
+        //             navigate('/donations');
+        //         },
+        //         onError: () => {
+        //             toast.error('حدث خطأ برجاء المحاولة لاحقا');
+        //         }
+        //     });
         },
     });
 
@@ -114,23 +102,23 @@ const AddDonation = () => {
 
     const handleCategorySelect = (index, item) => {
         formik.setFieldValue(`productItems[${index}].categoryId`, item.id);
-        formik.setFieldValue(`productItems[${index}].categoryName`, item.name);
     };
 
     const handleUnitSelect = (index, item) => {
         formik.setFieldValue(`productItems[${index}].unitId`, item.id);
-        formik.setFieldValue(`productItems[${index}].unitName`, item.name);
     };
 
     const handlePurposeSelect = (index, item) => {
         formik.setFieldValue(`productItems[${index}].purposeId`, item.id);
-        formik.setFieldValue(`productItems[${index}].purposeName`, item.name);
     };
 
     const handleCashPurposeSelect = (item) => {
         formik.setFieldValue('cashDonationPurposeId', item.id);
-        formik.setFieldValue('cashDonationPurposeName', item.name);
     };
+
+    const handleSelectDonor = (item) => {
+        formik.setFieldValue('donorId', item.id);
+    }
 
     return (
         <Layout headerText={'إضافة تبرع جديد'}>
@@ -146,62 +134,15 @@ const AddDonation = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label htmlFor="donorId" className="block mb-2">اسم المتبرع *</label>
-                            <div className="mb-2">
-                                <Input
-                                    id="donerSearch"
-                                    type="text"
-                                    placeholder="ابحث عن متبرع..."
-                                    value={donerDebounceValue}
-                                    onChange={(e) => {
-                                        setDonerDebounceValue(e.target.value);
-                                        setDonerPage(1);
-                                    }}
-                                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary"
-                                />
-                            </div>
-                            <select
-                                id="donorId"
-                                {...formik.getFieldProps('donorId')}
-                                className={`w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary ${formik.touched.donorId && formik.errors.donorId ? 'border-red-500' : ''}`}
-                                disabled={isLoadingDoners}
-                            >
-                                <option value="">اختر المتبرع</option>
-                                {isLoadingDoners && <option disabled>جاري التحميل...</option>}
-                                {isErrorDoners && <option disabled>خطأ في تحميل المتبرعين</option>}
-                                {!isLoadingDoners && !isErrorDoners && doners?.items?.map((doner) => (
-                                    <option key={doner.id} value={doner.id}>
-                                        {doner.name} - {doner.phone}
-                                    </option>
-                                ))}
-                            </select>
-                            {formik.touched.donorId && formik.errors.donorId && (
-                                <p className="text-red-500 text-sm mt-1">{formik.errors.donorId}</p>
-                            )}
-                            {!isLoadingDoners && !isErrorDoners && doners && (
-                                <div className="flex items-center justify-between mt-2">
-                                    <span className="text-sm text-gray-500">
-                                        صفحة {donerPage} من {doners.totalPages || 1} - إجمالي {doners.totalItems || 0} متبرع
-                                    </span>
-                                    <div className="flex items-center gap-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => setDonerPage(p => Math.max(1, p - 1))}
-                                            disabled={donerPage <= 1 || isLoadingDoners}
-                                        >
-                                            السابق
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => setDonerPage(p => p + 1)}
-                                            disabled={donerPage >= (doners.totalPages || 1) || isLoadingDoners}
-                                        >
-                                            التالي
-                                        </Button>
-                                    </div>
-                                </div>
-                            )}
+                            <CategoryListFilter
+                                setCategoryName={handleSelectDonor}
+                                response={doners}
+                                isLoading={isLoadingDoners}
+                                isError={isErrorDoners}
+                                setPage={setDonerPage}
+                                setCatDebounceValue={setDonerDebounceValue}
+                                text="اختر المتبرع"
+                            />
                         </div>
 
                         <div>
@@ -209,7 +150,7 @@ const AddDonation = () => {
                             <Input
                                 id="donationDeliverer"
                                 {...formik.getFieldProps('donationDeliverer')}
-                                className={formik.touched.donationDeliverer && formik.errors.donationDeliverer ? 'border-red-500' : ''}
+                                className={`${formik.touched.donationDeliverer && formik.errors.donationDeliverer ? 'border-red-500' : ''} p-2 py-1`}
                             />
                             {formik.touched.donationDeliverer && formik.errors.donationDeliverer && (
                                 <p className="text-red-500 text-sm mt-1">{formik.errors.donationDeliverer}</p>
@@ -221,7 +162,7 @@ const AddDonation = () => {
                             <Input
                                 id="receiptNumber"
                                 {...formik.getFieldProps('receiptNumber')}
-                                className={formik.touched.receiptNumber && formik.errors.receiptNumber ? 'border-red-500' : ''}
+                                className={`${formik.touched.receiptNumber && formik.errors.receiptNumber ? 'border-red-500' : ''} p-2 py-1`}
                             />
                             {formik.touched.receiptNumber && formik.errors.receiptNumber && (
                                 <p className="text-red-500 text-sm mt-1">{formik.errors.receiptNumber}</p>
@@ -232,33 +173,31 @@ const AddDonation = () => {
                             <label htmlFor="donationType" className="block mb-2">نوع التبرع *</label>
                             <select
                                 id="donationType"
-                                {...formik.getFieldProps('donationType')}
-                                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary"
+                                value={donationType}
+                                onChange={(e) => setDonationType(e.target.value)}
+                                className="w-full p border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary"
                             >
                                 <option value="">اختر نوع التبرع</option>
                                 <option value="عينى">عينى</option>
                                 <option value="نقدى">نقدى</option>
+                                <option value="معا">نقدى و عينى</option>
                             </select>
-                            {formik.touched.donationType && formik.errors.donationType && (
-                                <p className="text-red-500 text-sm mt-1">{formik.errors.donationType}</p>
-                            )}
                         </div>
                     </div>
 
-                    {formik.values.donationType === 'عينى' && (
-                        <div className="space-y-4">
+                    {(donationType === 'عينى' || donationType === 'معا') && (
+                        <div className="space-y-4 my-8">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-lg font-semibold">صناعات التبرع العيني</h3>
+                                <h3 className="text-lg font-semibold"> محتويات التبرع العيني </h3>
                                 <Button type="button" variant="outline" onClick={addProductItem} className="gap-2">
                                     <Plus size={16} /> إضافة صنف
                                 </Button>
                             </div>
 
                             {formik.values.productItems.map((item, index) => (
-                                <div key={index} className="border rounded-lg p-4 space-y-4 bg-gray-50">
+                                <div key={index} className="border rounded-lg p-4 bg-gray-50">
                                     <div className="flex items-center justify-between">
                                         <h4 className="font-medium">صنف #{index + 1}</h4>
-                                        {formik.values.productItems.length > 1 && (
                                             <Button
                                                 type="button"
                                                 variant="ghost"
@@ -268,10 +207,9 @@ const AddDonation = () => {
                                             >
                                                 <Trash2 size={16} />
                                             </Button>
-                                        )}
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                                         <div>
                                             <label className="block mb-2">الصنف *</label>
                                             <CategoryListFilter
@@ -328,7 +266,8 @@ const AddDonation = () => {
                                                 step="0.01"
                                                 min="0.01"
                                                 {...formik.getFieldProps(`productItems[${index}].amount`)}
-                                                className={formik.touched.productItems?.[index]?.amount && formik.errors.productItems?.[index]?.amount ? 'border-red-500' : ''}
+                                                className={`${formik.touched.productItems?.[index]?.amount && formik.errors.productItems?.[index]?.amount ? 'border-red-500 ' : ' '}
+                                                p-2 py-1 bg-white`}
                                             />
                                             {formik.touched.productItems?.[index]?.amount && formik.errors.productItems?.[index]?.amount && (
                                                 <p className="text-red-500 text-sm mt-1">{formik.errors.productItems[index].amount}</p>
@@ -340,21 +279,22 @@ const AddDonation = () => {
                         </div>
                     )}
 
-                    {formik.values.donationType === 'نقدى' && (
-                        <div className="space-y-4 border-t pt-6">
+                    {/* money donation */}
+
+                    {(donationType === 'نقدى' || donationType === 'معا') && (
+                        <div className="space-y-4 border-t pt-6 mt-8">
                             <h3 className="text-lg font-semibold">بيانات التبرع النقدي</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                                 <div>
                                     <label htmlFor="paymentMethod" className="block mb-2">طريقة الدفع *</label>
                                     <select
                                         id="paymentMethod"
                                         {...formik.getFieldProps('paymentMethod')}
-                                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary"
+                                        className="w-full  border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary"
                                     >
                                         <option value="">اختر طريقة الدفع</option>
                                         <option value="Cash">نقدي</option>
                                         <option value="Transfer">تحويل بنكي</option>
-                                        <option value="Check">شيك</option>
                                     </select>
                                     {formik.touched.paymentMethod && formik.errors.paymentMethod && (
                                         <p className="text-red-500 text-sm mt-1">{formik.errors.paymentMethod}</p>
@@ -369,7 +309,7 @@ const AddDonation = () => {
                                         step="0.01"
                                         min="0.01"
                                         {...formik.getFieldProps('cashAmount')}
-                                        className={formik.touched.cashAmount && formik.errors.cashAmount ? 'border-red-500' : ''}
+                                        className={`${formik.touched.cashAmount && formik.errors.cashAmount ? 'border-red-500' : ''} p-2 py-1`}
                                     />
                                     {formik.touched.cashAmount && formik.errors.cashAmount && (
                                         <p className="text-red-500 text-sm mt-1">{formik.errors.cashAmount}</p>
@@ -396,11 +336,11 @@ const AddDonation = () => {
                                     <label className="block mb-2">نوع الخزنة *</label>
                                     <select
                                         {...formik.getFieldProps('cashInventoryType')}
-                                        className={`w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary ${moneyInventoryStyle[formik.values.cashInventoryType] || ''}`}
+                                        className={`w-full  border border-gray-300 rounded-md focus:outline-none `}
                                     >
                                         <option value="">اختر نوع الخزنة</option>
                                         {moneyInventoryTypes.map((type) => (
-                                            <option key={type.id} value={type.id} className={moneyInventoryStyle[type.id]}>
+                                            <option key={type.id} value={type.id} >
                                                 {type.name}
                                             </option>
                                         ))}
@@ -419,6 +359,7 @@ const AddDonation = () => {
                             id="notes"
                             rows={3}
                             {...formik.getFieldProps('notes')}
+                            placeholder='ملاحظات عن عمليه التبرع'
                             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary"
                         />
                     </div>

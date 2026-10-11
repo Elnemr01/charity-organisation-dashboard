@@ -3,7 +3,7 @@ import Loading from '@/appComponents/models/Loading';
 import Empty from '@/appComponents/models/Empty';
 import useGetDonerById from '@/hooks/doners/useGetDonerById';
 import { Link, useParams } from 'react-router';
-import { ArrowLeft, Edit, Users, Phone, DollarSign, Calendar, CheckCircle, XCircle, Pen, Eye } from 'lucide-react';
+import { ArrowLeft, Edit, Users, Phone, DollarSign, Calendar, CheckCircle, XCircle, Pen, Eye, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import Pagination from '@/appComponents/pagination/Pagination';
@@ -27,7 +27,7 @@ const DonerDetails = () => {
     const [page,setPage]=useState(1);
     const { doner, isLoading, isError } = useGetDonerById({
         id,
-        pageNumber: page,
+        data: {pageNumber: page,}
     });
 
     const { deleteDonation, isPending } = useDeleteDonation();
@@ -167,16 +167,19 @@ const DonerDetails = () => {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody className={""}>
-                                        {donations?.items?.map((donation) => (
+                                        {doner?.donations?.items?.map((donation) => (
                                         <TableRow key={donation.id} className="text-center">
                                             <TableCell className={'p-6'}>{donation?.id}</TableCell>
-                                            <TableCell className={'p-6'}>{donation?.donationDeliverer}</TableCell>
-                                            <TableCell className={'p-6'}>{donation?.receiptNumber}</TableCell>
+                                            <TableCell className={'p-6'}>
+                                                {donation?.donationDeliverer ? donation?.donationDeliverer : 'غير محدد'}
+                                            </TableCell>
+                                            <TableCell className={'p-6'}>
+                                                {donation?.receiptNumber ? donation?.receiptNumber : 'غير محدد'}
+                                            </TableCell>
                                             <TableCell className={'p-6'}>
                                                 {donation?.productItemsCount === 0 ? 'نقدى' : 'عينى'}
                                             </TableCell>
                                             <TableCell className={'p-6'}>{format(new Date(donation?.createdOn), 'yyyy-MM-dd')}</TableCell>
-                                            <TableCell className={'p-6'}>{format(new Date(donation?.updatedOn), 'yyyy-MM-dd')}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-4 justify-center">
                                                     <Link to={`/donations/${donation.id}`}>
@@ -192,6 +195,7 @@ const DonerDetails = () => {
                                                         deleteDonation(donation.id, {
                                                             onSuccess: () => {
                                                                 queryClient.invalidateQueries({ queryKey: ['donations'] })
+                                                                queryClient.invalidateQueries({ queryKey: ['donerById'] })
                                                             }
                                                         })
                                                     }}

@@ -28,7 +28,7 @@ const CategoryListFilter = ({setCategoryName,response,isLoading,isError,setPage,
     return (
         <DropdownMenu dir='rtl'>
             <DropdownMenuTrigger render={<Button variant="outline"
-            className={" hover:text-secondary rounded-full text-secondary border-secondary border"}>
+            className={" hover:text-secondary rounded-md text-secondary border-secondary border"}>
                 {val ? val : text ? text : 'تصفيه'}
             </Button>} />
             <DropdownMenuContent className="w-50" align="center" dir='rtl'>

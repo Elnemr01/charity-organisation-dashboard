@@ -5,13 +5,12 @@ export const donationSchema = yup.object().shape({
   donationDeliverer: yup.string().required('مقدم التبرع مطلوب'),
   receiptNumber: yup.string().required('رقم الإيصال مطلوب'),
   notes: yup.string(),
-  donationType: yup.string().required('نوع التبرع مطلوب'),
   productItems: yup.array().of(
     yup.object().shape({
-      categoryId: yup.number().required('الصنف مطلوب'),
-      unitId: yup.number().required('الوحدة مطلوبة'),
-      purposeId: yup.number().required('الغرض مطلوب'),
-      amount: yup.number().required('الكمية مطلوبة').positive('الكمية يجب أن تكون أكبر من صفر'),
+      categoryId: yup.string().required('الصنف مطلوب'),
+      unitId: yup.string().required('الوحدة مطلوبة'),
+      purposeId: yup.string().required('الغرض مطلوب'),
+      amount: yup.string().required('الكمية مطلوبة').matches(/^\d+$/, 'الكمية يجب أن تكون رقمًا صحيحًا').test('positive', 'الكمية يجب أن تكون أكبر من صفر', (value) => parseInt(value, 10) > 0),
     })
   ).when('donationType', {
     is: 'عينى',

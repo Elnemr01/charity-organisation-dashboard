@@ -24,10 +24,14 @@ import { Button } from '@/components/ui/button';
 
 const Donations = () => {
     const [page, setPage] = useState(1);
+    const [filter, setFilter] = useState({});
+    const [searchColumn, setSearchColumn] = useState({});
     const [debounceValue, setDebounceValue] = useState('');
     const { donations, isLoading, isError } = useGetAllDonations({
         pageNumber: page,
-        SearchValue: debounceValue
+        SearchValue: debounceValue,
+        searchColumn: debounceValue ? searchColumn?.id : undefined,
+        Filter: filter,
     });
     const { deleteDonation, isPending } = useDeleteDonation();
     const tablehead = useMemo(() => donationTablehead, [])
@@ -77,16 +81,24 @@ const Donations = () => {
                                 <TableBody className={""}>
                                     {donations?.items?.map((donation) => (
                                     <TableRow key={donation.id} className="text-center">
-                                        <TableCell className={'p-6'}>{donation?.id}</TableCell>
-                                        <TableCell className={'p-6'}>{donation?.donorName}</TableCell>
-                                        <TableCell className={'p-6'}>{donation?.donationDeliverer}</TableCell>
-                                        <TableCell className={'p-6'}>{donation?.receiptNumber}</TableCell>
-                                        <TableCell className={'p-6'}>{donation?.donorPhone}</TableCell>
+                                        <TableCell className={'p-6'}>{donation?.id || 'لا يوحد'}</TableCell>
+                                        <TableCell className={'p-6'}>{donation?.donorName || 'لا يوحد'}</TableCell>
+                                        <TableCell className={'p-6'}>{donation?.donationDeliverer || 'لا يوحد'}</TableCell>
+                                        <TableCell className={'p-6'}>{donation?.receiptNumber || 'لا يوحد'}</TableCell>
+                                        <TableCell className={'p-6'}>{donation?.donorPhone || 'لا يوحد'}</TableCell>
                                         <TableCell className={'p-6'}>
-                                            {donation?.productItemsCount === 0 ? 'نقدى' : 'عينى'}
+                                            {donation?.productItemsCount === 0 && 'نقدى' }
+                                            {donation?.productItemsCount > 0  && donation.cashAmount ===null && 'عينى' }
+                                            {donation?.productItemsCount > 0  && donation.cashAmount > 0 && 'نقدى وعينى' }
                                         </TableCell>
                                         <TableCell className={'p-6'}>{format(new Date(donation?.createdOn), 'yyyy-MM-dd')}</TableCell>
-                                        <TableCell className={'p-6'}>{format(new Date(donation?.updatedOn), 'yyyy-MM-dd')}</TableCell>
+                                        <TableCell className={'p-6'}>
+                                            {
+                                                donation?.updatedOn ? format(new Date(donation.updatedOn), 'yyyy-MM-dd')
+                                                :
+                                                format(new Date(donation?.createdOn), 'yyyy-MM-dd')
+                                            }
+                                            </TableCell>
                                         <TableCell>
                                             <div className="flex items-center gap-4 justify-center">
                                                 <Link to={`/donations/${donation.id}`}>

@@ -7,7 +7,7 @@ export const getAllDonersFn = async (data) =>
 
 export const getDonerByIdFn = async (data) =>
     await client.get(`/api/Donors/${data.id}`,{
-        params: data
+        params: data.data
     }).then((res) => res.data);
 
 export const deleteDonerFn = async (id) =>
