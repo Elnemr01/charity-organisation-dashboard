@@ -14,6 +14,7 @@ import AddDonation from './pages/donations/AddDonation'
 import Doners from './pages/doners/Doners'
 import AddDoner from './pages/doners/AddDoner'
 import DonerDetails from './pages/doners/DonerDetails'
+import DonationDetails from './pages/donations/DonationDetails'
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
           
           <Route path='/donations' element={<Donations/>}/>
           <Route path='/donations/add' element={<AddDonation/>}/>
+          <Route path='/donations/:id' element={<DonationDetails/>}/>
 
           <Route path='/doners' element={<Doners/>}/>
           <Route path='/doners/add' element={<AddDoner/>}/>
