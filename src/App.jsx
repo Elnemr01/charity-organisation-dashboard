@@ -15,6 +15,8 @@ import Doners from './pages/doners/Doners'
 import AddDoner from './pages/doners/AddDoner'
 import DonerDetails from './pages/doners/DonerDetails'
 import DonationDetails from './pages/donations/DonationDetails'
+import FamilyExpense from './pages/familyExpense/FamilyExpense'
+import EditFamilyExpense from './pages/familyExpense/EditFamilyExpense'
 
 function App() {
 
@@ -46,6 +48,9 @@ function App() {
           <Route path='/doners' element={<Doners/>}/>
           <Route path='/doners/add' element={<AddDoner/>}/>
           <Route path='/doners/:id' element={<DonerDetails/>}/>
+
+          <Route path='/family-expense' element={<FamilyExpense/>}/>
+          <Route path='/family-expense/edit/:id' element={<EditFamilyExpense/>}/>
 
         </Route>
       </Routes>

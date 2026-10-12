@@ -45,6 +45,11 @@ export const sidebarBtns = [
           label: 'التصنيفات',
           href: '/categories',
           icon: Layers2
+        },
+        {
+          label: 'مصاريف جدول الانفاق',
+          href: '/family-expense',
+          icon: HandCoinsIcon
         }
       ]
     }
