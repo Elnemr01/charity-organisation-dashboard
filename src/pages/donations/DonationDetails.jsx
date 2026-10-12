@@ -29,7 +29,7 @@ const DonationDetails = () => {
     const moneyInventoriesObj = useMemo(() => moneyInventories, [])
 
     const hasCashDonation = donation?.cashAmount !== null && donation?.cashAmount !== undefined && donation.cashAmount > 0;
-    const hasProductItems = donation?.productItems && donation.productItems.length > 0;
+    const hasProductItems = donation?.donationProductItems && donation.donationProductItems.length > 0;
 
     return (
         <Layout headerText={'تفاصيل التبرع'}>
@@ -193,7 +193,7 @@ const DonationDetails = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {donation.productItems.map((item) => (
+                                            {donation.donationProductItems.map((item) => (
                                                 <tr key={item.id} className="border-b border-gray-100">
                                                     <td className="p-3 text-base">{getValue(item.productName)}</td>
                                                     <td className="p-3 text-base">{getValue(item.unitName)}</td>
@@ -208,7 +208,7 @@ const DonationDetails = () => {
                                         </tbody>
                                     </table>
                                 </div>
-                                <p className="text-sm text-muted-foreground mt-2">إجمالي الأصناف: {donation.productItemsCount ?? 0}</p>
+                                <p className="text-sm text-muted-foreground mt-2">إجمالي الأصناف: {donation.donationProductItemsCount ?? 0}</p>
                             </div>
                         )}
 

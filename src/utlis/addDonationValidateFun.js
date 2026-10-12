@@ -10,15 +10,15 @@ export const addDonationValidate = (values,donationType) => {
         
 
         if (donationType === 'عينى' || donationType === 'معا') {
-            if (!values.productItems || values.productItems.length === 0) {
+            if (!values.donationProductItems || values.donationProductItems.length === 0) {
                 // toast.error('يجب إضافة صنف واحد على الأقل للتبرع العيني');
             } else {
                 const productItemsErrors = [];
-                values.productItems.forEach((item, index) => {
+                values.donationProductItems.forEach((item, index) => {
                     const itemErrors = {};
                     if (!item.categoryId) itemErrors.categoryId = 'الصنف مطلوب';
                     if (!item.unitId) itemErrors.unitId = 'الوحدة مطلوبة';
-                    if (!item.purposeId) itemErrors.purposeId = 'الغرض مطلوب';
+                    if (!item.donationPurposeId) itemErrors.donationPurposeId = 'الغرض مطلوب';
                     if (!item.amount) {
                         itemErrors.amount = 'الكمية مطلوبة';
                     } else if (!/^\d+$/.test(item.amount)) {

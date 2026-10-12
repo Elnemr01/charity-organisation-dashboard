@@ -59,7 +59,7 @@ const Donations = () => {
                 <div className="donation-items bg-white rounded-md shadow p-4">
                     {
                         isLoading ?
-                        <div className='flex items-center justify-center h-screen'>
+                        <div className='flex items-center justify-center h-[50vh]'>
                             <Loading />
                         </div>
                         :
@@ -87,9 +87,9 @@ const Donations = () => {
                                         <TableCell className={'p-6'}>{donation?.receiptNumber || 'لا يوحد'}</TableCell>
                                         <TableCell className={'p-6'}>{donation?.donorPhone || 'لا يوحد'}</TableCell>
                                         <TableCell className={'p-6'}>
-                                            {donation?.productItemsCount === 0 && 'نقدى' }
-                                            {donation?.productItemsCount > 0  && donation.cashAmount ===null && 'عينى' }
-                                            {donation?.productItemsCount > 0  && donation.cashAmount > 0 && 'نقدى وعينى' }
+                                            {donation?.donationProductItemsCount === 0 && 'نقدى' }
+                                            {donation?.donationProductItemsCount > 0  && donation.cashAmount ===null && 'عينى' }
+                                            {donation?.donationProductItemsCount > 0  && donation.cashAmount > 0 && 'نقدى وعينى' }
                                         </TableCell>
                                         <TableCell className={'p-6'}>{format(new Date(donation?.createdOn), 'yyyy-MM-dd')}</TableCell>
                                         <TableCell className={'p-6'}>

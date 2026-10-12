@@ -14,7 +14,7 @@ const EnumFilter = ({data,text,setFilter,filter,propertyName}) => {
     return (
             <DropdownMenu dir='rtl'>
                 <DropdownMenuTrigger render={<Button variant="outline"
-                className={" hover:text-secondary rounded-full text-secondary border-secondary border"}>
+                className={" hover:text-secondary rounded-md text-secondary border-secondary border"}>
                     {filter?.propertyName ? filter?.propertyName : text ? text : 'تصفيه'}
                 </Button>} />
                 <DropdownMenuContent className="w-40" align="center" dir='rtl'>

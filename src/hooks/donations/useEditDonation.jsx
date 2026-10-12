@@ -7,8 +7,8 @@ const useEditDonation = () => {
     const { mutate: editDonation, isPending } = useMutation({
         mutationKey: ['editDonation'],
         mutationFn: (data) => editDonationFn(data),
-        onError: () => {
-            toast.error('حدث خطأ برجاء المحاولة لاحقا')
+        onError: (error) => {
+            toast.error(error?.response?.data?.detail ||'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: () => {
             toast.success('تم تعديل التبرع بنجاح')

@@ -70,13 +70,13 @@ const AddDonation = () => {
 
     const [donationType, setDonationType] = useState(()=> {
         if(edit) {
-            if(data?.productItems?.length > 0 && data?.cashAmount) {
+            if(data?.donationProductItems?.length > 0 && data?.cashAmount) {
                 return 'معا';
             }
-            else if(data?.productItems?.length > 0 && !data?.cashAmount) {
+            else if(data?.donationProductItems?.length > 0 && !data?.cashAmount) {
                 return 'عينى';
             }
-            else if( !data?.productItems?.length && data?.cashAmount ) {
+            else if( !data?.donationProductItems?.length && data?.cashAmount ) {
                 return 'نقدى';
             }
         }
@@ -89,7 +89,7 @@ const AddDonation = () => {
         return {
             categoryId: null,
             unitId: null,
-            purposeId: null,
+            donationPurposeId: null,
             amount: null,
         };
     },[])
@@ -100,7 +100,7 @@ const AddDonation = () => {
             donationDeliverer: data?.donationDeliverer || null,
             receiptNumber: data?.receiptNumber || null,
             notes: data?.notes || null,
-            productItems: data?.productItems || [],
+            donationProductItems: data?.donationProductItems || [],
             paymentMethod: data?.paymentMethod || null,
             cashAmount: data?.cashAmount || null,
             cashDonationPurposeId: data?.cashDonationPurposeId || null,
@@ -111,7 +111,7 @@ const AddDonation = () => {
             donationDeliverer: null,
             receiptNumber: null,
             notes: null,
-            productItems: [],
+            donationProductItems: [],
             paymentMethod: null,
             cashAmount: null,
             cashDonationPurposeId: null,
@@ -119,7 +119,7 @@ const AddDonation = () => {
         },
         validate: (values)=> addDonationValidate(values,donationType),
         onSubmit: (values) => {
-            if((donationType === 'عينى' || donationType === 'معا') && values.productItems.length === 0) {
+            if((donationType === 'عينى' || donationType === 'معا') && values.donationProductItems.length === 0) {
                 toast.error('برجاء إضافة محتويات التبرع العيني');
                 return;
             }
@@ -128,6 +128,8 @@ const AddDonation = () => {
                 toast.error('يجب اختيار نوع التبرع وادخال البيانات');
                 return;
             }
+
+            console.log(values)
 
             if(edit) {
                 editDonation({
@@ -153,26 +155,43 @@ const AddDonation = () => {
         },
     });
 
+    const resetData=()=> {
+        navigate('/donations');
+        queryClient.invalidateQueries({ queryKey: ['donations'] });
+        formik.resetForm();
+        if(donationType === 'عينى' ) {
+            queryClient.invalidateQueries({ queryKey: ['productCategories'] });
+        }
+        else if(donationType === 'نقدى') {
+            queryClient.invalidateQueries({ queryKey: ['cashInventories'] });
+        }
+        else if(donationType === 'معا') {
+            queryClient.invalidateQueries({ queryKey: ['cashInventories'] });
+            queryClient.invalidateQueries({ queryKey: ['productCategories'] });
+        }
+        
+    }
+
 
     const addProductItem = () => {
-        formik.setFieldValue('productItems', [...formik.values.productItems, initialProductItem]);
+        formik.setFieldValue('donationProductItems', [...formik.values.donationProductItems, initialProductItem]);
     };
 
     const removeProductItem = (index) => {
-        const newItems = formik.values.productItems.filter((_, i) => i !== index);
-        formik.setFieldValue('productItems', newItems);
+        const newItems = formik.values.donationProductItems.filter((_, i) => i !== index);
+        formik.setFieldValue('donationProductItems', newItems);
     };
 
     const handleCategorySelect = (index, item) => {
-        formik.setFieldValue(`productItems[${index}].categoryId`, item.id);
+        formik.setFieldValue(`donationProductItems[${index}].categoryId`, item.id);
     };
 
     const handleUnitSelect = (index, item) => {
-        formik.setFieldValue(`productItems[${index}].unitId`, item.id);
+        formik.setFieldValue(`donationProductItems[${index}].unitId`, item.id);
     };
 
     const handlePurposeSelect = (index, item) => {
-        formik.setFieldValue(`productItems[${index}].purposeId`, item.id);
+        formik.setFieldValue(`donationProductItems[${index}].donationPurposeId`, item.id);
     };
 
     const handleCashPurposeSelect = (item) => {
@@ -261,7 +280,7 @@ const AddDonation = () => {
                                 </Button>
                             </div>
 
-                            {formik.values.productItems.map((item, index) => (
+                            {formik.values.donationProductItems.map((item, index) => (
                                 <div key={index} className="border rounded-lg p-4 bg-gray-50">
                                     <div className="flex items-center justify-between">
                                         <h4 className="font-medium">صنف #{index + 1}</h4>
@@ -286,14 +305,14 @@ const AddDonation = () => {
                                                 isError={isErrorCategories}
                                                 setPage={setCatPage}
                                                 setCatDebounceValue={setCatDebounceValue}
-                                                text={edit ? formik.values.productItems?.[index]?.productName : 'اختر الصنف'}
+                                                text={edit ? formik.values.donationProductItems?.[index]?.categoryName : 'اختر الصنف'}
                                                 add={true}
                                                 addNewItem={addNewProductCategory}
                                                 addWait={addCategoryPending}
                                                 queryKey={'productCategories'}
                                             />
-                                            {formik.touched.productItems?.[index]?.categoryId && formik.errors.productItems?.[index]?.categoryId && (
-                                                <p className="text-red-500 text-sm mt-1">{formik.errors.productItems[index].categoryId}</p>
+                                            {formik.touched.donationProductItems?.[index]?.categoryId && formik.errors.donationProductItems?.[index]?.categoryId && (
+                                                <p className="text-red-500 text-sm mt-1">{formik.errors.donationProductItems[index].categoryId}</p>
                                             )}
                                         </div>
 
@@ -306,14 +325,14 @@ const AddDonation = () => {
                                                 isError={isErrorUnits}
                                                 setPage={setUnitPage}
                                                 setCatDebounceValue={setUnitDebounceValue}
-                                                text={edit ? formik.values.productItems?.[index]?.unitName : 'اختر الوحدة'}
+                                                text={edit ? formik.values.donationProductItems?.[index]?.unitName : 'اختر الوحدة'}
                                                 add={true}
                                                 addNewItem={addNewProductUnit}
                                                 addWait={addUnitPending}
                                                 queryKey={'productUnits'}
                                             />
-                                            {formik.touched.productItems?.[index]?.unitId && formik.errors.productItems?.[index]?.unitId && (
-                                                <p className="text-red-500 text-sm mt-1">{formik.errors.productItems[index].unitId}</p>
+                                            {formik.touched.donationProductItems?.[index]?.unitId && formik.errors.donationProductItems?.[index]?.unitId && (
+                                                <p className="text-red-500 text-sm mt-1">{formik.errors.donationProductItems[index].unitId}</p>
                                             )}
                                         </div>
 
@@ -327,7 +346,7 @@ const AddDonation = () => {
                                                 setPage={setPurposePage}
                                                 setCatDebounceValue={setPurposeDebounceValue}
                                                 text={edit ? 
-                                                    formik.values.productItems?.[index]?.donationPurposeName 
+                                                    formik.values.donationProductItems?.[index]?.donationPurposeName 
                                                     :
                                                     'اختر الغرض'}
                                                 add={true}
@@ -335,8 +354,8 @@ const AddDonation = () => {
                                                 addWait={addPurposePending}
                                                 queryKey={'donationPursposes'}
                                             />
-                                            {formik.touched.productItems?.[index]?.purposeId && formik.errors.productItems?.[index]?.purposeId && (
-                                                <p className="text-red-500 text-sm mt-1">{formik.errors.productItems[index].purposeId}</p>
+                                            {formik.touched.donationProductItems?.[index]?.donationPurposeId && formik.errors.donationProductItems?.[index]?.donationPurposeId && (
+                                                <p className="text-red-500 text-sm mt-1">{formik.errors.donationProductItems[index].donationPurposeId}</p>
                                             )}
                                         </div>
 
@@ -347,12 +366,12 @@ const AddDonation = () => {
                                                 type="number"
                                                 step="0.01"
                                                 min="0.01"
-                                                {...formik.getFieldProps(`productItems[${index}].amount`)}
-                                                className={`${formik.touched.productItems?.[index]?.amount && formik.errors.productItems?.[index]?.amount ? 'border-red-500 ' : ' '}
+                                                {...formik.getFieldProps(`donationProductItems[${index}].amount`)}
+                                                className={`${formik.touched.donationProductItems?.[index]?.amount && formik.errors.donationProductItems?.[index]?.amount ? 'border-red-500 ' : ' '}
                                                 p-2 py-1 bg-white`}
                                             />
-                                            {formik.touched.productItems?.[index]?.amount && formik.errors.productItems?.[index]?.amount && (
-                                                <p className="text-red-500 text-sm mt-1">{formik.errors.productItems[index].amount}</p>
+                                            {formik.touched.donationProductItems?.[index]?.amount && formik.errors.donationProductItems?.[index]?.amount && (
+                                                <p className="text-red-500 text-sm mt-1">{formik.errors.donationProductItems[index].amount}</p>
                                             )}
                                         </div>
                                     </div>
