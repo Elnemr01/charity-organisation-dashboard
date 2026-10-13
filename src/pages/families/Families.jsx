@@ -50,7 +50,7 @@ const Families = () => {
                         قائمة العائلات
                         </h2>
                         <Button className={'bg-secondary p-2'}>
-                            <Link to={'/families/add-info'} className='flex items-center'>
+                            <Link to={'/families/add'} className='flex items-center'>
                                 <Plus size={15} className=''/>
                                 <span className='mr-2'>إضافة عائلة</span>
                             </Link>
@@ -156,7 +156,7 @@ const Families = () => {
                                                 <Link to={`/families/${family.id}`}>
                                                     <Eye size={16} className='text-primary'/>
                                                 </Link>
-                                                <Link to={`/families/add`} state={{data:family,edit:true}}>
+                                                <Link to={`/families/edit/${family.id}`} state={{data:family,edit:true}}>
                                                     <Pen size={16} className='text-secondary'/>
                                                 </Link>
                                                 <DeleteModel

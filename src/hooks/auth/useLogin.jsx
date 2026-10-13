@@ -21,7 +21,7 @@ const useLogin = () => {
         },
         onError: (error)=> {
             console.log(error);
-            toast.error(error.response.data.message || 'حدث خطأ ما، يرجى المحاولة لاحقاً');
+            toast.error(error?.response?.data?.detail || 'حدث خطأ ما، يرجى المحاولة لاحقاً');
             
         }
     })
