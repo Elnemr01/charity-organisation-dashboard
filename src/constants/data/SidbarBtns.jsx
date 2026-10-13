@@ -8,6 +8,19 @@ export const sidebarBtns = [
       isParent: false,
     },
     {
+      label: 'العائلات',
+      icon: User,
+      isParent: true,
+      children: [
+        {
+          label: 'كل العائلات',
+          href: '/families',
+          icon: House
+        },
+        
+      ]
+    },
+    {
       label: 'التبرعات',
       icon: HandCoinsIcon,
       isParent: false,

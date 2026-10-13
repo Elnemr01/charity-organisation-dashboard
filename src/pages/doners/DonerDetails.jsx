@@ -185,7 +185,7 @@ const DonerDetails = () => {
                                                     <Link to={`/donations/${donation.id}`}>
                                                         <Eye size={16} className='text-primary'/>
                                                     </Link>
-                                                    <Link to={`/donations/edit/${donation.id}`}>
+                                                    <Link to={`/donations/add`} state={{data:donation,edit:true}}>
                                                         <Pen size={16} className='text-secondary'/>
                                                     </Link>
                                                     <DeleteModel

@@ -23,7 +23,7 @@ export const moneyTablehead = [
 
 
 export const moneyInventories = {
-    "Charity": 'الحميعيه',
+    "Charity": 'الجمعيه',
     "Treasurer": 'الامين',
     "Bank": 'البنك'
 }

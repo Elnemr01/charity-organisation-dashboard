@@ -20,6 +20,9 @@ import EditFamilyExpense from './pages/familyExpense/EditFamilyExpense'
 import CharityExpenseList from './pages/charityExpense/CharityExpenseList'
 import AddCharityExpense from './pages/charityExpense/AddCharityExpense'
 import CharityExpenseDetails from './pages/charityExpense/CharityExpenseDetails'
+import Families from './pages/families/Families'
+import AddFamilyInfo from './pages/families/AddFamilyInfo'
+import NotFound from './pages/not-found/NotFound'
 
 function App() {
 
@@ -58,6 +61,11 @@ function App() {
           <Route path='/charity-expense' element={<CharityExpenseList/>}/>
           <Route path='/charity-expense/add' element={<AddCharityExpense/>}/>
           <Route path='/charity-expense/:id' element={<CharityExpenseDetails/>}/>
+
+          <Route path='/families' element={<Families/>}/>
+          <Route path='/families/add-info' element={<AddFamilyInfo/>}/>
+          
+          <Route path='*' element={<NotFound/>}/>
 
         </Route>
       </Routes>
