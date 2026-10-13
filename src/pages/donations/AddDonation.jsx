@@ -137,18 +137,14 @@ const AddDonation = () => {
                     data:{...values}
                 }, {
                     onSuccess: () => {
-                        navigate('/donations');
-                        queryClient.invalidateQueries({ queryKey: ['donations'] });
-                        formik.resetForm();
+                        resetData();
                     },
                 });
             }
             else {
                 addDonation(values, {
                     onSuccess: () => {
-                        navigate('/donations');
-                        queryClient.invalidateQueries({ queryKey: ['donations'] });
-                        formik.resetForm();
+                        resetData();
                     },
                 });
             }
