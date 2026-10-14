@@ -7,8 +7,8 @@ const useEditFamily = () => {
     const { mutate: editFamily, isPending } = useMutation({
         mutationKey: ['editFamily'],
         mutationFn: (data) => editFamilyFn(data),
-        onError: () => {
-            toast.error('حدث خطأ برجاء المحاولة لاحقا')
+        onError: (error) => {
+            toast.error(error?.response?.data?.detail ||'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: () => {
             toast.success('تم تعديل العائلة بنجاح')

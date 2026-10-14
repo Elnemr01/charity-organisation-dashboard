@@ -105,11 +105,22 @@ const Families = () => {
                                         <TableCell className={'p-6'}>{family?.primaryReceiverName || 'لا يوجد'}</TableCell>
                                         <TableCell className={'p-6'}>{family?.region || 'لا يوجد'}</TableCell>
                                         <TableCell className={'p-6'}>
-                                            {family?.categories?.map((cat, idx) => (
-                                                <span key={idx} className="inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-blue-100 text-blue-800 mr-1 mb-1">
-                                                    {cat?.name || 'لا يوجد'}
-                                                </span>
-                                            ))}
+                                            <div className='flex flex-col gap-1 items-center justify-center'>
+                                                {
+                                                    family?.categories?.length === 0 ? (
+                                                        <span className="px-2.5 py-0.5 rounded-full font-medium bg-gray-100 text-gray-800">
+                                                            لا يوجد
+                                                        </span>
+                                                    )
+                                                    :
+                                                    family?.categories?.map((cat, idx) => (
+                                                        <span key={idx} className="px-2.5 py-0.5 rounded-full font-medium bg-blue-100 text-blue-800">
+                                                            {cat?.name || 'لا يوجد'}
+                                                        </span>
+                                                    ))
+
+                                                }
+                                            </div>
                                         </TableCell>
                                         <TableCell className={'p-6'}>{family?.casesCount || 0}</TableCell>
                                         <TableCell className={'p-6'}>

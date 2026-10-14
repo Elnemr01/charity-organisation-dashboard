@@ -19,6 +19,12 @@ export const familyEnumFilter = [
     { id: 'Pending', name: 'قيد الانتظار' },
 ]
 
+export const familyStatusOptions = [
+    { id: 'Accepted', name: 'مقبول' },
+    { id: 'Rejected', name: 'مرفوض' },
+    { id: 'Pending', name: 'قيد الانتظار' },
+]
+
 export const filterVals = [
     {
         id: 'name',
@@ -32,4 +38,12 @@ export const filterVals = [
         id: 'region',
         name: 'المنطقة',
     },
+    // {
+    //     id: 'region',
+    //     name: 'المنطقة',
+    // },
+    // {
+    //     id: 'region',
+    //     name: 'المنطقة',
+    // },
 ]

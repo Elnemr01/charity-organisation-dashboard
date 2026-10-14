@@ -1,10 +1,9 @@
 import Layout from '@/appComponents/layout/Layout';
-import Loading from '@/appComponents/models/Loading';
 import { useFormik } from 'formik';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useMemo, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import CategoryListFilter from '@/components/customUI/CategoryListFilter';
 import useGetAllAidCategories from '@/hooks/categories/aid/useGetAllAidCategories';
@@ -20,8 +19,12 @@ import {
   educationStatusOptions,
   genderOptions,
 } from '@/constants/families/familyEnums';
+import { familyStatusOptions } from '@/constants/families/familyConst';
+import FilterVals from '@/components/customUI/FilterVals';
 
 const AddFamily = () => {
+  const [familyCat,setFamilyCat] = useState([]);
+  const [caseCat,setCaseCat] = useState([[]]);
   const [catPage, setCatPage] = useState(1);
   const [catDebounceValue, setCatDebounceValue] = useState('');
 
@@ -33,11 +36,10 @@ const AddFamily = () => {
   const { addFamily, isPending } = useAddFamily();
   const { editFamily, isPending: editPending } = useEditFamily();
   const { addNewAidCategory, isPending: addCategoryPending } = useAddNewAidCategory();
-
+  const familyStatusOptionsArr=useMemo(()=>familyStatusOptions,[]);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const location = useLocation();
-  const params = useParams();
   const edit = location.state?.edit;
   const data = location.state?.data;
 
@@ -88,6 +90,8 @@ const AddFamily = () => {
       region: '',
       address: '',
       cashRequired: null,
+      decision: "Pending",
+      decisionReason:null,
       categoryIds: [],
       cases: [initialCase],
     },
@@ -129,6 +133,7 @@ const AddFamily = () => {
     },
   });
 
+
   const resetData = () => {
     navigate('/families');
     queryClient.invalidateQueries({ queryKey: ['families'] });
@@ -148,14 +153,41 @@ const AddFamily = () => {
     formik.setFieldValue('cases', newCases);
   };
 
+  // Handle family category selection
   const handleCategorySelect = (item) => {
-    formik.setFieldValue('categoryIds', item ? [item.id] : []);
+    formik.setFieldValue('categoryIds', [...formik.values.categoryIds, item.id]);
+    setFamilyCat((old)=> [...old, item.name]);
   };
 
+  const handleCategoryRemove = (i) => {
+    formik.setFieldValue('categoryIds', formik.values.categoryIds.filter((_, index) => index !== i));
+    setFamilyCat((old)=> old.filter((_, index) => index !== i));
+  };
+
+  // Handle case category selection
   const handleCaseCategorySelect = (index, item) => {
     const cases = [...formik.values.cases];
-    cases[index].categoryIds = item ? [item.id] : [];
+    cases[index].categoryIds = [...cases[index].categoryIds, item.id];
     formik.setFieldValue('cases', cases);
+
+    if(index >= caseCat.length) {
+      setCaseCat((old)=> [...old, [item.name]]);
+    } else {
+      const caseCats= [...caseCat];
+      caseCats[index] = [...caseCats[index], item.name];
+      setCaseCat(caseCats);
+    }
+  };
+
+  // handle case category removal
+  const handleCaseCategoryRemove = (caseIndex, catIndex) => {
+    const cases = [...formik.values.cases];
+    cases[caseIndex].categoryIds = cases[caseIndex].categoryIds.filter((_, index) => index !== catIndex);
+    formik.setFieldValue('cases', cases);
+
+    const caseCats= [...caseCat];
+    caseCats[caseIndex] = caseCats[caseIndex].filter((_, index) => index !== catIndex);
+    setCaseCat(caseCats);
   };
 
   const handlePrimaryReceiverChange = (index) => {
@@ -168,7 +200,7 @@ const AddFamily = () => {
 
   return (
     <Layout headerText={edit ? 'تعديل العائلة' : 'إضافة عائلة جديدة'}>
-      <div className="container py-10">
+      <div className="container py-10 mb-10">
         <div className="flex items-center gap-4 mb-8">
           <Link to="/families" className="flex items-center gap-2 text-secondary hover:text-primary">
             <ArrowLeft size={20} />
@@ -229,27 +261,63 @@ const AddFamily = () => {
               )}
             </div>
 
-            <div>
-              <label className="block mb-2">فئات المساعدة </label>
-              <CategoryListFilter
-                setCategoryName={handleCategorySelect}
-                response={aidCategories}
-                isLoading={isLoadingCategories}
-                isError={isErrorCategories}
-                setPage={setCatPage}
-                setCatDebounceValue={setCatDebounceValue}
-                text={edit && data?.categories?.[0] ? data.categories[0].name : 'اختر الفئة'}
-                add={true}
-                addNewItem={addNewAidCategory}
-                addWait={addCategoryPending}
-                queryKey={'aidCategories'}
+            <div >
+              <div className='flex items-center justify-between'>
+                <label className="block mb-2"> تصنيف العائله </label>
+                <CategoryListFilter
+                  setCategoryName={(item)=> handleCategorySelect(item,'family')}
+                  response={aidCategories}
+                  isLoading={isLoadingCategories}
+                  isError={isErrorCategories}
+                  setPage={setCatPage}
+                  setCatDebounceValue={setCatDebounceValue}
+                  text={edit && data?.categories?.[0] ? data.categories[0].name : 'اختر الفئة'}
+                  add={true}
+                  addNewItem={addNewAidCategory}
+                  addWait={addCategoryPending}
+                  queryKey={'aidCategories'}
+                />
+                {formik.touched.categoryIds && formik.errors.categoryIds && (
+                  <p className="text-red-500 text-sm mt-1">{formik.errors.categoryIds}</p>
+                )}
+              </div>
+                {
+                  familyCat.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {familyCat.map((cat, index) => (
+                        <span key={index} className="bg-secondary text-white px-3 py-1 rounded-full">
+                          {cat}
+                          <Trash2 size={12} className="inline-block ml-1 cursor-pointer mr-4 t"
+                          onClick={() => handleCategoryRemove(index)} />
+                        </span>
+                      ))}
+                    </div>
+                  )
+                }
+              </div>
+
+            <div className={'flex items-center justify-between'} >
+              <label htmlFor="decision">قرار الجمعيه</label>
+              <FilterVals
+              data={familyStatusOptionsArr}
+              setFilter={(item)=>formik.setFieldValue('decision',item.id)}
               />
-              {formik.touched.categoryIds && formik.errors.categoryIds && (
-                <p className="text-red-500 text-sm mt-1">{formik.errors.categoryIds}</p>
-              )}
             </div>
 
           </div>
+
+          <div className='flex flex-col gap-2'>
+            <label htmlFor="decisionReason">اسباب الرفض او القبول (ملاحظات)</label>
+            <textarea name="decisionReason"
+            onChange={formik.handleChange}
+            id="decisionReason"
+            className="p-2 border rounded-md h-30"
+            placeholder='اسباب الرفض او القبول (ملاحظات)'
+            >
+
+            </textarea>
+          </div>
+          
 
           <div className="space-y-4 my-8 border-t pt-6">
             <div className="flex items-center justify-between">
@@ -260,9 +328,20 @@ const AddFamily = () => {
             </div>
 
             {formik.values.cases.map((caseItem, index) => (
-              <div key={index} className="border rounded-lg p-4 bg-gray-50">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-medium">فرد #{index + 1}</h4>
+              <div key={index} className="border rounded-lg p-4 bg-gray-50 my-8">
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <h4 className="font-medium mb-4">فرد #{index + 1}</h4>
+                    <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      {...formik.getFieldProps(`cases[${index}].isPrimaryReceiver`)}
+                      onChange={() => handlePrimaryReceiverChange(index)}
+                      className="w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary"
+                    />
+                    <label className="text-sm">مستفيد رئيسي</label>
+                  </div>
+                  </div>
                   <Button
                     type="button"
                     variant="ghost"
@@ -433,35 +512,41 @@ const AddFamily = () => {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      {...formik.getFieldProps(`cases[${index}].isPrimaryReceiver`)}
-                      onChange={() => handlePrimaryReceiverChange(index)}
-                      className="w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary"
-                    />
-                    <label className="text-sm">مستفيد رئيسي</label>
-                  </div>
-
                   <div>
-                    <label className="block mb-2">فئة الحالة</label>
-                    <CategoryListFilter
-                      setCategoryName={(item) => handleCaseCategorySelect(index, item)}
-                      response={aidCategories}
-                      isLoading={isLoadingCategories}
-                      isError={isErrorCategories}
-                      setPage={setCatPage}
-                      setCatDebounceValue={setCatDebounceValue}
-                      text={formik.values.cases[index]?.categoryIds?.[0] ? 'محدد' : 'اختر الفئة'}
-                      add={true}
-                      addNewItem={addNewAidCategory}
-                      addWait={addCategoryPending}
-                      queryKey={'aidCategories'}
-                    />
-                    {formik.touched.cases?.[index]?.categoryIds && formik.errors.cases?.[index]?.categoryIds && (
-                      <p className="text-red-500 text-sm mt-1">{formik.errors.cases[index].categoryIds}</p>
-                    )}
-                  </div>
+                    <div className='flex itmes-center justify-between'>
+                      <label className="block mb-2">تصنيف الحالة</label>
+                      <CategoryListFilter
+                        setCategoryName={(item) => handleCaseCategorySelect(index, item)}
+                        response={aidCategories}
+                        isLoading={isLoadingCategories}
+                        isError={isErrorCategories}
+                        setPage={setCatPage}
+                        setCatDebounceValue={setCatDebounceValue}
+                        text={ 'اختر التصنيف'}
+                        add={true}
+                        addNewItem={addNewAidCategory}
+                        addWait={addCategoryPending}
+                        queryKey={'aidCategories'}
+                      />
+                      {formik.touched.cases?.[index]?.categoryIds && formik.errors.cases?.[index]?.categoryIds && (
+                        <p className="text-red-500 text-sm mt-1">{formik.errors.cases[index].categoryIds}</p>
+                      )}
+                    </div>
+                    {
+                      caseCat[index]?.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {caseCat[index]?.map((cat, catIndex) => (
+                            <span key={catIndex} className="bg-secondary text-white px-3 py-1 rounded-full">
+                              {cat}
+                              <Trash2 size={12} className="inline-block ml-1 cursor-pointer mr-4"
+                              onClick={()=> handleCaseCategoryRemove(index, catIndex)}
+                              />
+                            </span>
+                          ))}
+                        </div>
+                      )
+                    }
+                    </div>
                 </div>
               </div>
             ))}
