@@ -2,14 +2,13 @@ import Layout from '@/appComponents/layout/Layout';
 import { useFormik } from 'formik';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useMemo, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router';
+import { useCallback, useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router';
 import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import CategoryListFilter from '@/components/customUI/CategoryListFilter';
 import useGetAllAidCategories from '@/hooks/categories/aid/useGetAllAidCategories';
 import useAddFamily from '@/hooks/families/useAddFamily';
 import useAddNewAidCategory from '@/hooks/categories/aid/useAddNewAidCategory';
-import useEditFamily from '@/hooks/families/useEditFamily';
 import { familySchema } from '@/constants/schemas/familySchema';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
@@ -34,14 +33,10 @@ const AddFamily = () => {
   });
 
   const { addFamily, isPending } = useAddFamily();
-  const { editFamily, isPending: editPending } = useEditFamily();
   const { addNewAidCategory, isPending: addCategoryPending } = useAddNewAidCategory();
   const familyStatusOptionsArr=useMemo(()=>familyStatusOptions,[]);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const location = useLocation();
-  const edit = location.state?.edit;
-  const data = location.state?.data;
 
   const initialCase = useMemo(() => ({
     nationalId: '',
@@ -61,30 +56,7 @@ const AddFamily = () => {
   }), []);
 
   const formik = useFormik({
-    initialValues: edit && data ? {
-      name: data?.name || '',
-      primaryReceiverId: data?.primaryReceiverId || null,
-      region: data?.region || '',
-      address: data?.address || '',
-      cashRequired: data?.cashRequired || null,
-      categoryIds: data?.categoryIds || [],
-      cases: data?.cases?.map(c => ({
-        nationalId: c.nationalId || '',
-        name: c.name || '',
-        nickName: c.nickName || null,
-        gender: c.gender || null,
-        birthDate: c.birthDate || '',
-        maritalStatus: c.maritalStatus || null,
-        job: c.job || '',
-        jobIncome: c.jobIncome || null,
-        educationStatus: c.educationStatus || null,
-        healthStatus: c.healthStatus || '',
-        relationToFamily: c.relationToFamily || null,
-        phone: c.phone || '',
-        isPrimaryReceiver: c.isPrimaryReceiver || false,
-        categoryIds: c.categoryIds || [],
-      })) || [initialCase],
-    } : {
+    initialValues: {
       name: '',
       primaryReceiverId: null,
       region: '',
@@ -114,31 +86,20 @@ const AddFamily = () => {
       }
 
 
-      if (edit) {
-        editFamily({
-          id: data.id,
-          data: { ...values },
-        }, {
-          onSuccess: () => {
-            resetData();
-          },
-        });
-      } else {
         addFamily(values, {
           onSuccess: () => {
             resetData();
           },
         });
-      }
     },
   });
 
 
-  const resetData = () => {
+  const resetData =useCallback(()=> {
     navigate('/families');
     queryClient.invalidateQueries({ queryKey: ['families'] });
     formik.resetForm();
-  };
+  },[]);
 
   const addCase = () => {
     formik.setFieldValue('cases', [...formik.values.cases, initialCase]);
@@ -199,7 +160,7 @@ const AddFamily = () => {
   };
 
   return (
-    <Layout headerText={edit ? 'تعديل العائلة' : 'إضافة عائلة جديدة'}>
+    <Layout headerText={'إضافة عائلة جديدة'}>
       <div className="container py-10 mb-10">
         <div className="flex items-center gap-4 mb-8">
           <Link to="/families" className="flex items-center gap-2 text-secondary hover:text-primary">
@@ -271,7 +232,7 @@ const AddFamily = () => {
                   isError={isErrorCategories}
                   setPage={setCatPage}
                   setCatDebounceValue={setCatDebounceValue}
-                  text={edit && data?.categories?.[0] ? data.categories[0].name : 'اختر الفئة'}
+                  text={'اختر الفئة'}
                   add={true}
                   addNewItem={addNewAidCategory}
                   addWait={addCategoryPending}
@@ -556,8 +517,8 @@ const AddFamily = () => {
             <Link to="/families">
               <Button type="button" variant="outline">إلغاء</Button>
             </Link>
-            <Button type="submit" disabled={isPending || editPending} className="bg-secondary hover:bg-secondary">
-              {edit ? (editPending ? 'جاري تعديل العائلة...' : 'تعديل العائلة') : (isPending ? 'جاري إضافة العائلة...' : 'إضافة العائلة')}
+            <Button type="submit" disabled={isPending} className="bg-secondary hover:bg-secondary">
+              {isPending ? 'جاري إضافة العائلة...' : 'إضافة العائلة'}
             </Button>
           </div>
         </form>

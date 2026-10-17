@@ -23,9 +23,13 @@ import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import EnumFilter from '@/components/customUI/EnumFilter';
 import FilterVals from '@/components/customUI/FilterVals';
+import CategoryListFilter from '@/components/customUI/CategoryListFilter';
+import useGetAllCaseCategories from '@/hooks/categories/case/useGetAllCaseCategories';
 
 const Families = () => {
     const [page, setPage] = useState(1);
+    const [aidPage, setAidPage] = useState(1);
+    const [aidDebounceValue, setAidDebounceValue] = useState('');
     const [debounceValue, setDebounceValue] = useState('');
     const [searchColumn, setSearchColumn] = useState({});
     const [filter, setFilter] = useState({});
@@ -36,10 +40,21 @@ const Families = () => {
         Filter: filter,
     });
     const { deleteFamily, isPending } = useDeleteFamily();
+    const {caseCategories,isLoading: isCaseCategorLoading,isError: isCaseCategoryError} = useGetAllCaseCategories({
+        pageNumber: aidPage,
+        SearchValue: aidDebounceValue,
+    });
     const tablehead = useMemo(() => familyTablehead, [])
     const queryClient = useQueryClient();
     const familyEnumFilterArr = useMemo(() => familyEnumFilter, [])
     const filterValsArr = useMemo(() => filterVals, [])
+
+    const handleCategorySelect = (category) => {
+        setFilter(prevFilter => ({
+            ...prevFilter,
+            categoryId: category ? category.id : undefined
+        }));
+    };
 
     return (
         <Layout headerText={'إدارة العائلات'}>
@@ -67,12 +82,22 @@ const Families = () => {
                                 propertyName={'decision'}
                             />
 
+                            <CategoryListFilter
+                                setCategoryName={handleCategorySelect}
+                                response={caseCategories}
+                                isLoading={isCaseCategorLoading}
+                                isError={isCaseCategoryError}
+                                setPage={setAidPage}
+                                setCatDebounceValue={setAidDebounceValue}
+                                text={'تصنيف الحاله'}
+                            />
+
                             <FilterVals
                                 data={filterValsArr}
                                 value={searchColumn}
                                 setFilter={setSearchColumn}
                             />
-                            
+
                         </div>
                     </div>
                 </div>
@@ -113,11 +138,9 @@ const Families = () => {
                                                         </span>
                                                     )
                                                     :
-                                                    family?.categories?.map((cat, idx) => (
-                                                        <span key={idx} className="px-2.5 py-0.5 rounded-full font-medium bg-blue-100 text-blue-800">
-                                                            {cat?.name || 'لا يوجد'}
-                                                        </span>
-                                                    ))
+                                                    <span className="px-2.5 py-0.5 rounded-full font-medium bg-blue-100 text-blue-800">
+                                                        {family?.categories[0].name} {`${family?.categories?.length>=2 ? `+ ${family?.categories?.length-1}`: ''}` }
+                                                    </span>
 
                                                 }
                                             </div>
@@ -161,13 +184,13 @@ const Families = () => {
                                             )}
                                         </TableCell>
                                         <TableCell className={'p-6'}>{format(new Date(family?.createdOn), 'yyyy-MM-dd')}</TableCell>
-                                        <TableCell className={'p-6'}>{family?.updatedOn ? format(new Date(family?.updatedOn), 'yyyy-MM-dd') : format(new Date(family?.createdOn), 'yyyy-MM-dd')}</TableCell>
+                                        {/* <TableCell className={'p-6'}>{family?.updatedOn ? format(new Date(family?.updatedOn), 'yyyy-MM-dd') : format(new Date(family?.createdOn), 'yyyy-MM-dd')}</TableCell> */}
                                         <TableCell>
                                             <div className="flex items-center gap-4 justify-center">
                                                 <Link to={`/families/${family.id}`}>
                                                     <Eye size={16} className='text-primary'/>
                                                 </Link>
-                                                <Link to={`/families/edit/${family.id}`} state={{data:family,edit:true}}>
+                                                <Link to={`/families/edit`} state={{data:family,edit:true}}>
                                                     <Pen size={16} className='text-secondary'/>
                                                 </Link>
                                                 <DeleteModel

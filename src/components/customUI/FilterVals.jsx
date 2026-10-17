@@ -10,8 +10,8 @@ import {
 
 
 
-const FilterVals = ({data,setFilter}) => {
-    const [value,setValue]=useState("تصفيه");
+const FilterVals = ({data,setFilter,text}) => {
+    const [value,setValue]=useState(()=> text || 'تصفيه');
     return (
             <DropdownMenu dir='rtl'>
                 <DropdownMenuTrigger render={<Button variant="outline"

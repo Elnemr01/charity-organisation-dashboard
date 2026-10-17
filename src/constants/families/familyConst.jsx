@@ -8,9 +8,15 @@ export const familyTablehead = [
     'لديه جدول دخل وانفاق',
     'القرار',
     'تاريخ الإنشاء',
-    'تاريخ آخر تحديث',
+    // 'تاريخ آخر تحديث',
     'الإجراءات',
 ]
+
+export const familyDecision = {
+    "Accepted": "مقبول",
+    "Rejected": "مرفوض",
+    "Pending": "قيد الانتظار",
+}
 
 export const familyEnumFilter = [
     { id: null, name: 'الكل' },
