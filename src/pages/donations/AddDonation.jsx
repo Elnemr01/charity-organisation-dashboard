@@ -129,7 +129,6 @@ const AddDonation = () => {
                 return;
             }
 
-            console.log(values)
 
             if(edit) {
                 editDonation({
@@ -300,6 +299,7 @@ const AddDonation = () => {
                                                 isLoading={isLoadingCategories}
                                                 isError={isErrorCategories}
                                                 setPage={setCatPage}
+                                                showAll={false}
                                                 setCatDebounceValue={setCatDebounceValue}
                                                 text={edit ? formik.values.donationProductItems?.[index]?.categoryName : 'اختر الصنف'}
                                                 add={true}
@@ -320,6 +320,7 @@ const AddDonation = () => {
                                                 isLoading={isLoadingUnits}
                                                 isError={isErrorUnits}
                                                 setPage={setUnitPage}
+                                                showAll={false}
                                                 setCatDebounceValue={setUnitDebounceValue}
                                                 text={edit ? formik.values.donationProductItems?.[index]?.unitName : 'اختر الوحدة'}
                                                 add={true}
@@ -340,6 +341,7 @@ const AddDonation = () => {
                                                 isLoading={isLoadingPurposes}
                                                 isError={isErrorPurposes}
                                                 setPage={setPurposePage}
+                                                showAll={false}
                                                 setCatDebounceValue={setPurposeDebounceValue}
                                                 text={edit ? 
                                                     formik.values.donationProductItems?.[index]?.donationPurposeName 

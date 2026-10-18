@@ -20,6 +20,12 @@ import {
 } from '@/constants/families/familyEnums';
 import { familyStatusOptions } from '@/constants/families/familyConst';
 import FilterVals from '@/components/customUI/FilterVals';
+import useGetAllProductCategories from '@/hooks/categories/products/useGetAllProductCategories';
+import useGetAllProductUnits from '@/hooks/categories/productUnit/useGetAllProductUnits';
+import useGetAllDonationPurposes from '@/hooks/categories/donationPurpose/useGetAllDonationPurposes';
+import useAddNewProductCategory from '@/hooks/categories/products/useAddNewProductCategory';
+import useAddNewProductUnit from '@/hooks/categories/productUnit/useAddNewProductUnit';
+import useAddNewDonationPurpose from '@/hooks/categories/donationPurpose/useAddNewDonationPurpose';
 
 const AddFamily = () => {
   const [familyCat,setFamilyCat] = useState([]);
@@ -31,6 +37,35 @@ const AddFamily = () => {
     page: catPage,
     searchValue: catDebounceValue,
   });
+
+  const [productCatPage, setProductCatPage] = useState(1);
+  const [productCatDebounceValue, setProductCatDebounceValue] = useState('');
+
+  const [unitPage, setUnitPage] = useState(1);
+  const [unitDebounceValue, setUnitDebounceValue] = useState('');
+
+  const [purposePage, setPurposePage] = useState(1);
+  const [purposeDebounceValue, setPurposeDebounceValue] = useState('');
+
+
+  const { productCategories, isLoading: isLoadingProduct, isError: isErrorProduct } = useGetAllProductCategories({
+      page: productCatPage,
+      searchValue: productCatDebounceValue
+  });
+
+  const { productUnits, isLoading: isLoadingUnits, isError: isErrorUnits } = useGetAllProductUnits({
+      page: unitPage,
+      searchValue: unitDebounceValue
+  });
+
+  const { donationPursposes, isLoading: isLoadingPurposes, isError: isErrorPurposes } = useGetAllDonationPurposes({
+      page: purposePage,
+      searchValue: purposeDebounceValue
+  });
+
+  const { addNewProductCategory, isPending: addProductCategoryPending } = useAddNewProductCategory();
+  const { addNewProductUnit, isPending: addUnitPending } = useAddNewProductUnit();
+  const { addNewDonationPurpose, isPending: addPurposePending } = useAddNewDonationPurpose();
 
   const { addFamily, isPending } = useAddFamily();
   const { addNewAidCategory, isPending: addCategoryPending } = useAddNewAidCategory();
@@ -55,6 +90,15 @@ const AddFamily = () => {
     categoryIds: [],
   }), []);
 
+  const initialProductItem = useMemo(()=> {
+      return {
+          categoryId: null,
+          unitId: null,
+          purposeId: null,
+          amount: null,
+      };
+  },[])
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -66,6 +110,7 @@ const AddFamily = () => {
       decisionReason:null,
       categoryIds: [],
       cases: [initialCase],
+      familyRequiredItems:[]
     },
     validationSchema: familySchema,
     onSubmit: (values) => {
@@ -157,6 +202,27 @@ const AddFamily = () => {
       cases[i].isPrimaryReceiver = i === index;
     });
     formik.setFieldValue('cases', cases);
+  };
+
+  const addProductItem = () => {
+      formik.setFieldValue('familyRequiredItems', [...formik.values.familyRequiredItems, initialProductItem]);
+  };
+
+  const removeProductItem = (index) => {
+      const newItems = formik.values.familyRequiredItems.filter((_, i) => i !== index);
+      formik.setFieldValue('familyRequiredItems', newItems);
+  };
+
+  const handleProductCategorySelect = (index, item) => {
+      formik.setFieldValue(`familyRequiredItems[${index}].categoryId`, item.id);
+  };
+
+  const handleUnitSelect = (index, item) => {
+      formik.setFieldValue(`familyRequiredItems[${index}].unitId`, item.id);
+  };
+
+  const handlePurposeSelect = (index, item) => {
+      formik.setFieldValue(`familyRequiredItems[${index}].purposeId`, item.id);
   };
 
   return (
@@ -473,7 +539,8 @@ const AddFamily = () => {
                     )}
                   </div>
 
-                  <div>
+                </div>
+                  <div className="mt-4">
                     <div className='flex itmes-center justify-between'>
                       <label className="block mb-2">تصنيف الحالة</label>
                       <CategoryListFilter
@@ -507,11 +574,121 @@ const AddFamily = () => {
                         </div>
                       )
                     }
-                    </div>
-                </div>
+                  </div>
               </div>
             ))}
           </div>
+
+          {/* -------------- required items ----------------- */}
+
+          <div className="space-y-4 my-8">
+            <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">المساعده العينيه المطلوبه من العائله</h3>
+                <Button type="button" variant="outline" onClick={addProductItem} className="gap-2">
+                    <Plus size={16} /> إضافة صنف
+                </Button>
+            </div>
+
+            {formik.values.familyRequiredItems.map((item, index) => (
+                <div key={index} className="border rounded-lg p-4 bg-gray-50">
+                    <div className="flex items-center justify-between">
+                        <h4 className="font-medium">صنف #{index + 1}</h4>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeProductItem(index)}
+                                className="text-red-500 hover:text-red-500"
+                            >
+                                <Trash2 size={16} />
+                            </Button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <div>
+                            <label className="block mb-2">الصنف</label>
+                            <CategoryListFilter
+                                setCategoryName={(selected) => handleProductCategorySelect(index, selected)}
+                                response={productCategories}
+                                isLoading={isLoadingProduct}
+                                isError={isErrorProduct}
+                                setPage={setProductCatPage}
+                                setCatDebounceValue={setProductCatDebounceValue}
+                                text={'اختر الصنف'}
+                                showAll={false}
+                                add={true}
+                                addNewItem={addNewProductCategory}
+                                addWait={addProductCategoryPending}
+                                queryKey={'productCategories'}
+                            />
+                            {formik.touched.familyRequiredItems?.[index]?.categoryId && formik.errors.familyRequiredItems?.[index]?.categoryId && (
+                                <p className="text-red-500 text-sm mt-1">{formik.errors.familyRequiredItems[index].categoryId}</p>
+                            )}
+                        </div>
+
+                        <div>
+                            <label className="block mb-2">الوحدة</label>
+                            <CategoryListFilter
+                                setCategoryName={(selected) => handleUnitSelect(index, selected)}
+                                response={productUnits}
+                                isLoading={isLoadingUnits}
+                                isError={isErrorUnits}
+                                setPage={setUnitPage}
+                                setCatDebounceValue={setUnitDebounceValue}
+                                text={'اختر الوحدة'}
+                                showAll={false}
+                                add={true}
+                                addNewItem={addNewProductUnit}
+                                addWait={addUnitPending}
+                                queryKey={'productUnits'}
+                            />
+                            {formik.touched.familyRequiredItems?.[index]?.unitId && formik.errors.familyRequiredItems?.[index]?.unitId && (
+                                <p className="text-red-500 text-sm mt-1">{formik.errors.familyRequiredItems[index].unitId}</p>
+                            )}
+                        </div>
+
+                        <div>
+                            <label className="block mb-2">الغرض *</label>
+                            <CategoryListFilter
+                                setCategoryName={(selected) => handlePurposeSelect(index, selected)}
+                                response={donationPursposes}
+                                isLoading={isLoadingPurposes}
+                                isError={isErrorPurposes}
+                                setPage={setPurposePage}
+                                setCatDebounceValue={setPurposeDebounceValue}
+                                text={'اختر الغرض'}
+                                showAll={false}
+                                add={true}
+                                addNewItem={addNewDonationPurpose}
+                                addWait={addPurposePending}
+                                queryKey={'donationPursposes'}
+                            />
+                            {formik.touched.familyRequiredItems?.[index]?.purposeId && formik.errors.familyRequiredItems?.[index]?.purposeId && (
+                                <p className="text-red-500 text-sm mt-1">{formik.errors.familyRequiredItems[index].purposeId}</p>
+                            )}
+                        </div>
+
+                        <div>
+                            <label htmlFor={`amount-${index}`} className="block mb-2">الكمية *</label>
+                            <Input
+                                id={`amount-${index}`}
+                                type="number"
+                                step="0.01"
+                                min="0.01"
+                                {...formik.getFieldProps(`familyRequiredItems[${index}].amount`)}
+                                className={`${formik.touched.familyRequiredItems?.[index]?.amount && formik.errors.familyRequiredItems?.[index]?.amount ? 'border-red-500 ' : ' '}
+                                p-2 py-1 bg-white`}
+                            />
+                            {formik.touched.familyRequiredItems?.[index]?.amount && formik.errors.familyRequiredItems?.[index]?.amount && (
+                                <p className="text-red-500 text-sm mt-1">{formik.errors.familyRequiredItems[index].amount}</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            ))}
+                
+        </div>
+
 
           <div className="flex items-center justify-end gap-4 pt-4 border-t">
             <Link to="/families">

@@ -79,7 +79,7 @@ const CategoryListFilter = ({setCategoryName,response,isLoading,isError,setPage,
                         }
                         addNewItem({name: inputValue},{
                             onSuccess: ()=> {
-                                setInputValue('')
+                                setInputValue(()=> '')
                                 queryClient.invalidateQueries({queryKey: [queryKey]})
                             }
                         })
