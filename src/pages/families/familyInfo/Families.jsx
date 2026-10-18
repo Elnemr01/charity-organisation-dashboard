@@ -90,6 +90,7 @@ const Families = () => {
                                 setPage={setAidPage}
                                 setCatDebounceValue={setAidDebounceValue}
                                 text={'تصنيف الحاله'}
+                                showAll={true}
                             />
 
                             <FilterVals

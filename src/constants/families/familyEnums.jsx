@@ -25,6 +25,43 @@ export const genderOptions = [
   { id: 2, name: 'Female', label: 'أنثى' },
 ];
 
+export const genderObj= {
+  "Male": "ذكر",
+  "Female": "أنثى"
+}
+
+export const educationStatusObj= {
+  "PrimaryOrPreparatory": "ابتدائي أو إعدادي",
+  "SecondaryOrUniversity": "ثانوي أو جامعي",
+  "NoEducation": "بدون تعليم"
+}
+
+
+export const relationToFamiltObj= {
+  "Father": "أب",
+  "Mother": "أم",
+  "Husband": "زوج",
+  "Wife": "زوجة",
+  "Son": "ابن",
+  "Daughter": "ابنة"
+}
+
+
+export const maritalStatusObj= {
+  "Single": "أعزب",
+  "Married": "متزوج",
+  "Divorced": "مطلق",
+  "Widowed": "أرمل"
+}
+
+
+
+
+
+
+
+
+
 export const getRelationToFamilyLabel = (id) => {
   const option = relationToFamilyOptions.find((opt) => opt.id === id);
   return option ? option.label : '';

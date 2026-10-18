@@ -16,7 +16,7 @@ import toast from 'react-hot-toast'
 import { useQueryClient } from '@tanstack/react-query'
 
 const CategoryListFilter = ({setCategoryName,response,isLoading,isError,setPage,setCatDebounceValue
-    ,text,add,addNewItem,queryKey,addWait
+    ,text,add,addNewItem,queryKey,addWait,showAll
 }) => {
 
 
@@ -45,12 +45,13 @@ const CategoryListFilter = ({setCategoryName,response,isLoading,isError,setPage,
                         <Empty/>
                         :
                         <>
-                            {(text ==='تصفيه' || text === undefined) && <DropdownMenuItem className={'py-2 flex justify-center items-center cursor-pointer'}
-                            onClick={()=>{
-                                        setCategoryName({})
-                                        setVal(null)
-                                    }}>
-                                الكل
+                            {showAll &&
+                            <DropdownMenuItem className={'py-2 flex justify-center items-center cursor-pointer'}
+                                onClick={()=>{
+                                            setCategoryName({})
+                                            setVal(null)
+                                        }}>
+                                    الكل
                             </DropdownMenuItem>}
                             {response?.items?.map((item,index)=>(
                                 <DropdownMenuItem key={index} className={'py-2 flex justify-center items-center cursor-pointer'}

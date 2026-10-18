@@ -17,6 +17,11 @@ export const sidebarBtns = [
           href: '/families',
           icon: House
         },
+        {
+          label: 'كل الحالالت',
+          href: '/cases',
+          icon: User
+        },
         
       ]
     },
