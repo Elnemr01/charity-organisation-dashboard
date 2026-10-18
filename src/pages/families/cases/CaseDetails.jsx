@@ -1,6 +1,6 @@
 import Layout from '@/appComponents/layout/Layout';
 import useGetCaseById from '@/hooks/cases/useGetCaseById';
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import Loading from '@/appComponents/models/Loading';
 import Empty from '@/appComponents/models/Empty';
 import { format } from 'date-fns';
@@ -12,11 +12,18 @@ import {
 } from '@/constants/families/familyEnums';
 import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
+import useDeleteCase from '@/hooks/cases/useDeleteCase';
+import DeleteModel from '@/components/customUI/DeleteModel';
+import { Trash2 } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 
 const CaseDetails = () => {
+    const navigate = useNavigate();
+    const queryClient=useQueryClient();
     const { id } = useParams();
     const { familyCase, isLoading, isError } = useGetCaseById({ id });
     
+    const {deleteCase,isPending}=useDeleteCase();
 
     const gender = useMemo(()=> genderObj,[])
     const educationStatus = useMemo(()=> educationStatusObj,[])
@@ -33,7 +40,9 @@ const CaseDetails = () => {
             <div className="container py-10 mb-10">
                 {
                     isLoading ?
-                    <Empty message="حدث خطأ في تحميل البيانات" />
+                    <div className='flex items-center justify-center h-[70vh]'>
+                        <Loading/>
+                    </div>
                     :
                     !familyCase ?
                     <Empty message="الحالة غير موجودة" />
@@ -147,7 +156,29 @@ const CaseDetails = () => {
                                         )
                                     }
                                 </div>
-                            </div>
+                        </div>
+
+                        <div className="my-10 btns flex items-center gap-4">
+                            <DeleteModel
+                            message={'هل انت متأكد من حذف هذه الحاله من العائله ؟'}
+                            wait={isPending}
+                            deleteFun={()=>{
+                                deleteCase(caseItem.id);
+                                navigate("/cases");
+                                queryClient.invalidateQueries({ queryKey: ['cases'] });
+                            }}
+                            >
+                                <Button className={'bg-red-500 text-white border border-red-500'}>
+                                    <Trash2 size={16} className='text-white '/>
+                                    <span>حذف</span>
+                                </Button>
+                            </DeleteModel>
+                            <Button className={'bg-neutral'}>
+                                <Link to={`/cases/add`} state={{data:familyCase,edit:true}}>
+                                    تعديل
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
                 }
             </div>

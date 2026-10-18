@@ -15,14 +15,16 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Button } from '@/components/ui/button';
-import { Pen, Eye } from 'lucide-react';
+import { Pen, Eye, Trash2 } from 'lucide-react';
 import { caseTablehead } from '@/constants/cases/caseConst';
 import { maritalStatusObj, relationToFamiltObj } from '@/constants/families/familyEnums';
+import DeleteModel from '@/components/customUI/DeleteModel';
+import useDeleteCase from '@/hooks/cases/useDeleteCase';
 
 const FamilyDetails = () => {
     const { id } = useParams();
     const { family, isLoading, isError } = useGetFamilyById({ id: Number(id) });
-
+    const {deleteCase,isPending}=useDeleteCase();
 
     const maritalStatus = useMemo(()=> maritalStatusObj,[])
     const relationToFamily = useMemo(()=> relationToFamiltObj,[])
@@ -232,6 +234,19 @@ const FamilyDetails = () => {
                                                             <Link to={`/cases/${caseItem.id}`}>
                                                                 <Eye size={16} className='text-primary'/>
                                                             </Link>
+                                                            <Link to={`/cases/add`} state={{data:caseItem,edit:true}}>
+                                                                <Pen size={16} className='text-secondary'/>
+                                                            </Link>
+                                                            <DeleteModel
+                                                            message={'هل انت متأكد من حذف هذه الحاله من العائله ؟'}
+                                                            wait={isPending}
+                                                            deleteFun={()=>{
+                                                                deleteCase(caseItem.id);
+                                                                queryClient.invalidateQueries({ queryKey: ['cases'] });
+                                                            }}
+                                                            >
+                                                                <Trash2 size={16} className='text-red-500'/>
+                                                            </DeleteModel>
                                                         </div>
                                                     </TableCell>
                                                 </TableRow>

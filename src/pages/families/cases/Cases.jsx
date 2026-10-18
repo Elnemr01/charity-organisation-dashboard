@@ -15,13 +15,17 @@ import {
 import { caseTablehead, caseFilterVals } from '@/constants/cases/caseConst';
 import Empty from '@/appComponents/models/Empty';
 import { Link } from 'react-router';
-import { Eye } from 'lucide-react';
+import { Eye, Pen, Trash2 } from 'lucide-react';
 import FilterVals from '@/components/customUI/FilterVals';
 import useGetAllCaseCategories from '@/hooks/categories/case/useGetAllCaseCategories';
 import CategoryListFilter from '@/components/customUI/CategoryListFilter';
 import { maritalStatusObj, relationToFamiltObj } from '@/constants/families/familyEnums';
+import DeleteModel from '@/components/customUI/DeleteModel';
+import useDeleteCase from '@/hooks/cases/useDeleteCase';
+import { useQueryClient } from '@tanstack/react-query';
 
 const Cases = () => {
+    const queryClient = useQueryClient();
     const [page, setPage] = useState(1);
     const [catPage, setCatPage] = useState(1);
     const [catDebounceValue, setCatDebounceValue] = useState('');
@@ -34,6 +38,7 @@ const Cases = () => {
         searchColumn: debounceValue ? searchColumn?.id : undefined,
         Filter: filter,
     });
+    const {deleteCase,isPending}=useDeleteCase();
     const { caseCategories, isLoading: isCaseCategorLoading, isError: isCaseCategoryError } = useGetAllCaseCategories({
         pageNumber: catPage,
         SearchValue: catDebounceValue,
@@ -42,7 +47,7 @@ const Cases = () => {
     const filterValsArr = useMemo(() => caseFilterVals, [])
 
     const maritalStatus = useMemo(()=> maritalStatusObj,[])
-    const relationToFamily = useMemo(()=> relationToFamiltObj,[])
+    // const relationToFamily = useMemo(()=> relationToFamiltObj,[])
 
     const handleCategorySelect = (category) => {
         setFilter(prevFilter => ({
@@ -114,7 +119,6 @@ const Cases = () => {
                                         <TableCell className={'p-6'}>{maritalStatus[caseItem?.maritalStatus] || 'لا يوجد'}</TableCell>
                                         <TableCell className={'p-6'}>{caseItem?.job || 'لا يوجد'}</TableCell>
                                         <TableCell className={'p-6'}>{caseItem?.healthStatus || 'لا يوجد'}</TableCell>
-                                        <TableCell className={'p-6'}>{relationToFamily[caseItem?.relationToFamily] || 'لا يوجد'}</TableCell>
                                         <TableCell className={'p-6'}>{caseItem?.phone || 'لا يوجد'}</TableCell>
                                         <TableCell className={'p-6'}>{caseItem?.familyName || 'لا يوجد'}</TableCell>
                                         <TableCell className={'p-6'}>
@@ -139,6 +143,19 @@ const Cases = () => {
                                                 <Link to={`/cases/${caseItem.id}`}>
                                                     <Eye size={16} className='text-primary'/>
                                                 </Link>
+                                                <Link to={`/cases/add`} state={{data:caseItem,edit:true}}>
+                                                    <Pen size={16} className='text-secondary'/>
+                                                </Link>
+                                                <DeleteModel
+                                                message={'هل انت متأكد من حذف هذه الحاله من العائله ؟'}
+                                                wait={isPending}
+                                                deleteFun={()=>{
+                                                    deleteCase(caseItem.id);
+                                                    queryClient.invalidateQueries({ queryKey: ['cases'] });
+                                                }}
+                                                >
+                                                    <Trash2 size={16} className='text-red-500'/>
+                                                </DeleteModel>
                                             </div>
                                         </TableCell>
                                     </TableRow>

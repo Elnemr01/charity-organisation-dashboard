@@ -17,6 +17,7 @@ import {
   educationStatusOptions,
   genderOptions,
 } from '@/constants/families/familyEnums';
+import useEditCase from '@/hooks/cases/useEditCase';
 
 const AddCaseToFamily = () => {
   const [caseCat, setCaseCat] = useState([]);
@@ -29,16 +30,36 @@ const AddCaseToFamily = () => {
   });
 
 
-  const { addCase, isPending } = useAddCase();
+  const { addCase, isPending :addPending } = useAddCase();
+  const {editCase,isPending:editPending}=useEditCase();
   const { addNewCaseCategory, isPending: addCategoryPending } = useAddNewCaseCategory();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const location=useLocation();
   const familyId=location?.state?.familyId
+  const edit=location?.state?.edit
+  const data=location?.state?.data
+
+  console.log(data);
 
   const formik = useFormik({
-    initialValues: {
+    initialValues: edit ?{
+      nationalId: data?.nationalId || null,
+      name: data?.name || null,
+      nickName: data?.nickName || null,
+      gender: data?.gender || null,
+      birthDate: data?.birthDate || '',
+      maritalStatus: data?.maritalStatus || null,
+      job: data?.job || '',
+      jobIncome: data?.jobIncome || null,
+      educationStatus: data?.educationStatus || null,
+      healthStatus: data?.healthStatus || '',
+      relationToFamily: data?.relationToFamily || null,
+      phone: data?.phone || '',
+      categoryIds: data?.categories?.map((cat) => cat.id) || [],
+      familyId:data?.familyId
+      } : {
       nationalId: '',
       name: '',
       nickName: null,
@@ -52,11 +73,23 @@ const AddCaseToFamily = () => {
       relationToFamily: null,
       phone: '',
       categoryIds: [],
+      familyId
     },
     validationSchema: caseValidation,
     onSubmit: (values) => {
+      if(edit) {
+        editCase({
+          id: data?.id,
+          data: values
+        },{
+          onSuccess: () => {
+            resetData();
+          },
+        });
+        return;
+      }
       addCase(
-        {...values,familyId}, {
+        values, {
         onSuccess: () => {
           resetData();
         },
@@ -135,7 +168,7 @@ const AddCaseToFamily = () => {
               >
                 <option value="">اختر النوع</option>
                 {genderOptions.map((opt) => (
-                  <option key={opt.id} value={opt.id}>{opt.label}</option>
+                  <option key={opt.name} value={opt.name}>{opt.label}</option>
                 ))}
               </select>
               {formik.touched.gender && formik.errors.gender && (
@@ -164,7 +197,7 @@ const AddCaseToFamily = () => {
               >
                 <option value="">اختر الحالة الاجتماعية</option>
                 {maritalStatusOptions.map((opt) => (
-                  <option key={opt.id} value={opt.id}>{opt.label}</option>
+                  <option key={opt.name} value={opt.name}>{opt.label}</option>
                 ))}
               </select>
               {formik.touched.maritalStatus && formik.errors.maritalStatus && (
@@ -206,7 +239,7 @@ const AddCaseToFamily = () => {
               >
                 <option value="">اختر المستوى التعليمي</option>
                 {educationStatusOptions.map((opt) => (
-                  <option key={opt.id} value={opt.id}>{opt.label}</option>
+                  <option key={opt.name} value={opt.name}>{opt.label}</option>
                 ))}
               </select>
               {formik.touched.educationStatus && formik.errors.educationStatus && (
@@ -234,7 +267,7 @@ const AddCaseToFamily = () => {
               >
                 <option value="">اختر الصلة</option>
                 {relationToFamilyOptions.map((opt) => (
-                  <option key={opt.id} value={opt.id}>{opt.label}</option>
+                  <option key={opt.name} value={opt.name}>{opt.label}</option>
                 ))}
               </select>
               {formik.touched.relationToFamily && formik.errors.relationToFamily && (
@@ -294,8 +327,10 @@ const AddCaseToFamily = () => {
             <Link to="/cases">
               <Button type="button" variant="outline">إلغاء</Button>
             </Link>
-            <Button type="submit" disabled={isPending} className="bg-secondary hover:bg-secondary">
-              {isPending ? 'جاري إضافة الحالة...' : 'إضافة الحالة'}
+            <Button type="submit" disabled={editPending || addPending} className="bg-secondary hover:bg-secondary">
+              {
+                edit ? editPending ? 'جاري تعديل الحالة...' : 'تعديل الحالة' : addPending ? 'جاري إضافة الحالة...' : 'إضافة الحالة'
+              }
             </Button>
           </div>
         </form>
