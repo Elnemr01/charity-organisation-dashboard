@@ -21,6 +21,7 @@ import DeleteModel from '@/components/customUI/DeleteModel';
 import useDeleteCase from '@/hooks/cases/useDeleteCase';
 import FamilyRequiredItems from './FamilyRequiredItems';
 import { useQueryClient } from '@tanstack/react-query';
+import FamilyFinancialBudget from '../financialBudget/FamilyFinancialBudget';
 
 const FamilyDetails = () => {
     const { id } = useParams();
@@ -263,6 +264,13 @@ const FamilyDetails = () => {
                         <FamilyRequiredItems
                             requiredItems={family?.requiredItems || []}
                             familyId={family?.id}
+                        />
+
+
+                        <FamilyFinancialBudget
+                            familyId={family?.id}
+                            financialBudget={family?.financialBudget}
+                            hasFinancialBudget={family?.hasFinancialBudget}
                         />
                     </div>
                 }
