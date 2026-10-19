@@ -16,15 +16,17 @@ import {
 } from "@/components/ui/table"
 import { Button } from '@/components/ui/button';
 import { Pen, Eye, Trash2 } from 'lucide-react';
-import { caseTablehead } from '@/constants/cases/caseConst';
 import { maritalStatusObj, relationToFamiltObj } from '@/constants/families/familyEnums';
 import DeleteModel from '@/components/customUI/DeleteModel';
 import useDeleteCase from '@/hooks/cases/useDeleteCase';
+import FamilyRequiredItems from './FamilyRequiredItems';
+import { useQueryClient } from '@tanstack/react-query';
 
 const FamilyDetails = () => {
     const { id } = useParams();
     const { family, isLoading, isError } = useGetFamilyById({ id: Number(id) });
     const {deleteCase,isPending}=useDeleteCase();
+    const queryClient = useQueryClient();
 
     const maritalStatus = useMemo(()=> maritalStatusObj,[])
     const relationToFamily = useMemo(()=> relationToFamiltObj,[])
@@ -57,7 +59,7 @@ const FamilyDetails = () => {
 
     return (
         <Layout headerText={'تفاصيل العائلة'}>
-            <div className="container py-10">
+            <div className="container py-10 mb-10">
                 {
                     isLoading ?
                     <div className='flex items-center justify-center h-screen'>
@@ -257,6 +259,11 @@ const FamilyDetails = () => {
                                 )
                             }
                         </div>
+
+                        <FamilyRequiredItems
+                            requiredItems={family?.requiredItems || []}
+                            familyId={family?.id}
+                        />
                     </div>
                 }
             </div>

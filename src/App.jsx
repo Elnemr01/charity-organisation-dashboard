@@ -24,6 +24,7 @@ import NotFound from './pages/not-found/NotFound'
 import EditFamilyInfo from './pages/families/familyInfo/EditFamilyInfo'
 import FamilyDetails from './pages/families/familyInfo/FamilyDetails'
 import AddFamily from './pages/families/familyInfo/AddFamily'
+import AddRequiredItem from './pages/families/familyInfo/AddRequiredItem'
 import Families from './pages/families/familyInfo/Families'
 import Cases from './pages/families/cases/Cases'
 import CaseDetails from './pages/families/cases/CaseDetails'
@@ -71,6 +72,7 @@ function App() {
           <Route path='/families/:id' element={<FamilyDetails/>}/>
           <Route path='/families/add' element={<AddFamily/>}/>
           <Route path='/families/edit' element={<EditFamilyInfo/>}/>
+          <Route path='/families/required-items/add' element={<AddRequiredItem/>}/>
           
           <Route path='/cases' element={<Cases/>}/>
           <Route path='/cases/:id' element={<CaseDetails/>}/>
