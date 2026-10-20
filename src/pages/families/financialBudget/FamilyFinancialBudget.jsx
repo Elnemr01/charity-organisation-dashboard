@@ -4,7 +4,7 @@ import { Edit, Plus } from 'lucide-react'
 import React from 'react'
 import { Link } from 'react-router'
 
-const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget}) => {
+const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,cases}) => {
     return (
         <section id='familyFinancialBudget' className='bg-white rounded-lg shadow p-6'>
             <div className="flex items-center justify-between mb-6">
@@ -12,7 +12,7 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget}) =>
                 <div className="flex items-center gap-2">
                     {
                     !hasFinancialBudget ?
-                    <Link to={`/financial-budget/add`}>
+                    <Link to={`/financial-budget/add`} state={{cases}}>
                         <Button variant="outline"
                         className="gap-2 text-white bg-secondary hover:text-white flex items-center rounded-md cursor-pointer p-2 py-1">
                                 <Plus size={16} /> إضافة جدول دخل وانفاق
@@ -20,7 +20,7 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget}) =>
                     </Link>
                     :
                     <Link to={'/financial-budget/add'}
-                        state={{data:financialBudget,edit:true,familyId}} >
+                        state={{data:financialBudget,edit:true,familyId,cases}} >
                         <Button variant="outline"
                         className="text-white bg-neutral flex items-center  hover:text-white gap-2 rounded-md cursor-pointer p-2 py-1"
                         >

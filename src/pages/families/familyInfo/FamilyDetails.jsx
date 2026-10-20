@@ -271,6 +271,7 @@ const FamilyDetails = () => {
                             familyId={family?.id}
                             financialBudget={family?.financialBudget}
                             hasFinancialBudget={family?.hasFinancialBudget}
+                            cases={family?.cases || []}
                         />
                     </div>
                 }

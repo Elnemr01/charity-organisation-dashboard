@@ -5,13 +5,6 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { Button } from "@/components/ui/button"
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
     Table,
     TableBody,
     TableCell,
@@ -20,6 +13,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { financialBudgetTableHead } from '@/constants/financialBudget/financialBudget';
+import useGetAllFamilyExpenses from '@/hooks/familyExpense/useGetAllFamilyExpenses';
 
 const AddFamilyFinancialBudget = () => {
 
@@ -30,11 +24,13 @@ const AddFamilyFinancialBudget = () => {
     const edit=state?.edit;
     const data=state?.data;
     const familyId=state?.familyId;
+    const cases=state?.cases;
 
+    const {familyExpenses}=useGetAllFamilyExpenses();
 
     const financialBudgetTableHeadArr=useMemo(()=> financialBudgetTableHead,[])
 
-
+    console.log(familyExpenses)
 
 
     return (
@@ -53,44 +49,31 @@ const AddFamilyFinancialBudget = () => {
                             <TableRow className={'text-lg'}>
                                 {
                                     financialBudgetTableHead.map((e,i)=> 
-                                        <TableHead className={"text-center font-semibold p-4"}>{e}</TableHead>
+                                        <TableHead key={i} className={"text-center font-semibold p-4"}>{e}</TableHead>
                                     )
                                 }
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                         <TableRow>
-                            <TableCell className="font-medium">Wireless Mouse</TableCell>
-                            <TableCell>$29.99</TableCell>
-                            <TableCell className="text-right">
-                            <DropdownMenu>
-                                <DropdownMenuContent align="end">
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem variant="destructive">
-                                    Delete
-                                </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <TableCell className="">
+                                <div className='item flex justify-around items-center gap text-lg font-semibold'>
+                                    <label htmlFor="fatherIncome" className=''>دخل الأب</label>
+                                    <input type="number" id="fatherIncome" 
+                                    className='p-2 rounded-md border border-neutral outline-none bg--200'
+                                    />
+                                </div>
+                            </TableCell>
+                            <TableCell>
+                                <div className='item flex justify-around items-center gap text-lg font-semibold'>
+                                    <label htmlFor="fatherIncome" className=''>الضروريات ( {familyExpenses[3].amount || 0} للفرد )</label>
+                                    <input type="number" id="fatherIncome" 
+                                    className='p-2 rounded-md border border-neutral outline-none'
+                                    />
+                                </div>
                             </TableCell>
                         </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium">Mechanical Keyboard</TableCell>
-                            <TableCell>$129.99</TableCell>
-                            <TableCell className="text-right">
-                            <DropdownMenu>
-                                <DropdownMenuContent align="end">
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem variant="destructive">
-                                    Delete
-                                </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                            </TableCell>
-                        </TableRow>
+                        
                         
                         </TableBody>
                     </Table>
