@@ -1,0 +1,42 @@
+import * as yup from 'yup';
+
+export const financialBudgetSchema = yup.object().shape({
+  familyId: yup.number().required('معرف العائلة مطلوب').typeError('معرف العائلة مطلوب'),
+  fatherIncome: yup.number().required('دخل الأب مطلوب').typeError('دخل الأب مطلوب').min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر'),
+  motherIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  childrenIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  pensionIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  inheritanceOrPropertiesIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  permanentAidIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  temporaryAidIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  otherIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  basicNeedsExpenses: yup.number().required('مصاريف الضروريات مطلوبة').typeError('مصاريف الضروريات مطلوبة').min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر'),
+  utilitiesExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+  rentExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+  medicalExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+  basicEducationExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+  higherEducationExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+  debtExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+  irregularWorkEmergencyExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+});
+
+export const editFinancialBudgetSchema = yup.object().shape({
+  id: yup.number().required('معرف الميزانية مطلوب').typeError('معرف الميزانية مطلوب'),
+  familyId: yup.number().required('معرف العائلة مطلوب').typeError('معرف العائلة مطلوب'),
+  fatherIncome: yup.number().required('دخل الأب مطلوب').typeError('دخل الأب مطلوب').min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر'),
+  motherIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  childrenIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  pensionIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  inheritanceOrPropertiesIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  permanentAidIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  temporaryAidIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  otherIncome: yup.number().min(0, 'الدخل يجب أن يكون أكبر من أو يساوي صفر').default(0),
+  basicNeedsExpenses: yup.number().required('مصاريف الضروريات مطلوبة').typeError('مصاريف الضروريات مطلوبة').min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر'),
+  utilitiesExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+  rentExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+  medicalExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+  basicEducationExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+  higherEducationExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+  debtExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+  irregularWorkEmergencyExpenses: yup.number().min(0, 'المصاريف يجب أن تكون أكبر من أو يساوي صفر').default(0),
+});
