@@ -1,10 +1,38 @@
 import Empty from '@/appComponents/models/Empty'
 import { Button } from '@base-ui/react'
-import { Edit, Plus } from 'lucide-react'
-import React from 'react'
-import { Link } from 'react-router'
+import { Edit, Plus, Trash2 } from 'lucide-react'
+import React, { useCallback, useMemo } from 'react'
+import { data, Link, useNavigate } from 'react-router'
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import { expenseKeys, financialBudgetTableHead, incomeKeys } from '@/constants/financialBudget/financialBudget'
+import DeleteModel from '@/components/customUI/DeleteModel'
+import useDeleteFinancialBudget from '@/hooks/financialBudget/useDeleteFinancialBudget'
+import { useQueryClient } from '@tanstack/react-query'
+
+
+
+
+
 
 const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,cases}) => {
+
+    const financialBudgetTableHeadArr = useMemo(() => financialBudgetTableHead, []);
+    const incomeKeysArr = useMemo(() => incomeKeys, []);
+    const expenseKeysArr = useMemo(() => expenseKeys, []);
+
+    const queryClient=useQueryClient();
+    const {deleteFinancialBudget,isPending:deletePending}=useDeleteFinancialBudget();
+
+    const numberOfEductionalCases = useCallback((type) =>
+            cases?.filter((e) => e.type === type).length, [cases])
+
     return (
         <section id='familyFinancialBudget' className='bg-white rounded-lg shadow p-6'>
             <div className="flex items-center justify-between mb-6">
@@ -12,13 +40,32 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,case
                 <div className="flex items-center gap-2">
                     {
                     !hasFinancialBudget ?
-                    <Link to={`/financial-budget/add`} state={{cases}}>
+                    <Link to={`/financial-budget/add`} state={{cases,familyId}}>
                         <Button variant="outline"
                         className="gap-2 text-white bg-secondary hover:text-white flex items-center rounded-md cursor-pointer p-2 py-1">
                                 <Plus size={16} /> إضافة جدول دخل وانفاق
                         </Button>
                     </Link>
                     :
+                    <>
+                    <DeleteModel
+                        message={'هل انت متأكد من حذف هذا الجدول'}
+                        wait={deletePending}
+                        deleteFun={()=> {
+                            deleteFinancialBudget(financialBudget?.id, {
+                                onSuccess: ()=> {
+                                    queryClient.invalidateQueries({queryKey:['familyById']})
+                                }
+                            })
+                            
+                        }}
+                    >
+                        <Button variant="outline"
+                        className="text-white bg-red-600 flex items-center  hover:text-white gap-2 rounded-md cursor-pointer p-2 py-1"
+                        >
+                            <Trash2 size={16} /> حذف
+                        </Button>
+                    </DeleteModel>
                     <Link to={'/financial-budget/add'}
                         state={{data:financialBudget,edit:true,familyId,cases}} >
                         <Button variant="outline"
@@ -27,6 +74,7 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,case
                                 <Edit size={16} /> تعديل
                         </Button>
                     </Link>
+                    </>
                     }
                 </div>
             </div>
@@ -50,22 +98,26 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,case
                                 {/* father and basic needs */}
                             <TableRow>
                                 <TableCell className="">
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
                                         <label htmlFor="fatherIncome" className=''>دخل الأب</label>
-                                        <input type="number" id="fatherIncome" 
-                                        className='p-2 rounded-md border border-neutral outline-none bg--200'
-                                        />
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.fatherIncome || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
                                         <label htmlFor="basicNeedsExpenses" className='flex flex-col gap-2'>
-                                            <span>الضروريات ( {familyExpenses[3]?.amount || 0} للفرد )</span>
+                                            <span>الضروريات</span>
                                             <span className='text-sm'>يوجد {cases?.length || 0} حاله فى هذه العائله</span>
                                         </label>
-                                        <input type="number" id="basicNeedsExpenses" 
-                                        className='p-2 rounded-md border border-neutral outline-none'
-                                        />
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.basicNeedsExpenses || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -73,19 +125,24 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,case
                                 {/* mother and utilities */}
                             <TableRow>
                                 <TableCell className="">
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
                                         <label htmlFor="motherIncome" className=''>دخل الام</label>
-                                        <input type="number" id="motherIncome" 
-                                        className='p-2 rounded-md border border-neutral outline-none bg--200'
-                                        />
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.motherIncome || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
                                         <label htmlFor="utilitiesExpenses" className=''>مياه وكهرباء للاسره</label>
-                                        <input type="number" id="utilitiesExpenses" value={familyExpenses[2]?.amount || 0}
-                                        className='p-2 rounded-md border border-neutral outline-none' disabled
-                                        />
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.utilitiesExpenses || 0
+                                            }
+                                        </p>
+                                        
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -93,19 +150,24 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,case
                             {/* children and rent */}
                             <TableRow>
                                 <TableCell className="">
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
                                         <label htmlFor="childrenIncome" className=''>دخل الابناء</label>
-                                        <input type="number" id="childrenIncome" 
-                                        className='p-2 rounded-md border border-neutral outline-none bg--200'
-                                        />
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.childrenIncome || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
-                                        <label htmlFor="rentExpenses" className=''> الايجار ( اختيارى ) </label>
-                                        <input type="number" id="rentExpenses"
-                                        className='p-2 rounded-md border border-neutral outline-none'
-                                        />
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                        <label htmlFor="rentExpenses" className=''> الايجار </label>
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.rentExpenses || 0
+                                            }
+                                        </p>
+
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -113,19 +175,23 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,case
                             {/* pension and medical */}
                             <TableRow>
                                 <TableCell className="">
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
-                                        <label htmlFor="pensionIncome" className=''> المعاش ( اختيارى )</label>
-                                        <input type="number" id="pensionIncome" 
-                                        className='p-2 rounded-md border border-neutral outline-none bg--200'
-                                        />
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                        <label htmlFor="pensionIncome" className=''> المعاش</label>
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.pensionIncome || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
-                                        <label htmlFor="medicalExpenses" className=''> العلاج ( اختيارى ) </label>
-                                        <input type="number" id="medicalExpenses"
-                                        className='p-2 rounded-md border border-neutral outline-none'
-                                        />
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                        <label htmlFor="medicalExpenses" className=''> العلاج </label>
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.medicalExpenses || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -133,22 +199,26 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,case
                             {/* properties and basicEducationExpenses */}
                             <TableRow>
                                 <TableCell className="">
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
-                                        <label htmlFor="inheritanceOrPropertiesIncome" className=''> ميراث او املاك ( اختيارى )</label>
-                                        <input type="number" id="inheritanceOrPropertiesIncome" 
-                                        className='p-2 rounded-md border border-neutral outline-none bg--200'
-                                        />
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                        <label htmlFor="inheritanceOrPropertiesIncome" className=''> ميراث او املاك</label>
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.inheritanceOrPropertiesIncome || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
-                                        <label htmlFor="higherEducationExpenses" className='flex flex-col gap-2'>
-                                            <span>تعليم ابتدائى واعدادى ( {familyExpenses[0].amount} للفرد )</span>
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                        <label htmlFor="basicEducationExpenses" className='flex flex-col gap-2'>
+                                            <span>تعليم ابتدائى واعدادى</span>
                                             <span className='text-sm'>يوجد {numberOfEductionalCases('PrimaryOrPreparatory') || 0} طالب فى هذه المرحله</span>
                                         </label>
-                                        <input type="number" id="basicEducationExpenses"
-                                        className='p-2 rounded-md border border-neutral outline-none'
-                                        />
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.basicEducationExpenses || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -156,22 +226,26 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,case
                             {/* permanentAidIncome and higherEducationExpenses */}
                             <TableRow>
                                 <TableCell className="">
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
-                                        <label htmlFor="permanentAidIncome" className=''> مساعدات دائمه ( اختيارى )</label>
-                                        <input type="number" id="permanentAidIncome" 
-                                        className='p-2 rounded-md border border-neutral outline-none bg--200'
-                                        />
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                        <label htmlFor="permanentAidIncome" className=''> مساعدات دائمه </label>
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.permanentAidIncome || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
                                         <label htmlFor="higherEducationExpenses" className='flex flex-col gap-2'>
-                                            <span>تعليم ثانوى وجامعى ( {familyExpenses[1].amount} للفرد )</span>
+                                            <span>تعليم ثانوى وجامعى</span>
                                             <span className='text-sm'>يوجد {numberOfEductionalCases('SecondaryOrUniversity') || 0} طالب فى هذه المرحله</span>
                                         </label>
-                                        <input type="number" id="higherEducationExpenses"
-                                        className='p-2 rounded-md border border-neutral outline-none'
-                                        />
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.higherEducationExpenses || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -179,19 +253,23 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,case
                             {/* temporaryAidIncome and debtExpenses */}
                             <TableRow>
                                 <TableCell className="">
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
-                                        <label htmlFor="temporaryAidIncome" className=''>مساعدات مؤقته ( اختيارى )</label>
-                                        <input type="number" id="temporaryAidIncome" 
-                                        className='p-2 rounded-md border border-neutral outline-none bg--200'
-                                        />
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                        <label htmlFor="temporaryAidIncome" className=''>مساعدات مؤقته </label>
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.temporaryAidIncome || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
-                                        <label htmlFor="debtExpenses" className=''> الديون ( اختيارى ) </label>
-                                        <input type="number" id="debtExpenses"
-                                        className='p-2 rounded-md border border-neutral outline-none'
-                                        />
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                        <label htmlFor="debtExpenses" className=''> الديون </label>
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.debtExpenses || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -199,19 +277,46 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,case
                             {/* irregularWorkEmergencyExpenses and medical */}
                             <TableRow>
                                 <TableCell className="">
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
-                                        <label htmlFor="otherIncome" className=''> اخرى ( اختيارى )</label>
-                                        <input type="number" id="otherIncome" 
-                                        className='p-2 rounded-md border border-neutral outline-none bg--200'
-                                        />
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                        <label htmlFor="otherIncome" className=''> اخرى </label>
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.otherIncome || 0
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <div className='item flex justify-around items-center gap text-lg font-semibold'>
-                                        <label htmlFor="irregularWorkEmergencyExpenses" className=''> عماله غير منتظمه ( اختيارى ) </label>
-                                        <input type="number" id="irregularWorkEmergencyExpenses"
-                                        className='p-2 rounded-md border border-neutral outline-none'
-                                        />
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                        <label htmlFor="irregularWorkEmergencyExpenses" className=''> عماله غير منتظمه  </label>
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                financialBudget?.irregularWorkEmergencyExpenses || 0
+                                            }
+                                        </p>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                                    {/* total */}
+                            <TableRow>
+                                <TableCell className="">
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                        <label htmlFor="otherIncome" className=''> اجمالى الدخل </label>
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                incomeKeysArr.reduce((acc, key) => acc + (financialBudget[key] || 0), 0)
+                                            }
+                                        </p>
+                                    </div>
+                                </TableCell>
+                                <TableCell>
+                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                        <label htmlFor="irregularWorkEmergencyExpenses" className=''>اجمالى المصروفات </label>
+                                        <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                            {
+                                                expenseKeysArr.reduce((acc, key) => acc + (financialBudget[key] || 0), 0)
+                                            }
+                                        </p>
                                     </div>
                                 </TableCell>
                             </TableRow>

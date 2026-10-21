@@ -13,15 +13,13 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { financialBudgetTableHead } from '@/constants/financialBudget/financialBudget';
+import { expenseKeys, financialBudgetTableHead, incomeKeys } from '@/constants/financialBudget/financialBudget';
 import useGetAllFamilyExpenses from '@/hooks/familyExpense/useGetAllFamilyExpenses';
 import Loading from '@/appComponents/models/Loading';
 import Error from '@/appComponents/models/Error';
 import useAddFinancialBudget from '@/hooks/financialBudget/useAddFinancialBudget';
 import useEditFinancialBudget from '@/hooks/financialBudget/useEditFinancialBudget';
-import { financialBudgetSchema, editFinancialBudgetSchema } from '@/constants/schemas/financialBudgetSchema';
-import { Input } from '@/components/ui/input';
-import toast from 'react-hot-toast';
+import { editFinancialBudgetSchema } from '@/constants/schemas/financialBudgetSchema';
 
 const AddFamilyFinancialBudget = () => {
 
@@ -34,11 +32,15 @@ const AddFamilyFinancialBudget = () => {
     const familyId = state?.familyId;
     const cases = state?.cases;
 
+    console.log(familyId)
+
     const { familyExpenses, isLoading: isLoadingExp, isError: isErrorExp } = useGetAllFamilyExpenses();
     const { addNewFinancialBudget, isPending: addPending } = useAddFinancialBudget();
     const { editFinancialBudget, isPending: editPending } = useEditFinancialBudget();
 
     const financialBudgetTableHeadArr = useMemo(() => financialBudgetTableHead, [])
+    const incomeKeysArr = useMemo(() => incomeKeys, []);
+    const expenseKeysArr = useMemo(() => expenseKeys, []);
 
     const numberOfEductionalCases = useCallback((type) =>
         cases?.filter((e) => e.type === type).length, [cases])
@@ -61,33 +63,33 @@ const AddFamilyFinancialBudget = () => {
         higherEducationExpenses: data?.higherEducationExpenses || 0,
         debtExpenses: data?.debtExpenses || 0,
         irregularWorkEmergencyExpenses: data?.irregularWorkEmergencyExpenses || 0,
-    }), [data, familyId, familyExpenses]);
+    }), []);
 
-    const validationSchema = edit ? editFinancialBudgetSchema : financialBudgetSchema;
 
     const formik = useFormik({
         initialValues,
-        validationSchema,
+        validationSchema: editFinancialBudgetSchema,
         onSubmit: (values) => {
-            console.log(values)
-            // if (edit) {
-            //     editFinancialBudget({ id: data.id, data: values }, {
-            //         onSuccess: () => {
-            //             queryClient.invalidateQueries({ queryKey: ['financialBudgetById'] });
-            //             navigate(-1);
-            //         },
-            //     });
-            // } else {
-            //     addNewFinancialBudget(values, {
-            //         onSuccess: () => {
-            //             navigate(-1);
-            //         },
-            //     });
-            // }
+
+            if (edit) {
+                editFinancialBudget({ id: data.id, data: values }, {
+                    onSuccess: () => {
+                        queryClient.invalidateQueries({ queryKey: ['familyById'] });
+                        navigate(-1);
+                    },
+                });
+            } else {
+                addNewFinancialBudget(values, {
+                    onSuccess: () => {
+                        queryClient.invalidateQueries({ queryKey: ['familyById'] });
+                        navigate(-1);
+                    },
+                });
+            }
         },
     });
 
-    console.log(formik.errors)
+
 
 
 
@@ -145,7 +147,7 @@ const AddFamilyFinancialBudget = () => {
                                             </label>
                                             <input type="number" id="basicNeedsExpenses" name='basicNeedsExpenses'
                                             value={formik.values.basicNeedsExpenses} onChange={formik.handleChange}
-                                            className='p-2 rounded-md border border-neutral outline-none w-30'
+                                            className='p-2 rounded-md border border-neutral outline-none w-50'
                                             />
                                         </div>
                                         {
@@ -215,7 +217,7 @@ const AddFamilyFinancialBudget = () => {
                                 {/* pension and medical */}
                                 <TableRow>
                                     <TableCell className="">
-                                        <div className='item flex justify-around items-center gap text-lg font-semibold'>
+                                        <div className='item flex justify-between items-center gap text-lg font-semibold'>
                                             <label htmlFor="pensionIncome" className=''> المعاش ( اختيارى )</label>
                                             <input type="number" id="pensionIncome" name='pensionIncome'
                                             value={formik.values.pensionIncome}
@@ -229,7 +231,7 @@ const AddFamilyFinancialBudget = () => {
                                         }
                                     </TableCell>
                                     <TableCell>
-                                        <div className='item flex justify-around items-center gap text-lg font-semibold'>
+                                        <div className='item flex justify-between items-center gap text-lg font-semibold'>
                                             <label htmlFor="medicalExpenses" className=''> العلاج ( اختيارى ) </label>
                                             <input type="number" id="medicalExpenses" name='medicalExpenses'
                                             value={formik.values.medicalExpenses}
@@ -247,7 +249,7 @@ const AddFamilyFinancialBudget = () => {
                                 {/* properties and basicEducationExpenses */}
                                 <TableRow>
                                     <TableCell className="">
-                                        <div className='item flex justify-around items-center gap text-lg font-semibold'>
+                                        <div className='item flex justify-between items-center gap text-lg font-semibold'>
                                             <label htmlFor="inheritanceOrPropertiesIncome" className=''> ميراث او املاك ( اختيارى )</label>
                                             <input type="number" id="inheritanceOrPropertiesIncome" name='inheritanceOrPropertiesIncome'
                                             value={formik.values.inheritanceOrPropertiesIncome}
@@ -261,7 +263,7 @@ const AddFamilyFinancialBudget = () => {
                                         }
                                     </TableCell>
                                     <TableCell>
-                                        <div className='item flex justify-around items-center gap text-lg font-semibold'>
+                                        <div className='item flex justify-between items-center gap text-lg font-semibold'>
                                             <label htmlFor="higherEducationExpenses" className='flex flex-col gap-2'>
                                                 <span>تعليم ابتدائى واعدادى ( {familyExpenses[0].amount} للفرد )</span>
                                                 <span className='text-sm'>يوجد {numberOfEductionalCases('PrimaryOrPreparatory') || 0} طالب فى هذه المرحله</span>
@@ -377,6 +379,29 @@ const AddFamilyFinancialBudget = () => {
                                         }
                                     </TableCell>
                                 </TableRow>
+                                    {/* total */}
+                                <TableRow>
+                                    <TableCell className="">
+                                        <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                            <label htmlFor="otherIncome" className=''> اجمالى الدخل </label>
+                                            <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                                {
+                                                    incomeKeysArr.reduce((acc, key) => acc + (formik.values[key] || 0), 0)
+                                                }
+                                            </p>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                            <label htmlFor="irregularWorkEmergencyExpenses" className=''>اجمالى المصروفات </label>
+                                            <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
+                                                {
+                                                    expenseKeysArr.reduce((acc, key) => acc + (formik.values[key] || 0), 0)
+                                                }
+                                            </p>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
                                 
                                 
                                 </TableBody>
@@ -398,7 +423,7 @@ const AddFamilyFinancialBudget = () => {
                                     type='button'
                                     className='bg-neutral text-white py-4'
                                     onClick={() => navigate(-1)}
-                                    disabled={isPending}
+                                    disabled={editPending || addPending}
                                 >
                                     الغاء
                                 </Button>

@@ -49,7 +49,7 @@ const FamilyRequiredItems = ({ requiredItems = [],familyId }) => {
             </div>
 
             {requiredItems.length === 0 ? (
-                <Empty text={'لا توجد ماسعدات عينيه مطلوبه'}/>
+                <Empty text={'لا توجد مساعدات عينيه مطلوبه'}/>
             ) : (
                 <div className="overflow-x-auto">
                     <Table className="p-4">
