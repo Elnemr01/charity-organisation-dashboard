@@ -30,6 +30,7 @@ import Cases from './pages/families/cases/Cases'
 import CaseDetails from './pages/families/cases/CaseDetails'
 import AddCaseToFamily from './pages/families/cases/AddCaseToFamily'
 import AddFamilyFinancialBudget from './pages/families/financialBudget/AddFamilyFinancialBudget'
+import AddSocialAssessment from './pages/families/socialAssessment/AddSocialAssessment'
 
 function App() {
 
@@ -80,6 +81,7 @@ function App() {
           <Route path='/cases/add' element={<AddCaseToFamily/>}/>
 
           <Route path='/financial-budget/add' element={<AddFamilyFinancialBudget/>}/>
+          <Route path='/social-assessment/add' element={<AddSocialAssessment/>}/>
           
           <Route path='*' element={<NotFound/>}/>
 

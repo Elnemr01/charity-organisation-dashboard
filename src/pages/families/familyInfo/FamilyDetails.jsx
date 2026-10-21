@@ -22,6 +22,7 @@ import useDeleteCase from '@/hooks/cases/useDeleteCase';
 import FamilyRequiredItems from './FamilyRequiredItems';
 import { useQueryClient } from '@tanstack/react-query';
 import FamilyFinancialBudget from '../financialBudget/FamilyFinancialBudget';
+import FamilySocialAssessment from '../socialAssessment/FamilySocialAssessment';
 
 const FamilyDetails = () => {
     const { id } = useParams();
@@ -76,10 +77,10 @@ const FamilyDetails = () => {
                     <div className="space-y-8">
                         <div className="bg-white rounded-lg shadow p-6">
                             <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-2xl font-semibold">{family?.name || 'بدون اسم'}</h2>
+                                <h2 className="text-2xl font-semibold">المعلومات الاساسيه للعائله </h2>
                                 <Link to={`/families/edit`} state={{ data: family, edit: true }} 
                                 >
-                                    <Button variant="outline" className="gap-2 bg-secondary text-white hover:text-white cursor-pointer">
+                                    <Button variant="outline" className="gap-2 bg-neutral text-white hover:text-white cursor-pointer">
                                         <Pen size={16} /> تعديل العائلة
                                     </Button>
                                 </Link>
@@ -271,6 +272,13 @@ const FamilyDetails = () => {
                             familyId={family?.id}
                             financialBudget={family?.financialBudget}
                             hasFinancialBudget={family?.hasFinancialBudget}
+                            cases={family?.cases || []}
+                        />
+
+                        <FamilySocialAssessment
+                            familyId={family?.id}
+                            socialAssessment={family?.socialAssessment}
+                            hasSocialAssessment={family?.hasSocialAssessment}
                             cases={family?.cases || []}
                         />
                     </div>
