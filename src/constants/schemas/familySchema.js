@@ -24,9 +24,19 @@ const familtRequiredItemSchema=yup.object().shape({
   amount : yup.number().required('الكمية مطلوبة').typeError('الكمية مطلوبة').positive('الكمية يجب أن تكون أكبر من صفر').min(0.01, 'الكمية يجب أن تكون أكبر من صفر'),
 })
 
-export const editFamiltRequiredItemSchema=yup.object().shape({
-  familyRequiredItems : yup.array().of(familtRequiredItemSchema).nullable().transform((value) => (Array.isArray(value) && value.length === 0 ? null : value)),
+
+const editfamiltRequiredItemSchema=yup.object().shape({
+  productCategoryId : yup.number().required('الصنف مطلوب').typeError('الصنف مطلوب'),
+  unitId : yup.number().required('الوحدة مطلوبة').typeError('الوحدة مطلوبة'),
+  donationPurposeId : yup.number().required('الغرض مطلوب').typeError('الغرض مطلوب'),
+  amount : yup.number().required('الكمية مطلوبة').typeError('الكمية مطلوبة').positive('الكمية يجب أن تكون أكبر من صفر').min(0.01, 'الكمية يجب أن تكون أكبر من صفر'),
 })
+
+
+export const editFamiltRequiredItemSchema=yup.object().shape({
+  familyRequiredItems : yup.array().of(editfamiltRequiredItemSchema).nullable().transform((value) => (Array.isArray(value) && value.length === 0 ? null : value)),
+})
+
 
 export const familySchema = yup.object().shape({
   name: yup.string().required('اسم العائلة مطلوب'),

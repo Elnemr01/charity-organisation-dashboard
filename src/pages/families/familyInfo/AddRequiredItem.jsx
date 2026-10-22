@@ -14,13 +14,16 @@ import useAddNewProductUnit from '@/hooks/categories/productUnit/useAddNewProduc
 import useAddNewDonationPurpose from '@/hooks/categories/donationPurpose/useAddNewDonationPurpose';
 import { editFamiltRequiredItemSchema } from '@/constants/schemas/familySchema';
 import useAddProductItem from '@/hooks/productItems/useAddProductItem';
+import { useQueryClient } from '@tanstack/react-query';
+import useEditProductItem from '@/hooks/productItems/useEditProductItem';
 
 const AddRequiredItem = () => {
+    const queryClient = useQueryClient();
     const location = useLocation();
     const navigate = useNavigate();
-    const isEditMode = location.state?.edit === true;
+    const isEditMode = location.state?.isEditMode === true;
     const familyId = location.state?.familyId || null;
-    const editItems = useMemo(() => location.state?.data || [], [location.state?.data]);
+    const editItems = useMemo(() => location.state?.editItems || [], [location.state?.editItems]);
 
     const [productCatPage, setProductCatPage] = useState(1);
     const [productCatDebounceValue, setProductCatDebounceValue] = useState('');
@@ -51,32 +54,40 @@ const AddRequiredItem = () => {
     const { addNewDonationPurpose, isPending: addPurposePending } = useAddNewDonationPurpose();
 
 
-
-    const {addNewProductItem,isPending : addPending}=useAddProductItem();
-    const {editProductItem,isPending : editPending}=useAddProductItem();
+    const {editProductItem,isPending : editPending}=useEditProductItem();
 
     const initialProductItem = useMemo(() => {
         return {
-            categoryId: null,
+            productCategoryId: null,
             unitId: null,
-            purposeId: null,
+            donationPurposeId: null,
             amount: null,
         };
     }, []);
 
+    console.log(editItems)
+
     const formik = useFormik({
         initialValues: {
-            familyRequiredItems: isEditMode && editItems.length > 0 ? editItems : [],
+            familyRequiredItems: editItems ? editItems.map((item)=> {
+                return {
+                    productCategoryId: item.productItemId,
+                    unitId: item.unitId,
+                    donationPurposeId: item.donationPurposeId,
+                    amount: item.amount,
+                }
+            }) : [],
         },
         validationSchema: editFamiltRequiredItemSchema,
         onSubmit: (values) => {
             console.log(values)
-            if(isEditMode) {
-
-            }
-            else {
-
-            }
+            editProductItem({ id:familyId, data: values.familyRequiredItems },{
+                onSuccess: ()=> {
+                    formik.resetForm();
+                    queryClient.invalidateQueries({ queryKey: ['familyById'] });
+                    navigate(-1);
+                }
+            })
         },
     });
 
@@ -91,17 +102,17 @@ const AddRequiredItem = () => {
     };
 
     const handleProductCategorySelect = (index, item) => {
-        formik.setFieldValue(`familyRequiredItems[${index}].categoryId`, item.id);
-        formik.setFieldValue(`familyRequiredItems[${index}].itemName`, item.name);
+        formik.setFieldValue(`familyRequiredItems[${index}].productCategoryId`, item.id);
+        // formik.setFieldValue(`familyRequiredItems[${index}].itemName`, item.name);
     };
 
     const handleUnitSelect = (index, item) => {
         formik.setFieldValue(`familyRequiredItems[${index}].unitId`, item.id);
-        formik.setFieldValue(`familyRequiredItems[${index}].unitName`, item.name);
+        // formik.setFieldValue(`familyRequiredItems[${index}].unitName`, item.name);
     };
 
     const handlePurposeSelect = (index, item) => {
-        formik.setFieldValue(`familyRequiredItems[${index}].purposeId`, item.id);
+        formik.setFieldValue(`familyRequiredItems[${index}].donationPurposeId`, item.id);
     };
 
     const headerText = isEditMode ? 'تعديل الأصناف المطلوبة' : 'إضافة أصناف مطلوبة';
@@ -110,7 +121,7 @@ const AddRequiredItem = () => {
         <Layout headerText={headerText}>
             <div className="container py-10 mb-10">
                 <div className="flex items-center gap-4 mb-8">
-                    <Link to="/families" className="flex items-center gap-2 text-secondary hover:text-primary">
+                    <Link to={`/families/${familyId}`} className="flex items-center gap-2 text-secondary hover:text-primary">
                         <ArrowLeft size={20} />
                         <span>العودة للقائمة</span>
                     </Link>
@@ -150,15 +161,15 @@ const AddRequiredItem = () => {
                                             isError={isErrorProduct}
                                             setPage={setProductCatPage}
                                             setCatDebounceValue={setProductCatDebounceValue}
-                                            text={'اختر الصنف'}
+                                            text={editItems?.[index]?.itemName || 'اختر الصنف'}
                                             showAll={false}
                                             add={true}
                                             addNewItem={addNewProductCategory}
                                             addWait={addProductCategoryPending}
                                             queryKey={'productCategories'}
                                         />
-                                        {formik.touched.familyRequiredItems?.[index]?.categoryId && formik.errors.familyRequiredItems?.[index]?.categoryId && (
-                                            <p className="text-red-500 text-sm mt-1">{formik.errors.familyRequiredItems[index].categoryId}</p>
+                                        {formik.touched.familyRequiredItems?.[index]?.productCategoryId && formik.errors.familyRequiredItems?.[index]?.productCategoryId && (
+                                            <p className="text-red-500 text-sm mt-1">{formik.errors.familyRequiredItems[index].productCategoryId}</p>
                                         )}
                                     </div>
 
@@ -171,7 +182,7 @@ const AddRequiredItem = () => {
                                             isError={isErrorUnits}
                                             setPage={setUnitPage}
                                             setCatDebounceValue={setUnitDebounceValue}
-                                            text={'اختر الوحدة'}
+                                            text={editItems?.[index]?.unitName ||'اختر الوحدة'}
                                             showAll={false}
                                             add={true}
                                             addNewItem={addNewProductUnit}
@@ -192,15 +203,15 @@ const AddRequiredItem = () => {
                                             isError={isErrorPurposes}
                                             setPage={setPurposePage}
                                             setCatDebounceValue={setPurposeDebounceValue}
-                                            text={'اختر الغرض'}
+                                            text={editItems?.[index]?.donationPurposeName ||'اختر الغرض'}
                                             showAll={false}
                                             add={true}
                                             addNewItem={addNewDonationPurpose}
                                             addWait={addPurposePending}
                                             queryKey={'donationPursposes'}
                                         />
-                                        {formik.touched.familyRequiredItems?.[index]?.purposeId && formik.errors.familyRequiredItems?.[index]?.purposeId && (
-                                            <p className="text-red-500 text-sm mt-1">{formik.errors.familyRequiredItems[index].purposeId}</p>
+                                        {formik.touched.familyRequiredItems?.[index]?.donationPurposeId && formik.errors.familyRequiredItems?.[index]?.donationPurposeId && (
+                                            <p className="text-red-500 text-sm mt-1">{formik.errors.familyRequiredItems[index].donationPurposeId}</p>
                                         )}
                                     </div>
 
@@ -229,11 +240,10 @@ const AddRequiredItem = () => {
                         <Button type="button" variant="outline" onClick={() => navigate(-1)}>
                             إلغاء
                         </Button>
-                        <Button type="submit" className="bg-secondary hover:bg-secondary">
-                            {isEditMode ? 
-                            editPending ? 'جاري التعديل...' : 'تعديل'
-                        : addPending ? 'جاري الإضافة...' : 'إضافة'
-                        }
+                        <Button type="submit"
+                        disabled={editPending}
+                        className="bg-secondary hover:bg-secondary">
+                            {editPending ? 'جاري التعديل...' : 'تعديل'}
                         </Button>
                     </div>
                 </form>

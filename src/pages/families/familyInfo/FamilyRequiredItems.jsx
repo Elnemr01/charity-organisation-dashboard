@@ -19,12 +19,8 @@ const FamilyRequiredItems = ({ requiredItems = [],familyId }) => {
     const navigate = useNavigate();
     const queryClient=useQueryClient();
 
-    const handleAdd = () => {
-        navigate(`/families/required-items/add`);
-    };
-
-    const handleEdit = () => {
-        navigate(`/families/required-items/add`, { state: { data: requiredItems, edit: true ,familyId} });
+    const handleNavigate = () => {
+        navigate(`/families/required-items/add`, { state: { editItems: requiredItems, isEditMode: true ,familyId} });
     };
 
     const {deleteProductItem,isPending : isDeletePending}=useDeleteProductItem()
@@ -36,14 +32,14 @@ const FamilyRequiredItems = ({ requiredItems = [],familyId }) => {
                 <div className="flex items-center gap-2">
                     {
                         requiredItems.length <= 0 ?
-                            <Button variant="outline" onClick={handleAdd}
+                            <Button variant="outline" onClick={handleNavigate}
                             className="gap-2 text-white bg-secondary hover:text-white cursor-pointer">
                                 <Plus size={16} /> إضافة صنف
                             </Button>
-                        :
+                        :   
                         <Button variant="outline" 
                         className="text-white bg-neutral hover:text-white gap-2 cursor-pointer"
-                        onClick={handleEdit} >
+                        onClick={handleNavigate} >
                             <Edit size={16} /> تعديل
                         </Button>
                     }
