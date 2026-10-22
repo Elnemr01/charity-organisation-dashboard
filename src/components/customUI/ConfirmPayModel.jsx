@@ -43,6 +43,8 @@ const ConfirmPayModel = ({ children, message, wait, onConfirm, inventoryTypes,da
         validationSchema: paySchema,
         onSubmit: (values) => {
             onConfirm(values);
+            console.log(values);
+            formik.resetForm();
         },
     });
 
@@ -54,64 +56,72 @@ const ConfirmPayModel = ({ children, message, wait, onConfirm, inventoryTypes,da
                     <DialogTitle className={'text-lg'}>{message}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={formik.handleSubmit} className="space-y-4 p-4">
-                    <div className='flex items-center justify-between'>
-                        <label htmlFor="cashInventoryType" className="block mb-2 text-lg">نوع الخزنة </label>
-                        <DropdownMenu dir='rtl'>
-                            <DropdownMenuTrigger render={<Button variant="outline"
-                            className={" hover:text-secondary rounded-md text-secondary border-secondary border"}>
-                                {inventoryType || 'الخزنه'}
-                            </Button>} />
-                            <DropdownMenuContent className="w-40" align="center" dir='rtl'>
-                                <DropdownMenuGroup className={'flex flex-col gap-2 p-2 justify-center items-center w-full'}>
-                                    {inventoryTypes.map((item,index)=>(
-                                        <DropdownMenuItem key={index} className={'py-2 flex justify-center items-center cursor-pointer'}
-                                        onClick={(e)=>{
-                                            setType(item.name);
-                                            formik.setFieldValue('cashInventoryType', item.id);
-                                        }}>
-                                            {item.name}
-                                        </DropdownMenuItem>
-                                    ))}
-                                </DropdownMenuGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                    <div>
+                        <div className='flex items-center justify-between'>
+                            <label htmlFor="cashInventoryType" className="block mb-2 text-lg">نوع الخزنة </label>
+                            <DropdownMenu dir='rtl'>
+                                <DropdownMenuTrigger render={<Button variant="outline"
+                                className={" hover:text-secondary rounded-md text-secondary border-secondary border"}>
+                                    {inventoryType || 'الخزنه'}
+                                </Button>} />
+                                <DropdownMenuContent className="w-40" align="center" dir='rtl'>
+                                    <DropdownMenuGroup className={'flex flex-col gap-2 p-2 justify-center items-center w-full'}>
+                                        {inventoryTypes.map((item,index)=>(
+                                            <DropdownMenuItem key={index} className={'py-2 flex justify-center items-center cursor-pointer'}
+                                            onClick={(e)=>{
+                                                setType(item.name);
+                                                formik.setFieldValue('cashInventoryType', item.id);
+                                            }}>
+                                                {item.name}
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                         {formik.touched.cashInventoryType && formik.errors.cashInventoryType && (
                             <p className="text-red-500 text-lg mt-1">{formik.errors.cashInventoryType}</p>
                         )}
+
                     </div>
-                    <div className='flex items-center justify-between'>
-                        <label htmlFor="donationPurposeId" className="block mb-2 text-lg">الغرض </label>
-                        <CategoryListFilter
-                            text={donationPurpose}
-                            response={donationPursposes}
-                            isError={isError}
-                            isLoading={isLoading}
-                            setPage={setPage}
-                            setCatDebounceValue={setDebounce}
-                            add={false}
-                            setCategoryName={(item)=>{
-                                setDonationPurpose(item.name);
-                                formik.setFieldValue('donationPurposeId', item.id);
-                            }}
-                            
-                        />
+                    <div>
+                        <div className='flex items-center justify-between'>
+                            <label htmlFor="donationPurposeId" className="block mb-2 text-lg">الغرض </label>
+                            <CategoryListFilter
+                                text={donationPurpose}
+                                response={donationPursposes}
+                                isError={isError}
+                                isLoading={isLoading}
+                                setPage={setPage}
+                                setCatDebounceValue={setDebounce}
+                                add={false}
+                                setCategoryName={(item)=>{
+                                    setDonationPurpose(item.name);
+                                    formik.setFieldValue('donationPurposeId', item.id);
+                                }}
+                                
+                            />
+                        </div>
                         {formik.touched.donationPurposeId && formik.errors.donationPurposeId && (
                             <p className="text-red-500 text-lg mt-1">{formik.errors.donationPurposeId}</p>
                         )}
                     </div>
-                    <div className='flex items-center justify-between gap-4'>
-                        <label htmlFor="amount" className="block mb-2 text-lg">المبلغ</label>
-                        <Input
-                            id="amount"
-                            type="number"
-                            step="0.01"
-                            min="0.01"
-                            {...formik.getFieldProps('amount')}
-                            className={`${formik.touched.amount && formik.errors.amount ? 'border-red-500' : ''} p-3 text-lg w-fit`}
-                        />
+                    <div className='flex flex-col'>
+                        <div className='flex items-center justify-between gap-4'>
+                            <label htmlFor="amount" className="block mb-2 text-lg">المبلغ</label>
+                            <Input
+                                id="amount"
+                                type="number"
+                                step="0.01"
+                                min="0.01"
+                                {...formik.getFieldProps('amount')}
+                                className={`${formik.touched.amount && formik.errors.amount ? 'border-red-500' : ''} p-3 text-lg w-fit`}
+                            />
+                        </div>
                         {formik.touched.amount && formik.errors.amount && (
                             <p className="text-red-500 text-lg mt-1">{formik.errors.amount}</p>
                         )}
+
                     </div>
                     <DialogFooter className="flex items-center justify-between gap-4 mt-4">
                         <DialogClose render={<Button type="button" variant="outline" className="text-lg">إلغاء</Button>} />

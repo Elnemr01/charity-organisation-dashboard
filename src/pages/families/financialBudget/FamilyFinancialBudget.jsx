@@ -98,7 +98,8 @@ const FamilyFinancialBudget = ({financialBudget,familyId,hasFinancialBudget,case
                                 {/* father and basic needs */}
                             <TableRow>
                                 <TableCell className="">
-                                    <div className='item flex justify-between items-center gap text-lg font-semibold'>
+                                    <div className='item flex
+                                        justify-between items-center gap text-lg font-semibold'>
                                         <label htmlFor="fatherIncome" className=''>دخل الأب</label>
                                         <p className='p-2 w-50 bg-tertiary rounded-md text-center'>
                                             {

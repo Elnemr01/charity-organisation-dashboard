@@ -34,17 +34,19 @@ const FamilyRequiredItems = ({ requiredItems = [],familyId }) => {
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold">المساعدات العينيه المطلوبه </h2>
                 <div className="flex items-center gap-2">
-                    <Button variant="outline" onClick={handleAdd}
-                    className="gap-2 text-white bg-secondary hover:text-white cursor-pointer">
-                        <Plus size={16} /> إضافة صنف
-                    </Button>
-                    {requiredItems.length > 0 && (
+                    {
+                        requiredItems.length <= 0 ?
+                            <Button variant="outline" onClick={handleAdd}
+                            className="gap-2 text-white bg-secondary hover:text-white cursor-pointer">
+                                <Plus size={16} /> إضافة صنف
+                            </Button>
+                        :
                         <Button variant="outline" 
                         className="text-white bg-neutral hover:text-white gap-2 cursor-pointer"
                         onClick={handleEdit} >
                             <Edit size={16} /> تعديل
                         </Button>
-                    )}
+                    }
                 </div>
             </div>
 

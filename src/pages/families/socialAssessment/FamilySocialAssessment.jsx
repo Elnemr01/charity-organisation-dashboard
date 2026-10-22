@@ -22,23 +22,23 @@ const text = (v) => (v === null || v === undefined || v === '' ? '-' : v)
 
 const yesNo = (v) => (v ? 'نعم' : 'لا')
 
-const gridClass = 'grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3'
+const gridClass = 'grid grid-cols-[repeat(auto-fill,minmax(400px,1fr))] gap-3'
 
 const Card = ({ title, children, full = false }) => (
     <div className={`border rounded-md p-3 bg-gray-50 ${full ? 'col-span-full' : ''}`}>
-        <h3 className="font-semibold text-sm text-secondary border-b pb-1 mb-2">{title}</h3>
+        <h3 className="font-semibold text-lg text-secondary border-b pb-1 mb-2">{title}</h3>
         {children}
     </div>
 )
 
 const Row = ({ label, value }) => (
-    <div className="flex items-start justify-between gap-3 text-sm py-0.5">
+    <div className="flex items-start justify-between gap-3 text-md py-0.5">
         <span className="text-gray-500 shrink-0">{label}</span>
         <span className="font-medium text-left break-wor">{value}</span>
     </div>
 )
 
-const None = ({ children }) => <p className="text-sm text-gray-500">{children}</p>
+const None = ({ children }) => <p className="text-md text-gray-500">{children}</p>
 
 const Table = ({ head, children }) => (
     <div className="overflow-x-auto">
