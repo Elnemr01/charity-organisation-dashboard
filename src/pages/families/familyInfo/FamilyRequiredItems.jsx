@@ -61,9 +61,10 @@ const FamilyRequiredItems = ({ requiredItems = [],familyId }) => {
                         <TableBody className="">
                             {requiredItems.map((item) => (
                                 <TableRow key={item.id} className="text-center">
-                                    <TableCell className="p-4">{item.itemName || 'لا يوجد'}</TableCell>
-                                    <TableCell className="p-4">{item.unitName || 'لا يوجد'}</TableCell>
                                     <TableCell className="p-4">{item.amount || 'لا يوجد'}</TableCell>
+                                    <TableCell className="p-4">{item.unitName || 'لا يوجد'}</TableCell>
+                                    <TableCell className="p-4">{item.productCategoryName || 'لا يوجد'}</TableCell>
+                                    <TableCell className="p-4">{item.donationPurposeName || 'لا يوجد'}</TableCell>
                                     <TableCell className="p-4">
                                         <div className="flex items-center gap-2 justify-center">
                                             <DeleteModel

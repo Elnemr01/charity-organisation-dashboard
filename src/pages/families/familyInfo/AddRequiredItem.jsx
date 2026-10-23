@@ -71,7 +71,7 @@ const AddRequiredItem = () => {
         initialValues: {
             familyRequiredItems: editItems ? editItems.map((item)=> {
                 return {
-                    productCategoryId: item.productItemId,
+                    productCategoryId: item.productCategoryId,
                     unitId: item.unitId,
                     donationPurposeId: item.donationPurposeId,
                     amount: item.amount,
@@ -161,7 +161,7 @@ const AddRequiredItem = () => {
                                             isError={isErrorProduct}
                                             setPage={setProductCatPage}
                                             setCatDebounceValue={setProductCatDebounceValue}
-                                            text={editItems?.[index]?.itemName || 'اختر الصنف'}
+                                            text={editItems?.[index]?.productCategoryName || 'اختر الصنف'}
                                             showAll={false}
                                             add={true}
                                             addNewItem={addNewProductCategory}

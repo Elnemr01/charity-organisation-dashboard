@@ -1,65 +1,21 @@
 import Empty from '@/appComponents/models/Empty'
 import { Button } from '@base-ui/react'
 import { Edit, Plus, Trash2 } from 'lucide-react'
-import React, { useMemo } from 'react'
+import React, { use, useMemo } from 'react'
 import { Link } from 'react-router'
-
 import DeleteModel from '@/components/customUI/DeleteModel'
 import { useQueryClient } from '@tanstack/react-query'
 import useDeleteSocialAssessment from '@/hooks/socialAssessment/useDeleteSocialAssessment'
 import { housingTypeOpts } from '@/constants/socialAssessment/socialAssessmentConst'
+import Card from '@/appComponents/socialAssAddCom/Card'
+import Td from '@/appComponents/socialAssAddCom/Td'
+import Table from '@/appComponents/socialAssAddCom/Table'
+import None from '@/appComponents/socialAssAddCom/None'
+import Row from '@/appComponents/socialAssAddCom/Row'
 
-/* ------------------------------------------------------------------ */
-/*                         Small helpers                              */
-/* ------------------------------------------------------------------ */
 
-const money = (v) =>
-    v === null || v === undefined || v === '' ? '-' : `${Number(v).toLocaleString('ar-EG')} ج.م`
 
-const date = (v) => (v ? String(v).slice(0, 10) : '-')
 
-const text = (v) => (v === null || v === undefined || v === '' ? '-' : v)
-
-const yesNo = (v) => (v ? 'نعم' : 'لا')
-
-const gridClass = 'grid grid-cols-[repeat(auto-fill,minmax(400px,1fr))] gap-3'
-
-const Card = ({ title, children, full = false }) => (
-    <div className={`border rounded-md p-3 bg-gray-50 ${full ? 'col-span-full' : ''}`}>
-        <h3 className="font-semibold text-lg text-secondary border-b pb-1 mb-2">{title}</h3>
-        {children}
-    </div>
-)
-
-const Row = ({ label, value }) => (
-    <div className="flex items-start justify-between gap-3 text-md py-0.5">
-        <span className="text-gray-500 shrink-0">{label}</span>
-        <span className="font-medium text-left break-wor">{value}</span>
-    </div>
-)
-
-const None = ({ children }) => <p className="text-md text-gray-500">{children}</p>
-
-const Table = ({ head, children }) => (
-    <div className="overflow-x-auto">
-        <table className="w-full text-sm text-right">
-            <thead>
-                <tr className="bg-gray-100 text-gray-600">
-                    {head.map((h) => (
-                        <th key={h} className="px-2 py-1 font-medium whitespace-nowrap">{h}</th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>{children}</tbody>
-        </table>
-    </div>
-)
-
-const Td = ({ children }) => <td className="px-2 py-1 border-t">{children}</td>
-
-/* ------------------------------------------------------------------ */
-/*                           Component                                */
-/* ------------------------------------------------------------------ */
 
 const FamilySocialAssessment = ({ socialAssessment, familyId, cases, hasSocialAssessment }) => {
 
@@ -67,6 +23,14 @@ const FamilySocialAssessment = ({ socialAssessment, familyId, cases, hasSocialAs
     const { deleteSocialAssessment, isPending: deletePending } = useDeleteSocialAssessment();
 
     const s = socialAssessment || {};
+
+    const text = useMemo(() => (v) => (v === null || v === undefined || v === '' ? '-' : v), []);
+    const yesNo = useMemo(() => (v) => (v ? 'نعم' : 'لا'), []);
+    const date = useMemo(() => (v) => (v ? String(v).slice(0, 10) : '-'), []);
+    const money = useMemo(() => (v) => (v === null || v === undefined || v === '' ? '-' : `${Number(v).toLocaleString('ar-EG')} ج.م`), []);
+
+    const gridClass = 'grid grid-cols-[repeat(auto-fill,minmax(400px,1fr))] gap-3'
+
 
     const caseName = useMemo(() => {
         const map = {};

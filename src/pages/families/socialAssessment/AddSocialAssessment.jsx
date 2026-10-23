@@ -1,5 +1,5 @@
 import Layout from '@/appComponents/layout/Layout';
-import { useCallback, useEffect, useMemo } from 'react';
+import { use, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router';
 import { useFormik, getIn } from 'formik';
 import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
@@ -10,139 +10,13 @@ import useAddSocialAssessment from '@/hooks/socialAssessment/useAddSocialAssessm
 import { socialAssessmentSchema } from '@/constants/schemas/socialAssessmentSchema';
 import { housingTypeOpts } from '@/constants/socialAssessment/socialAssessmentConst';
 import useEditSocialAssessment from '@/hooks/socialAssessment/useEditSocialAssessment';
+import Section from '@/appComponents/addSocialAssCom/Section';
+import YesNoField from '@/appComponents/addSocialAssCom/YesNoField';
+import TextField from '@/appComponents/addSocialAssCom/TextField';
+import TextAreaField from '@/appComponents/addSocialAssCom/TextAreaField';
+import SelectField from '@/appComponents/addSocialAssCom/SelectField';
+import { buildPayload } from '@/utlis/buildPayload';
 
-
-const inputClass = (hasError) =>
-  `w-full border rounded-md p-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-secondary ${
-    hasError ? 'border-red-500' : 'border-gray-300'
-  }`;
-
-const gridClass = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4';
-
-const toStr = (v) => (v === null || v === undefined ? '' : v);
-const toDate = (v) => (v ? String(v).slice(0, 10) : '');
-const toNum = (v) => (v === '' || v === null || v === undefined ? null : Number(v));
-const toNullIfEmpty = (v) => (v === '' || v === undefined ? null : v);
-
-// يرجع أول قيمة موجودة (مفيدة لو الباك بيرجع object متداخل بدل id)
-const pick = (...vals) => vals.find((x) => x !== undefined && x !== null);
-
-// يحوّل true/'true'/false/'false' لـ boolean، وأي حاجة تانية null (يعني لسه ما اختارش)
-const toBool = (x) => {
-  if (x === true || x === 'true') return true;
-  if (x === false || x === 'false') return false;
-  return null;
-};
-
-/* ------------------------------------------------------------------ */
-/*              Small presentational helpers (plain HTML)             */
-/* ------------------------------------------------------------------ */
-
-const FieldError = ({ formik, name }) => {
-  const error = getIn(formik.errors, name);
-  const touched = getIn(formik.touched, name);
-  if (!touched || !error || typeof error !== 'string') return null;
-  return <p className="text-red-500 text-sm mt-1">{error}</p>;
-};
-
-const hasErr = (formik, name) =>
-  Boolean(getIn(formik.touched, name) && getIn(formik.errors, name));
-
-const TextField = ({ formik, name, label, type = 'text', ...rest }) => (
-  <div>
-    <label htmlFor={name} className="block mb-2">{label}</label>
-    <input
-      id={name}
-      type={type}
-      {...formik.getFieldProps(name)}
-      className={inputClass(hasErr(formik, name))}
-      {...rest}
-    />
-    <FieldError formik={formik} name={name} />
-  </div>
-);
-
-const SelectField = ({ formik, name, label, placeholder, options }) => (
-  <div>
-    <label htmlFor={name} className="block mb-2">{label}</label>
-    <select
-      id={name}
-      {...formik.getFieldProps(name)}
-      className={inputClass(hasErr(formik, name))}
-    >
-      <option value="">{placeholder}</option>
-      {options.map((opt) => (
-        <option key={opt.id} value={opt.id}>{opt.label}</option>
-      ))}
-    </select>
-    <FieldError formik={formik} name={name} />
-  </div>
-);
-
-const TextAreaField = ({ formik, name, label, placeholder }) => (
-  <div>
-    <label htmlFor={name} className="block mb-2">{label}</label>
-    <textarea
-      id={name}
-      placeholder={placeholder}
-      {...formik.getFieldProps(name)}
-      className={`${inputClass(hasErr(formik, name))} h-24`}
-    />
-    <FieldError formik={formik} name={name} />
-  </div>
-);
-
-const YesNoField = ({ formik, name, label, onChange }) => {
-  const value = getIn(formik.values, name);
-
-  const handle = (val) => {
-    formik.setFieldValue(name, val);
-    formik.setFieldTouched(name, true, false);
-    onChange?.(val);
-  };
-
-  return (
-    <div>
-      <span className="block mb-2">{label}</span>
-      <div className="flex items-center gap-6">
-        <label htmlFor={`${name}-yes`} className="flex items-center gap-2 cursor-pointer">
-          <input
-            id={`${name}-yes`}
-            type="radio"
-            name={name}
-            checked={value === true}
-            onChange={() => handle(true)}
-            className="w-4 h-4"
-          />
-          نعم
-        </label>
-        <label htmlFor={`${name}-no`} className="flex items-center gap-2 cursor-pointer">
-          <input
-            id={`${name}-no`}
-            type="radio"
-            name={name}
-            checked={value === false}
-            onChange={() => handle(false)}
-            className="w-4 h-4"
-          />
-          لا
-        </label>
-      </div>
-      <FieldError formik={formik} name={name} />
-    </div>
-  );
-};
-
-const Section = ({ title, children }) => (
-  <section className="border rounded-lg p-5 bg-gray-50 space-y-5">
-    <h3 className="text-lg font-semibold border-b pb-3">{title}</h3>
-    {children}
-  </section>
-);
-
-/* ------------------------------------------------------------------ */
-/*                              Page                                  */
-/* ------------------------------------------------------------------ */
 
 const AddSocialAssessment = () => {
   const navigate = useNavigate();
@@ -158,6 +32,25 @@ const AddSocialAssessment = () => {
     () => (cases || []).map((c) => ({ id: c.id, label: c.name })),
     [cases]
   );
+
+
+
+const gridClass = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4';
+
+const toStr = useMemo(() => (v) => (v === null || v === undefined ? '' : v), []);
+const toDate = useMemo(() => (v) => (v ? String(v).slice(0, 10) : ''), []);
+const toNum = useMemo(() => (v) => (v === '' || v === null || v === undefined ? null : Number(v)), []);
+const toNullIfEmpty = useMemo(() => (v) => (v === '' || v === undefined ? null : v), []);
+
+// يرجع أول قيمة موجودة (مفيدة لو الباك بيرجع object متداخل بدل id)
+const pick = useMemo(() => (...vals) => vals.find((x) => x !== undefined && x !== null), []);
+
+// يحوّل true/'true'/false/'false' لـ boolean، وأي حاجة تانية null (يعني لسه ما اختارش)
+const toBool = (x) => {
+  if (x === true || x === 'true') return true;
+  if (x === false || x === 'false') return false;
+  return null;
+}
 
   const housingTypeOptions = useMemo(()=> housingTypeOpts,[])
 
@@ -267,73 +160,6 @@ const AddSocialAssessment = () => {
       researcherName: toStr(d.researcherName),
     };
   }, [edit, data, familyId, initialDebt, initialMarriageCase]);
-
-  const buildPayload = (v) => ({
-    familyId: Number(v.familyId),
-
-    hasPension: v.hasPension,
-    pensionType: v.hasPension ? v.pensionType : null,
-    pensionAmount: v.hasPension ? toNum(v.pensionAmount) : null,
-
-    hasProperties: v.hasProperties,
-    propertiesDetails: v.hasProperties ? v.propertiesDetails : null,
-
-    hasWellOffRelatives: v.hasWellOffRelatives,
-    wellOffRelativesRelationship: v.hasWellOffRelatives
-      ? v.wellOffRelativesRelationship
-      : null,
-
-    canReachDonors: v.canReachDonors,
-    donorsAccessNotes: v.canReachDonors ? v.donorsAccessNotes : null,
-
-    receivesExternalAid: v.receivesExternalAid,
-    externalAidDetails: v.receivesExternalAid ? v.externalAidDetails : null,
-
-    housingType: v.housingType,
-    rentAmount: v.housingType === 'Rented' ? toNum(v.rentAmount) : null,
-
-    requiredMedicalTreatment: v.requiredMedicalTreatment,
-    medicalTreatmentCost: toNum(v.medicalTreatmentCost),
-
-    hasDebt: v.hasDebt,
-    debts: v.hasDebt
-      ? v.debts.map((d) => ({
-          debtorCaseId: Number(d.debtorCaseId),
-          debtReason: d.debtReason,
-          debtAmount: toNum(d.debtAmount),
-          creditor: d.creditor,
-          isPaid: d.isPaid,
-          paidDate: d.isPaid ? toNullIfEmpty(d.paidDate) : null,
-        }))
-      : [],
-
-    hasExcessiveSpending: v.hasExcessiveSpending,
-    spendingNotes: v.hasExcessiveSpending ? v.spendingNotes : null,
-
-    providerWorkCapacity: v.providerWorkCapacity,
-    isBeggingProfession: v.isBeggingProfession,
-    isSmoking: v.isSmoking,
-
-    hasMarriageCase: v.hasMarriageCase,
-    marriageCases: v.hasMarriageCase
-      ? v.marriageCases.map((m) => ({
-          groomName: m.groomName,
-          groomJob: m.groomJob,
-          isGroomTraveling: m.isGroomTraveling,
-          marriageDate: m.marriageDate,
-          wifeId: Number(m.wifeId),
-        }))
-      : null,
-
-    referrerName: v.referrerName,
-    referrerPhone: v.referrerPhone,
-
-    dataProviderName: v.dataProviderName,
-    dataProviderRelation: v.dataProviderRelation,
-    dataProviderPhone: v.dataProviderPhone,
-
-    researcherName: v.researcherName,
-  });
 
   const formik = useFormik({
     initialValues,
