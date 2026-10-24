@@ -7,8 +7,8 @@ const useConvertProductUnit = () => {
     const {mutate: convertProductUnit, isPending} = useMutation({
         mutationKey: ['convertProductUnit'],
         mutationFn: (data) => convertProductItemsFn(data),
-        onError: () => {
-            toast.error('حدث خطأ برجاء المحاولة لاحقا')
+        onError: (error) => {
+            toast.error(error?.response?.data?.detail ||'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: () => {
             toast.success('تم تحويل الوحدة بنجاح')

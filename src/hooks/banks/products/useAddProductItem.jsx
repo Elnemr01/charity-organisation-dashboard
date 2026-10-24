@@ -9,8 +9,8 @@ const useAddProductItem = () => {
     const {mutate: addProductItem,isPending,isError,error} = useMutation({
         mutationKey:['addProductItem'],
         mutationFn: (data)=> addProductItemsFn(data),
-        onError : ()=> {
-            toast.error('حدث خطأ برجاء المحاولة لاحقا')
+        onError : (error)=> {
+            toast.error(error?.response?.data?.detail ||'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: ()=> {
             toast.success('تمت إضافة المنتج بنجاح')
