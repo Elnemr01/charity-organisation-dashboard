@@ -68,9 +68,14 @@ const CategoryListFilter = ({setCategoryName,response,isLoading,isError,setPage,
                 </DropdownMenuGroup>
                 <Pagination setPage={setPage} response={response}/>
                 {add && <div className="add-new flex justify-center items-center p-1 gap-2 mt-4">
-                    <input type="text" placeholder="إضافة جديد"
-                    onChange={(event)=> setInputValue(event.target.value)}
-                    className='flex-1 w-30 p-2 rounded-sm border border-secondary'/>
+                    <input
+                        type="text"
+                        placeholder="إضافة جديد"
+                        value={inputValue}
+                        onChange={(event) => setInputValue(event.target.value)}
+                        onKeyDown={(e) => e.stopPropagation()}
+                        className='flex-1 w-30 p-2 rounded-sm border border-secondary'
+                    />
                     <Button variant="outline"
                     onClick={()=> {
                         if(inputValue.trim() === ''){

@@ -14,6 +14,7 @@ const TextSearch = ({setDebounceValue}) => {
             <input
                 type="text"
                 onChange={(e) => debounceFun(e.target.value)}
+                onKeyDown={(e) => e.stopPropagation()}
                 placeholder="بحث..."
                 className="border border-secondary rounded-md outline-none p-2 w-full pr-8"
             />
