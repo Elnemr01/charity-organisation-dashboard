@@ -37,6 +37,21 @@ export const editFamiltRequiredItemSchema=yup.object().shape({
   familyRequiredItems : yup.array().of(editfamiltRequiredItemSchema).nullable().transform((value) => (Array.isArray(value) && value.length === 0 ? null : value)),
 })
 
+const documentSchema=yup.object().shape({
+  file : yup
+    .mixed()
+    .required('ملف الصوره مطلوب')
+    .test('fileType', 'لازم تختار صورة', (value) =>
+      value ? value.type?.startsWith('image/') : false
+    ),
+  name : yup.string().required('الاسم مطلوب').typeError('الاسم مطلوب'),
+})
+
+
+export const addNewFamilyDocument=yup.object().shape({
+  documents: yup.array().of(documentSchema).nullable().transform((value) => (Array.isArray(value) && value.length === 0 ? null : value)),
+})
+
 
 export const familySchema = yup.object().shape({
   name: yup.string().required('اسم العائلة مطلوب'),
@@ -49,6 +64,7 @@ export const familySchema = yup.object().shape({
   categoryIds: yup.array().of(yup.number()).nullable(),
   cases: yup.array().of(caseSchema).required('يجب إضافة حالة واحدة على الأقل').min(1, 'يجب إضافة حالة واحدة على الأقل'),
   familyRequiredItems: yup.array().of(familtRequiredItemSchema).nullable().transform((value) => (Array.isArray(value) && value.length === 0 ? null : value)),
+  documents: yup.array().of(documentSchema).nullable().transform((value) => (Array.isArray(value) && value.length === 0 ? null : value)),
 });
 
 export const editFamilySchema = yup.object().shape({

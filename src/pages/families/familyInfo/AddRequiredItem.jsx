@@ -65,7 +65,6 @@ const AddRequiredItem = () => {
         };
     }, []);
 
-    console.log(editItems)
 
     const formik = useFormik({
         initialValues: {

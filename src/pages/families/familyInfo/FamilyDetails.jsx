@@ -23,6 +23,7 @@ import FamilyRequiredItems from './FamilyRequiredItems';
 import { useQueryClient } from '@tanstack/react-query';
 import FamilyFinancialBudget from '../financialBudget/FamilyFinancialBudget';
 import FamilySocialAssessment from '../socialAssessment/FamilySocialAssessment';
+import FamilyDocuments from '../documents/FamilyDocuments';
 
 const FamilyDetails = () => {
     const { id } = useParams();
@@ -281,6 +282,13 @@ const FamilyDetails = () => {
                             hasSocialAssessment={family?.hasSocialAssessment}
                             cases={family?.cases || []}
                         />
+
+                        <FamilyDocuments
+                            familyId={family?.id}
+                            documents={family?.documents}
+                        />
+
+
                     </div>
                 }
             </div>

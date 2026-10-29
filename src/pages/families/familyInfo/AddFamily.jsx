@@ -99,6 +99,13 @@ const AddFamily = () => {
       };
   },[])
 
+  const initialDocument = useMemo(()=> {
+      return {
+          file: null,
+          name: null,
+      };
+  },[])
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -110,10 +117,12 @@ const AddFamily = () => {
       decisionReason:null,
       categoryIds: [],
       cases: [initialCase],
-      familyRequiredItems:[]
+      familyRequiredItems:[],
+      documents:[],
     },
     validationSchema: familySchema,
     onSubmit: (values) => {
+
       const hasPrimaryReceiver = values.cases.some(c => c.isPrimaryReceiver);
       if (!hasPrimaryReceiver) {
         toast.error('يجب تحديد مستفيد رئيسي واحد على الأقل');
@@ -223,6 +232,18 @@ const AddFamily = () => {
 
   const handlePurposeSelect = (index, item) => {
       formik.setFieldValue(`familyRequiredItems[${index}].purposeId`, item.id);
+  };
+
+  //handle documents add and remove
+
+  
+  const addDocumentItem = () => {
+      formik.setFieldValue('documents', [...formik.values.documents, initialDocument]);
+  };
+
+  const removeDocumentItem = (index) => {
+      const newItems = formik.values.documents.filter((_, i) => i !== index);
+      formik.setFieldValue('documents', newItems);
   };
 
   return (
@@ -346,7 +367,7 @@ const AddFamily = () => {
           </div>
           
 
-          <div className="space-y-4 my-8 border-t pt-6">
+          <div className="space-y-4 border-t pt-6 my-15">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">أفراد العائلة (الحالات) </h3>
               <Button type="button" variant="outline" onClick={addCase} className="gap-2">
@@ -689,8 +710,71 @@ const AddFamily = () => {
                 
         </div>
 
+          {/* -------------- family documents ----------------- */}
+        <div className="documents my-10">
+          <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">صور المرفقات للعائله</h3>
+                <Button type="button" variant="outline" onClick={addDocumentItem} className="gap-2">
+                    <Plus size={16} /> إضافة مرفق
+                </Button>
+            </div>
+            {
+              formik.values.documents.map((item, index) => (
+                <div key={index} className="border rounded-lg p-4 bg-gray-50 my-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium">صوره #{index + 1}</h4>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeDocumentItem(index)}
+                      className="text-red-500 hover:text-red-500"
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
 
-          <div className="flex items-center justify-end gap-4 pt-4 border-t">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <label className="block mb-2">اسم الصوره</label>
+                      <Input
+                      placeholder="اسم الصوره"
+                        {...formik.getFieldProps(`documents[${index}].name`)}
+                        className={`${formik.touched.documents?.[index]?.name && formik.errors.documents?.[index]?.name ? 'border-red-500' : ''} p-2 py-1`}
+                      />
+                      {formik.touched.documents?.[index]?.name && formik.errors.documents?.[index]?.name && (
+                        <p className="text-red-500 text-sm mt-1">{formik.errors.documents[index].name}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block mb-2">رفع الصوره</label>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        name={`documents[${index}].file`}
+                        onChange={(e) =>
+                          formik.setFieldValue(`documents[${index}].file`, e.currentTarget.files[0])
+                        }
+                        onBlur={formik.handleBlur}
+                        className={`cursor-pointer ${
+                          formik.touched.documents?.[index]?.file && formik.errors.documents?.[index]?.file
+                            ? 'border-red-500'
+                            : ''
+                        } p-2 py-1`}
+                      />
+                      {formik.touched.documents?.[index]?.file && formik.errors.documents?.[index]?.file && (
+                        <p className="text-red-500 text-sm mt-1">{formik.errors.documents[index].file}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))
+            }
+        </div>
+
+
+          <div className="flex items-center justify-end gap-4 pt-4 mt-10 border-t">
             <Link to="/families">
               <Button type="button" variant="outline">إلغاء</Button>
             </Link>
