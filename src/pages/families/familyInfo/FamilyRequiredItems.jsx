@@ -36,7 +36,7 @@ const FamilyRequiredItems = ({ requiredItems = [],familyId }) => {
                             className="gap-2 text-white bg-secondary hover:text-white cursor-pointer">
                                 <Plus size={16} /> إضافة صنف
                             </Button>
-                        :   
+                        : 
                         <Button variant="outline" 
                         className="text-white bg-neutral hover:text-white gap-2 cursor-pointer"
                         onClick={handleNavigate} >
