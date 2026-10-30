@@ -32,6 +32,7 @@ import AddCaseToFamily from './pages/families/cases/AddCaseToFamily'
 import AddFamilyFinancialBudget from './pages/families/financialBudget/AddFamilyFinancialBudget'
 import AddSocialAssessment from './pages/families/socialAssessment/AddSocialAssessment'
 import AddNewDocument from './pages/families/documents/AddNewDocument'
+import DocumentPic from './pages/families/documents/DocumentPic'
 
 function App() {
 
@@ -84,6 +85,8 @@ function App() {
 
           <Route path='/financial-budget/add' element={<AddFamilyFinancialBudget/>}/>
           <Route path='/social-assessment/add' element={<AddSocialAssessment/>}/>
+
+          <Route path='/documents/:id' element={<DocumentPic/>}/>
           
           <Route path='*' element={<NotFound/>}/>
 

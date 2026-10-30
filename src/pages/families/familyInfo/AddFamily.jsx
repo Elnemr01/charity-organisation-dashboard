@@ -26,6 +26,7 @@ import useGetAllDonationPurposes from '@/hooks/categories/donationPurpose/useGet
 import useAddNewProductCategory from '@/hooks/categories/products/useAddNewProductCategory';
 import useAddNewProductUnit from '@/hooks/categories/productUnit/useAddNewProductUnit';
 import useAddNewDonationPurpose from '@/hooks/categories/donationPurpose/useAddNewDonationPurpose';
+import { buildFamilyFormData } from '@/utlis/buildFormData';
 
 const AddFamily = () => {
   const [familyCat,setFamilyCat] = useState([]);
@@ -101,8 +102,8 @@ const AddFamily = () => {
 
   const initialDocument = useMemo(()=> {
       return {
-          file: null,
-          name: null,
+          File: null,
+          Name: null,
       };
   },[])
 
@@ -139,14 +140,17 @@ const AddFamily = () => {
         values.primaryReceiverId = null;
       }
 
+      const formData=buildFamilyFormData(values)
 
-        addFamily(values, {
+        addFamily(formData, {
           onSuccess: () => {
             resetData();
           },
         });
     },
   });
+
+  console.log(formik.errors)
 
 
   const resetData =useCallback(()=> {
@@ -739,11 +743,11 @@ const AddFamily = () => {
                       <label className="block mb-2">اسم الصوره</label>
                       <Input
                       placeholder="اسم الصوره"
-                        {...formik.getFieldProps(`documents[${index}].name`)}
-                        className={`${formik.touched.documents?.[index]?.name && formik.errors.documents?.[index]?.name ? 'border-red-500' : ''} p-2 py-1`}
+                        {...formik.getFieldProps(`documents[${index}].Name`)}
+                        className={`${formik.touched.documents?.[index]?.Name && formik.errors.documents?.[index]?.Name ? 'border-red-500' : ''} p-2 py-1`}
                       />
-                      {formik.touched.documents?.[index]?.name && formik.errors.documents?.[index]?.name && (
-                        <p className="text-red-500 text-sm mt-1">{formik.errors.documents[index].name}</p>
+                      {formik.touched.documents?.[index]?.Name && formik.errors.documents?.[index]?.Name && (
+                        <p className="text-red-500 text-sm mt-1">{formik.errors.documents[index].Name}</p>
                       )}
                     </div>
 
@@ -752,19 +756,19 @@ const AddFamily = () => {
                       <Input
                         type="file"
                         accept="image/*"
-                        name={`documents[${index}].file`}
+                        name={`documents[${index}].File`}
                         onChange={(e) =>
-                          formik.setFieldValue(`documents[${index}].file`, e.currentTarget.files[0])
+                          formik.setFieldValue(`documents[${index}].File`, e.currentTarget.files[0])
                         }
                         onBlur={formik.handleBlur}
                         className={`cursor-pointer ${
-                          formik.touched.documents?.[index]?.file && formik.errors.documents?.[index]?.file
+                          formik.touched.documents?.[index]?.File && formik.errors.documents?.[index]?.File
                             ? 'border-red-500'
                             : ''
                         } p-2 py-1`}
                       />
-                      {formik.touched.documents?.[index]?.file && formik.errors.documents?.[index]?.file && (
-                        <p className="text-red-500 text-sm mt-1">{formik.errors.documents[index].file}</p>
+                      {formik.touched.documents?.[index]?.File && formik.errors.documents?.[index]?.File && (
+                        <p className="text-red-500 text-sm mt-1">{formik.errors.documents[index].File}</p>
                       )}
                     </div>
                   </div>

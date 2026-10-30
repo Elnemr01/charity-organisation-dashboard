@@ -9,6 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { addNewFamilyDocument } from '@/constants/schemas/familySchema';
 import useAddDocument from '@/hooks/documents/useAddDocument';
 import toast from 'react-hot-toast';
+import { buildDocumentsFormData } from '@/utlis/formDataHelper';
 
 const AddNewDocument = () => {
 
@@ -21,8 +22,8 @@ const AddNewDocument = () => {
 
     const initialDocument = useMemo(()=> {
         return {
-            file: null,
-            name: null,
+            File: null,
+            Name: null,
         };
     },[])
 
@@ -33,11 +34,17 @@ const AddNewDocument = () => {
         validationSchema: addNewFamilyDocument,
         onSubmit: (values) => {
 
-            if(values.documents.length === 0 || !values.documents){
-                toast.error('برجاء اضافه مرفق واحد علي الاقل');
-                return;
+        if(values.documents.length === 0 || !values.documents){
+            toast.error('برجاء اضافه مرفق واحد علي الاقل');
+            return;
+        }
+
+        const formData= buildDocumentsFormData(values.documents);
+        addDocument({id, data: formData},{
+            onSuccess: () => {
+                resetData();
             }
-            console.log(values)
+        });
             
         },
     });
@@ -64,7 +71,7 @@ const AddNewDocument = () => {
             <div className="container pt-10 my-10">
                 <div className="flex items-center gap-4 mb-8">
                     <Button onClink={() => navigate(-1)} type="button"
-                    className="flex items-center gap-2 text-secondary hover:text-primary">
+                    className="flex items-center gap-2 text- bg-transparent">
                         <ArrowLeft size={20} />
                         <span>العودة للقائمة</span>
                     </Button>
@@ -101,11 +108,11 @@ const AddNewDocument = () => {
                                     <label className="block mb-2">اسم الصوره</label>
                                     <Input
                                     placeholder="اسم الصوره"
-                                        {...formik.getFieldProps(`documents[${index}].name`)}
-                                        className={`${formik.touched.documents?.[index]?.name && formik.errors.documents?.[index]?.name ? 'border-red-500' : ''} p-2 py-1`}
+                                        {...formik.getFieldProps(`documents[${index}].Name`)}
+                                        className={`${formik.touched.documents?.[index]?.Name && formik.errors.documents?.[index]?.Name ? 'border-red-500' : ''} p-2 py-1`}
                                     />
-                                    {formik.touched.documents?.[index]?.name && formik.errors.documents?.[index]?.name && (
-                                        <p className="text-red-500 text-sm mt-1">{formik.errors.documents[index].name}</p>
+                                    {formik.touched.documents?.[index]?.Name && formik.errors.documents?.[index]?.Name && (
+                                        <p className="text-red-500 text-sm mt-1">{formik.errors.documents[index].Name}</p>
                                     )}
                                     </div>
 
@@ -114,19 +121,19 @@ const AddNewDocument = () => {
                                     <Input
                                         type="file"
                                         accept="image/*"
-                                        name={`documents[${index}].file`}
+                                        name={`documents[${index}].File`}
                                         onChange={(e) =>
-                                        formik.setFieldValue(`documents[${index}].file`, e.currentTarget.files[0])
+                                        formik.setFieldValue(`documents[${index}].File`, e.currentTarget.files[0])
                                         }
                                         onBlur={formik.handleBlur}
                                         className={`cursor-pointer ${
-                                        formik.touched.documents?.[index]?.file && formik.errors.documents?.[index]?.file
+                                        formik.touched.documents?.[index]?.File && formik.errors.documents?.[index]?.File
                                             ? 'border-red-500'
                                             : ''
                                         } p-2 py-1`}
                                     />
-                                    {formik.touched.documents?.[index]?.file && formik.errors.documents?.[index]?.file && (
-                                        <p className="text-red-500 text-sm mt-1">{formik.errors.documents[index].file}</p>
+                                    {formik.touched.documents?.[index]?.File && formik.errors.documents?.[index]?.File && (
+                                        <p className="text-red-500 text-sm mt-1">{formik.errors.documents[index].File}</p>
                                     )}
                                     </div>
                                 </div>

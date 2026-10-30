@@ -38,13 +38,13 @@ export const editFamiltRequiredItemSchema=yup.object().shape({
 })
 
 const documentSchema=yup.object().shape({
-  file : yup
+  File : yup
     .mixed()
     .required('ملف الصوره مطلوب')
     .test('fileType', 'لازم تختار صورة', (value) =>
       value ? value.type?.startsWith('image/') : false
     ),
-  name : yup.string().required('الاسم مطلوب').typeError('الاسم مطلوب'),
+  Name : yup.string().required('الاسم مطلوب').typeError('الاسم مطلوب'),
 })
 
 
