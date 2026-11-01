@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useCallback, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { addNewFamilyDocument } from '@/constants/schemas/familySchema';
@@ -70,11 +70,13 @@ const AddNewDocument = () => {
         <Layout headerText={'اداره العائلات'}>
             <div className="container pt-10 my-10">
                 <div className="flex items-center gap-4 mb-8">
-                    <Button onClink={() => navigate(-1)} type="button"
-                    className="flex items-center gap-2 text- bg-transparent">
-                        <ArrowLeft size={20} />
-                        <span>العودة للقائمة</span>
-                    </Button>
+                    <Link to={`/families/${id}`}>
+                        <Button type="button"
+                        className="flex items-center gap-2 text- bg-transparent">
+                            <ArrowLeft size={20} />
+                            <span>العودة للقائمة</span>
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* add form */}
@@ -144,7 +146,9 @@ const AddNewDocument = () => {
                     </div>
 
                     <div className="flex items-center justify-end gap-4 pt-4 border-t mt-20">
-                        <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+                        <Button type="button" variant="outline"
+                        className={'cursor-pointer'}
+                        onClick={() => navigate(-1)}>
                             إلغاء
                         </Button>
                         <Button type="submit"
