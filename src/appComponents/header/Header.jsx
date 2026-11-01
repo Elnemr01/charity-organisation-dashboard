@@ -4,7 +4,7 @@ import React from 'react'
 
 const Header = ({headerText}) => {
     return (
-        <header className='flex items-center justify-center p-4 shadow-sm shadow-primary'>
+        <header className='flex items-center justify-center p-4 shadow-sm shadow-primary fixed w-full  z-10 bg-tertiary'>
             <div className="container flex items-center justify-between">
                 <h1 className='font-semibold text-2xl text-neutral'>
                     {headerText}

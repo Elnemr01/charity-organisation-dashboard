@@ -97,7 +97,7 @@ export function SidebarLayout({ children }) {
         <SidebarProvider className={"bg-white"}>
             <MySidebar />
             <main >
-                <SidebarTrigger className={'absolute right-5 top-20 p-4 rounded-full bg-primary/20 hover:bg-primary cursor-pointer'}/>
+                <SidebarTrigger className={'fixed right-10 top-25 p-4 rounded-full bg-primary/20 hover:bg-primary cursor-pointer'}/>
                 {children}
             </main>
         </SidebarProvider>

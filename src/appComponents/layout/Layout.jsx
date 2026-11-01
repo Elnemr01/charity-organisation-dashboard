@@ -8,7 +8,7 @@ const Layout = ({children,headerText}) => {
             <SidebarLayout className="fixed top-0 left-0 h-full z-50"/>
             <section className="main-content flex-1">
                 <Header headerText={headerText} />
-                <div className="page-content">
+                <div className="page-content pt-25">
                     {children}
                 </div>  
             </section>

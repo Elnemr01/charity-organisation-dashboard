@@ -12,7 +12,7 @@ const useDeleteDocument = () => {
             toast.error( error?.response?.data?.detail ||'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: () => {
-            toast.success('تم حذف التبرع بنجاح')
+            toast.success('تم حذف المرفق بنجاح')
         }
     })
 
