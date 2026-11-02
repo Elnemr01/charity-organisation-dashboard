@@ -37,7 +37,7 @@ const DonerDetails = () => {
     return (
         <Layout headerText={'تفاصيل المتبرع'}>
             <div className="container py-10">
-                <div className="flex items-center gap-4 mb-8">
+                <div className="flex items-center justify-between gap-4 mb-8">
                     <Link to="/doners" className="flex items-center gap-2 text-secondary hover:text-primary">
                         <ArrowLeft size={20} />
                         <span>العودة للقائمة</span>
