@@ -8,7 +8,7 @@ const useDeleteCashInventory = () => {
         mutationKey: ['deleteCashInventory'],
         mutationFn: (id) => deleteCashInventoryFn(id),
         onError: (error) => {
-            toast.error( error?.response?.data?.detail || 'حدث خطأ برجاء المحاولة لاحقا')
+            toast.error( error?.response?.data?.detail || error?.response?.data?.errors[0]?.description || 'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: () => {
             toast.success('تم حذف المبلغ بنجاح')

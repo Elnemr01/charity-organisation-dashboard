@@ -9,8 +9,8 @@ const useAddNewProductCategory = () => {
     const {mutate: addNewProductCategory,isPending,isError,error} = useMutation({
         mutationKey:['addNewProductCategory'],
         mutationFn: (data)=> addNewProductCategoryFn(data),
-        onError : ()=> {
-            toast.error('حدث خطأ برجاء المحاولة لاحقا')
+        onError : (error)=> {
+            toast.error(error?.response?.data?.detail || error?.response?.data?.errors[0]?.description || 'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: ()=> {
             toast.success('تمت إضافة التصنيف بنجاح')

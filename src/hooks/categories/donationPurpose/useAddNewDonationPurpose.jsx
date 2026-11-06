@@ -9,8 +9,8 @@ const useAddNewDonationPurpose = () => {
     const {mutate: addNewDonationPurpose,isPending,isError,error} = useMutation({
         mutationKey:['addNewDonationPurpose'],
         mutationFn: (data)=> addNewDonationPursposeFn(data),
-        onError : ()=> {
-            toast.error('حدث خطأ برجاء المحاولة لاحقا')
+        onError : (error)=> {
+            toast.error( error?.response?.data?.detail || error?.response?.data?.errors[0]?.description || 'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: ()=> {
             toast.success('تمت إضافة التصنيف بنجاح')

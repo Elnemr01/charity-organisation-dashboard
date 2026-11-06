@@ -109,7 +109,7 @@ const FamilyDetails = () => {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm text-gray-500">المبلغ النقدي المطلوب</label>
+                                    <label className="text-sm text-gray-500">المبلغ النقدي المقرر من الجمعيه</label>
                                     <p>{getLabel(family?.cashRequired)}</p>
                                 </div>
 

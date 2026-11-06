@@ -8,8 +8,8 @@ const useUpdateAidCategory = () => {
     const {mutate: updateAidCategory,isPending,isError,error} = useMutation({
         mutationKey:['updateAidCategory'],
         mutationFn: (data)=> updateAidCategoryFn(data),
-        onError : ()=> {
-            toast.error('حدث خطأ برجاء المحاولة لاحقا')
+        onError : (error)=> {
+            toast.error(error?.response?.data?.detail || error?.response?.data?.errors[0]?.description || 'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: ()=> {
             toast.success('تم تعديل التصنيف بنجاح')

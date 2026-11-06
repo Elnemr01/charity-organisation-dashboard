@@ -17,7 +17,7 @@ const useLogout = () => {
             navigate('/login');
         },
         onError: (error)=> {
-            toast.error(error.response.data.detail || 'حدث خطأ ما، يرجى المحاولة لاحقاً');
+            toast.error(error?.response?.data?.detail || error?.response?.data?.errors[0]?.description || 'حدث خطأ ما، يرجى المحاولة لاحقاً');
             
         }
     })

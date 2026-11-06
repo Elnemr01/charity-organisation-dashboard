@@ -9,7 +9,7 @@ const useDeleteAidCategory = () => {
         mutationKey:['deleteAidCategory'],
         mutationFn: (id)=> deleteAidCategoryFn(id),
         onError : ()=> {
-            toast.error('حدث خطأ برجاء المحاولة لاحقا')
+            toast.error(error?.response?.data?.detail || error?.response?.data?.errors[0]?.description || 'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: ()=> {
             toast.success('تم حذف التصنيف بنجاح')

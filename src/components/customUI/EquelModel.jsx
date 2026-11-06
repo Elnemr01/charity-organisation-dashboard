@@ -16,7 +16,7 @@ const EquelModel = ({children,message,wait,equelFun,onChange,amount}) => {
     return (
         <Dialog dir="rtl">
             <DialogTrigger>{children}</DialogTrigger>
-            <DialogContent>
+            <DialogContent className="bg-white">
                 <DialogHeader className={'text-center'}>
                     <DialogTitle>{message}</DialogTitle>
                     <input type="number" name="newAmount"

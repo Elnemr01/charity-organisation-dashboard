@@ -7,8 +7,8 @@ const useDeleteCharityExpense = () => {
     const { mutate: deleteCharityExpense, isPending } = useMutation({
         mutationKey: ['deleteCharityExpense'],
         mutationFn: (id) => deleteCharityExpenseFn(id),
-        onError: () => {
-            toast.error('حدث خطأ برجاء المحاولة لاحقا')
+        onError: (error) => {
+            toast.error(error?.response?.data?.detail || error?.response?.data?.errors[0]?.description || 'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: () => {
             toast.success('تم حذف المصروف بنجاح')

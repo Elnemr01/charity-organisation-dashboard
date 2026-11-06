@@ -8,8 +8,8 @@ const useDeleteDonationPurpose = () => {
     const {mutate: deleteDonationPurpose,isPending,isError,error} = useMutation({
         mutationKey:['deleteDonationPurpose'],
         mutationFn: (id)=> deleteDonationPursposeFn(id),
-        onError : ()=> {
-            toast.error('حدث خطأ برجاء المحاولة لاحقا')
+        onError : (error)=> {
+            toast.error(error?.response?.data?.detail || error?.response?.data?.errors[0]?.description || 'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: ()=> {
             toast.success('تم حذف التصنيف بنجاح')

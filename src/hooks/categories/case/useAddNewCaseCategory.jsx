@@ -9,8 +9,8 @@ const useAddNewCaseCategory = () => {
     const {mutate: addNewCaseCategory,isPending,isError,error} = useMutation({
         mutationKey:['addNewCaseCategory'],
         mutationFn: (data)=> addNewCaseCategoryFn(data),
-        onError : ()=> {
-            toast.error('حدث خطأ برجاء المحاولة لاحقا')
+        onError : (error)=> {
+            toast.error(error?.response?.data?.detail || error?.response?.data?.errors[0]?.description || 'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: ()=> {
             toast.success('تمت إضافة التصنيف بنجاح')

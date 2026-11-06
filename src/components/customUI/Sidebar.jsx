@@ -73,8 +73,7 @@ export function MySidebar() {
                                 }
                             })
                         }
-                    </div>
-                    <div className="logout bg-red-200 text-red-500 mt-50 rounded-md flex text-base
+                    <div className="logout bg-red-200 text-red-500 rounded-md flex text-base mt-10
                     items-center gap-2 p-2 cursor-pointer hover:bg-red-500 hover:text-white transition-colors"
                     onClick={logout}
                     >
@@ -84,6 +83,7 @@ export function MySidebar() {
                                 isPending ? 'جاري تسجيل الخروج...' : 'تسجيل الخروج'
                             }
                         </span>
+                    </div>
                     </div>
                 </div>
             </div>

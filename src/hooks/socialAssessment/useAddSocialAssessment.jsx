@@ -8,7 +8,7 @@ const useAddSocialAssessment = () => {
         mutationKey: ['addSocialAssessment'],
         mutationFn: (data) => addSocialAssessmentFn(data),
         onError: (error) => {
-            toast.error(error?.response?.data?.detail || 'حدث خطأ برجاء المحاولة لاحقا')
+            toast.error(error?.response?.data?.detail || error?.response?.data?.errors[0]?.description || 'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: () => {
             toast.success('تم إضافة التقييم الاجتماعي بنجاح')

@@ -55,7 +55,7 @@ const ConfirmPayModel = ({ children, message, wait, onConfirm, inventoryTypes,da
                 <DialogHeader className="text-center">
                     <DialogTitle className={'text-lg'}>{message}</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={formik.handleSubmit} className="space-y-4 p-4">
+                <form onSubmit={formik.handleSubmit} className="space-y-4 p-4 bg-white">
                     <div>
                         <div className='flex items-center justify-between'>
                             <label htmlFor="cashInventoryType" className="block mb-2 text-lg">نوع الخزنة </label>

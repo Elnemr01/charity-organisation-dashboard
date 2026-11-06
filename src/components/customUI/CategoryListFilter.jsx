@@ -31,7 +31,7 @@ const CategoryListFilter = ({setCategoryName,response,isLoading,isError,setPage,
             className={" hover:text-secondary rounded-md text-secondary border-secondary border"}>
                 {val ? val : text ? text : 'تصفيه'}
             </Button>} />
-            <DropdownMenuContent className="w-50" align="center" dir='rtl'>
+            <DropdownMenuContent className="w-50 bg-white" align="center" dir='rtl'>
                 <TextSearch setDebounceValue={setCatDebounceValue}/>
                 <DropdownMenuGroup className={'flex flex-col gap-2 p-2 justify-center items-center w-full'}>
                     {

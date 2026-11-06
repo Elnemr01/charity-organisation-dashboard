@@ -7,8 +7,8 @@ const useEditCharityExpense = () => {
     const { mutate: editCharityExpense, isPending } = useMutation({
         mutationKey: ['editCharityExpense'],
         mutationFn: (data) => editCharityExpenseFn(data),
-        onError: () => {
-            toast.error('حدث خطأ برجاء المحاولة لاحقا')
+        onError: (error) => {
+            toast.error(error?.response?.data?.detail || error?.response?.data?.errors[0]?.description || 'حدث خطأ برجاء المحاولة لاحقا')
         },
         onSuccess: () => {
             toast.success('تم تعديل المصروف بنجاح')

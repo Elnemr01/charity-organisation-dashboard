@@ -27,6 +27,8 @@ import useAddNewProductCategory from '@/hooks/categories/products/useAddNewProdu
 import useAddNewProductUnit from '@/hooks/categories/productUnit/useAddNewProductUnit';
 import useAddNewDonationPurpose from '@/hooks/categories/donationPurpose/useAddNewDonationPurpose';
 import { buildFamilyFormData } from '@/utlis/buildFormData';
+import useAddNewCaseCategory from '@/hooks/categories/case/useAddNewCaseCategory';
+import useGetAllCaseCategories from '@/hooks/categories/case/useGetAllCaseCategories';
 
 const AddFamily = () => {
   const [familyCat,setFamilyCat] = useState([]);
@@ -34,11 +36,11 @@ const AddFamily = () => {
   const [catPage, setCatPage] = useState(1);
   const [catDebounceValue, setCatDebounceValue] = useState('');
 
-  const { aidCategories, isLoading: isLoadingCategories, isError: isErrorCategories } = useGetAllAidCategories({
-    page: catPage,
+  const { caseCategories, isLoading: isLoadingCategories, isError: isErrorCategories } = useGetAllCaseCategories({
+    pageNumber: catPage,
     searchValue: catDebounceValue,
   });
-
+  
   const [productCatPage, setProductCatPage] = useState(1);
   const [productCatDebounceValue, setProductCatDebounceValue] = useState('');
 
@@ -50,26 +52,26 @@ const AddFamily = () => {
 
 
   const { productCategories, isLoading: isLoadingProduct, isError: isErrorProduct } = useGetAllProductCategories({
-      page: productCatPage,
+      pageNumber: productCatPage,
       searchValue: productCatDebounceValue
   });
 
   const { productUnits, isLoading: isLoadingUnits, isError: isErrorUnits } = useGetAllProductUnits({
-      page: unitPage,
+      pageNumber: unitPage,
       searchValue: unitDebounceValue
   });
 
   const { donationPursposes, isLoading: isLoadingPurposes, isError: isErrorPurposes } = useGetAllDonationPurposes({
-      page: purposePage,
+      pageNumber: purposePage,
       searchValue: purposeDebounceValue
   });
 
   const { addNewProductCategory, isPending: addProductCategoryPending } = useAddNewProductCategory();
   const { addNewProductUnit, isPending: addUnitPending } = useAddNewProductUnit();
   const { addNewDonationPurpose, isPending: addPurposePending } = useAddNewDonationPurpose();
+  const { addNewCaseCategory, isPending: addCaseCategoryPending } = useAddNewCaseCategory();
 
   const { addFamily, isPending } = useAddFamily();
-  const { addNewAidCategory, isPending: addCategoryPending } = useAddNewAidCategory();
   const familyStatusOptionsArr=useMemo(()=>familyStatusOptions,[]);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -299,7 +301,7 @@ const AddFamily = () => {
             </div>
 
             <div>
-              <label htmlFor="cashRequired" className="block mb-2">المبلغ النقدي المطلوب </label>
+              <label htmlFor="cashRequired" className="block mb-2">المبلغ النقدى المقرر من الجمعيه</label>
               <Input
                 id="cashRequired"
                 type="number"
@@ -318,16 +320,16 @@ const AddFamily = () => {
                 <label className="block mb-2"> تصنيف العائله </label>
                 <CategoryListFilter
                   setCategoryName={(item)=> handleCategorySelect(item,'family')}
-                  response={aidCategories}
+                  response={caseCategories}
                   isLoading={isLoadingCategories}
                   isError={isErrorCategories}
                   setPage={setCatPage}
                   setCatDebounceValue={setCatDebounceValue}
                   text={'اختر الفئة'}
                   add={true}
-                  addNewItem={addNewAidCategory}
-                  addWait={addCategoryPending}
-                  queryKey={'aidCategories'}
+                  addNewItem={addNewCaseCategory}
+                  addWait={addCaseCategoryPending}
+                  queryKey={'caseCategories'}
                 />
                 {formik.touched.categoryIds && formik.errors.categoryIds && (
                   <p className="text-red-500 text-sm mt-1">{formik.errors.categoryIds}</p>
@@ -570,16 +572,16 @@ const AddFamily = () => {
                       <label className="block mb-2">تصنيف الحالة</label>
                       <CategoryListFilter
                         setCategoryName={(item) => handleCaseCategorySelect(index, item)}
-                        response={aidCategories}
+                        response={caseCategories}
                         isLoading={isLoadingCategories}
                         isError={isErrorCategories}
                         setPage={setCatPage}
                         setCatDebounceValue={setCatDebounceValue}
                         text={ 'اختر التصنيف'}
                         add={true}
-                        addNewItem={addNewAidCategory}
-                        addWait={addCategoryPending}
-                        queryKey={'aidCategories'}
+                        addNewItem={addNewCaseCategory}
+                        addWait={addCaseCategoryPending}
+                        queryKey={'caseCategories'}
                       />
                       {formik.touched.cases?.[index]?.categoryIds && formik.errors.cases?.[index]?.categoryIds && (
                         <p className="text-red-500 text-sm mt-1">{formik.errors.cases[index].categoryIds}</p>
