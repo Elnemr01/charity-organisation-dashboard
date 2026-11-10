@@ -101,11 +101,11 @@
                 paidDate: yup
                 .string()
                 .nullable()
-                .when('isPaid', {
-                    is: true,
-                    then: (s) => s.required(REQ),
-                    otherwise: (s) => s.nullable(),
-                }),
+                // .when('isPaid', {
+                //     is: true,
+                //     then: (s) => s.required(REQ),
+                //     otherwise: (s) => s.nullable(),
+                // }),
             })
             )
             .min(1, 'يجب إضافة دين واحد على الأقل'),

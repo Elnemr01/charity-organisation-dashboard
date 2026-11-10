@@ -464,14 +464,14 @@ const toBool = (x) => {
                           if (!val) formik.setFieldValue(`debts[${index}].paidDate`, '');
                         }}
                       />
-                      {v.debts[index].isPaid && (
+                      {/* {v.debts[index].isPaid && (
                         <TextField
                           formik={formik}
                           name={`debts[${index}].paidDate`}
                           label="تاريخ السداد"
                           type="date"
                         />
-                      )}
+                      )} */}
                     </div>
                   </div>
                 ))}

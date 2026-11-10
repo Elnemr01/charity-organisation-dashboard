@@ -121,7 +121,7 @@ const FamilyDetails = () => {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm text-gray-500">الأصناف المطلوبة</label>
+                                    <label className="text-sm text-gray-500">الأصناف المقرره</label>
                                     <p>{getLabel(family?.requiredItemsCount)}</p>
                                 </div>
 

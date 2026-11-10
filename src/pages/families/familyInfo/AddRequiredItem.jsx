@@ -129,7 +129,7 @@ const AddRequiredItem = () => {
                 <form onSubmit={formik.handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6" dir="rtl">
                     <div className="space-y-4 my-8">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-semibold">الأصناف المطلوبة</h3>
+                            <h3 className="text-lg font-semibold">الأصناف المقرره من الجمعيه</h3>
                             <Button type="button" variant="outline" onClick={addProductItem} className="gap-2">
                                 <Plus size={16} /> إضافة صنف
                             </Button>

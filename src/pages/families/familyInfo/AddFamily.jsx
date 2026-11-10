@@ -610,7 +610,7 @@ const AddFamily = () => {
 
           <div className="space-y-4 my-8">
             <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">المساعده العينيه المطلوبه من العائله</h3>
+                <h3 className="text-lg font-semibold">المساعده العينيه المقرره من الجمعيه </h3>
                 <Button type="button" variant="outline" onClick={addProductItem} className="gap-2">
                     <Plus size={16} /> إضافة صنف
                 </Button>
