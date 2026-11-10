@@ -64,7 +64,7 @@ const CaseDetails = () => {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm text-gray-500">اللقب</label>
+                                <label className="text-sm text-gray-500">اللقب ( الشهره )</label>
                                 <p>{getLabel(familyCase?.nickName)}</p>
                             </div>
 

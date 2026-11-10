@@ -2,7 +2,7 @@ import Layout from '@/appComponents/layout/Layout';
 import Loading from '@/appComponents/models/Loading';
 import Empty from '@/appComponents/models/Empty';
 import useGetDonerById from '@/hooks/doners/useGetDonerById';
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { ArrowLeft, Edit, Users, Phone, DollarSign, Calendar, CheckCircle, XCircle, Pen, Eye, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
@@ -20,6 +20,8 @@ import useDeleteDonation from '@/hooks/donations/useDeleteDonation';
 import { useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import DeleteModel from '@/components/customUI/DeleteModel';
+import useDeleteDoner from '@/hooks/doners/useDeleteDoner';
+import WhatsMessageToDonor from './WhatsMessageToDonor';
 
 
 const DonerDetails = () => {
@@ -30,9 +32,12 @@ const DonerDetails = () => {
         data: {pageNumber: page,}
     });
 
+    const {deleteDoner,isPending: deleteDonerPending} = useDeleteDoner();
+
     const { deleteDonation, isPending } = useDeleteDonation();
     const tablehead = useMemo(() => donationsInDonerPage, [])
     const queryClient = useQueryClient();
+    const navigate=useNavigate();
 
     return (
         <Layout headerText={'تفاصيل المتبرع'}>
@@ -42,13 +47,6 @@ const DonerDetails = () => {
                         <ArrowLeft size={20} />
                         <span>العودة للقائمة</span>
                     </Link>
-                    {doner && (
-                        <Link to={`/doners/add`} className="ml-auto" state={{data:doner,edit:true}}>
-                            <Button variant="outline" className="gap-2 cursor-pointer">
-                                <Edit size={16} /> تعديل
-                            </Button>
-                        </Link>
-                    )}
                 </div>
 
                 {isLoading && (
@@ -149,6 +147,37 @@ const DonerDetails = () => {
                                 </div>
                             </div>
                         </div>
+                        <div className="btns mt-10 flex gap-4 items-center">
+                            <Link to={`/doners/add`} className=''
+                            state={{data:doner,edit:true}}>
+                                <Button variant="outline" className="gap-2 cursor-pointer bg-neutral hover:text-white text-white">
+                                    <Edit size={16} /> تعديل
+                                </Button>
+                            </Link>
+                            <DeleteModel
+                            message={'هل انت متأكد منحذف هذا المتبرع'}
+                            wait={deleteDonerPending}
+                            deleteFun={() => {
+                                deleteDoner(id, {
+                                    onSuccess: () => {
+                                        queryClient.invalidateQueries({ queryKey: ['doners'] })
+                                        navigate('/doners')
+                                    }
+                                })
+                            }}
+                            >
+                                <Button variant="outline" className="gap-2 cursor-pointer bg-red-500 hover:text-white text-white">
+                                    <Trash2 size={16} /> حذف
+                                </Button>
+                            </DeleteModel>
+
+                        {/* whatsapp message */}
+                            { doner?.isSubscriber && doner?.phone && <WhatsMessageToDonor phone={doner.phone} donorId={id} name={doner.name}>
+                                <Button variant="outline" className="gap-2 cursor-pointer bg-secondary hover:text-white text-white">
+                                    <Phone size={16} /> إرسال رسالة
+                                </Button>
+                            </WhatsMessageToDonor>}
+                    </div>
                     </div>
                     <h3 className=' my-4 text-lg font-semibold'>
                         التبرعات التى قام بها : 

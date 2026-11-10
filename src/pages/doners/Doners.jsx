@@ -61,7 +61,7 @@ const Doners = () => {
                         <div className="filters flex items-center gap-4">
                             <EnumFilter
                                 data={donerEnumFilterArr}
-                                text={'المشتركين'}
+                                text={'الاشتراك'}
                                 setFilter={setFilter}
                                 filter={filter}
                                 propertyName={'isSubscriber'}

@@ -432,7 +432,7 @@ const AddFamily = () => {
                   </div>
 
                   <div>
-                    <label className="block mb-2">اللقب</label>
+                    <label className="block mb-2">اللقب (الشهره)</label>
                     <Input
                       {...formik.getFieldProps(`cases[${index}].nickName`)}
                       className="p-2 py-1"
