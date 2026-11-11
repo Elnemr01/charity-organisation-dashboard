@@ -52,8 +52,8 @@ const FamilyDetails = () => {
         'العمر',
         'الحالة الاجتماعية',
         'العمل',
-        'الحالة الصحية',
-        'الصلة بالعائلة',
+        // 'الحالة الصحية',
+        // 'الصلة بالعائلة',
         'رقم الهاتف',
         'الفئات',
         'تاريخ الإنشاء',
@@ -214,8 +214,8 @@ const FamilyDetails = () => {
                                                     <TableCell className={'p-6'}>{caseItem?.age || 'لا يوجد'}</TableCell>
                                                     <TableCell className={'p-6'}>{maritalStatus[caseItem?.maritalStatus] || 'لا يوجد'}</TableCell>
                                                     <TableCell className={'p-6'}>{caseItem?.job || 'لا يوجد'}</TableCell>
-                                                    <TableCell className={'p-6'}>{caseItem?.healthStatus || 'لا يوجد'}</TableCell>
-                                                    <TableCell className={'p-6'}>{relationToFamily[caseItem?.relationToFamily] || 'لا يوجد'}</TableCell>
+                                                    {/* <TableCell className={'p-6'}>{caseItem?.healthStatus || 'لا يوجد'}</TableCell> */}
+                                                    {/* <TableCell className={'p-6'}>{relationToFamily[caseItem?.relationToFamily] || 'لا يوجد'}</TableCell> */}
                                                     <TableCell className={'p-6'}>{caseItem?.phone || 'لا يوجد'}</TableCell>
                                                     <TableCell className={'p-6'}>
                                                         <div className='flex flex-col gap-1 items-center justify-center'>

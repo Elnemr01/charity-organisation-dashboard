@@ -28,7 +28,7 @@ const FamilyRequiredItems = ({ requiredItems = [],familyId }) => {
     return (
         <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">المساعدات العينيه المطلوبه </h2>
+                <h2 className="text-xl font-semibold">المساعدات العينيه المقرره من الجمعيه </h2>
                 <div className="flex items-center gap-2">
                     {
                         requiredItems.length <= 0 ?
@@ -36,7 +36,7 @@ const FamilyRequiredItems = ({ requiredItems = [],familyId }) => {
                             className="gap-2 text-white bg-secondary hover:text-white cursor-pointer">
                                 <Plus size={16} /> إضافة صنف
                             </Button>
-                        : 
+                        :
                         <Button variant="outline" 
                         className="text-white bg-neutral hover:text-white gap-2 cursor-pointer"
                         onClick={handleNavigate} >

@@ -19,7 +19,7 @@ import { Eye, Pen, Trash2 } from 'lucide-react';
 import FilterVals from '@/components/customUI/FilterVals';
 import useGetAllCaseCategories from '@/hooks/categories/case/useGetAllCaseCategories';
 import CategoryListFilter from '@/components/customUI/CategoryListFilter';
-import { maritalStatusObj, relationToFamiltObj } from '@/constants/families/familyEnums';
+import { maritalStatusObj } from '@/constants/families/familyEnums';
 import DeleteModel from '@/components/customUI/DeleteModel';
 import useDeleteCase from '@/hooks/cases/useDeleteCase';
 import { useQueryClient } from '@tanstack/react-query';
@@ -116,9 +116,9 @@ const Cases = () => {
                                         <TableCell className={'p-6'}>{caseItem?.name || 'لا يوجد'}</TableCell>
                                         <TableCell className={'p-6'}>{caseItem?.nationalId || 'لا يوجد'}</TableCell>
                                         <TableCell className={'p-6'}>{caseItem?.age || 'لا يوجد'}</TableCell>
-                                        <TableCell className={'p-6'}>{maritalStatus[caseItem?.maritalStatus] || 'لا يوجد'}</TableCell>
+                                        {/* <TableCell className={'p-6'}>{maritalStatus[caseItem?.maritalStatus] || 'لا يوجد'}</TableCell> */}
                                         <TableCell className={'p-6'}>{caseItem?.job || 'لا يوجد'}</TableCell>
-                                        <TableCell className={'p-6'}>{caseItem?.healthStatus || 'لا يوجد'}</TableCell>
+                                        {/* <TableCell className={'p-6'}>{caseItem?.healthStatus || 'لا يوجد'}</TableCell> */}
                                         <TableCell className={'p-6'}>{caseItem?.phone || 'لا يوجد'}</TableCell>
                                         <TableCell className={'p-6'}>{caseItem?.familyName || 'لا يوجد'}</TableCell>
                                         <TableCell className={'p-6'}>

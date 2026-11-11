@@ -147,7 +147,7 @@ const Families = () => {
                                             </div>
                                         </TableCell>
                                         <TableCell className={'p-6'}>{family?.casesCount || 0}</TableCell>
-                                        <TableCell className={'p-6'}>
+                                        {/* <TableCell className={'p-6'}>
                                             {family?.hasSocialAssessment ? (
                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-green-100 text-green-800">
                                                     نعم
@@ -168,7 +168,7 @@ const Families = () => {
                                                     لا
                                                 </span>
                                             )}
-                                        </TableCell>
+                                        </TableCell> */}
                                         <TableCell className={'p-6'}>
                                             {family?.decision === 'Accepted' ? (
                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-green-100 text-green-800">

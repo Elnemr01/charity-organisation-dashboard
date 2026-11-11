@@ -60,7 +60,7 @@ export const familySchema = yup.object().shape({
   address: yup.string().required('العنوان مطلوب'),
   decision: yup.string(),
   decisionReason: yup.string().nullable(),
-  cashRequired: yup.number().required('المبلغ النقدي المطلوب').typeError('المبلغ النقدي مطلوب').positive('المبلغ يجب أن يكون أكبر من صفر').min(0.01, 'المبلغ يجب أن يكون أكبر من صفر'),
+  cashRequired: yup.number().required('المبلغ النقدي المطلوب').typeError('المبلغ النقدي مطلوب').min(0, 'المبلغ يجب أن يكون أكبر من او يساوى صفر'),
   categoryIds: yup.array().of(yup.number()).nullable(),
   cases: yup.array().of(caseSchema).required('يجب إضافة حالة واحدة على الأقل').min(1, 'يجب إضافة حالة واحدة على الأقل'),
   familyRequiredItems: yup.array().of(familtRequiredItemSchema).nullable().transform((value) => (Array.isArray(value) && value.length === 0 ? null : value)),
@@ -74,7 +74,7 @@ export const editFamilySchema = yup.object().shape({
   address: yup.string().required('العنوان مطلوب'),
   decision: yup.string(),
   decisionReason: yup.string().nullable(),
-  cashRequired: yup.number().required('المبلغ النقدي المطلوب').typeError('المبلغ النقدي مطلوب').positive('المبلغ يجب أن يكون أكبر من صفر').min(0.01, 'المبلغ يجب أن يكون أكبر من صفر'),
+  cashRequired: yup.number().required('المبلغ النقدي المطلوب').typeError('المبلغ النقدي مطلوب').min(0, 'المبلغ يجب أن يكون أكبر من او يساوى صفر'),
   categoryIds: yup.array().of(yup.number()).nullable(),
 });
 

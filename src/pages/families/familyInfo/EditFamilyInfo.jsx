@@ -180,7 +180,7 @@ const EditFamilyInfo = () => {
                         id="cashRequired"
                         type="number"
                         step="0.01"
-                        min="0.01"
+                        min="0"
                         {...formik.getFieldProps('cashRequired')}
                         className={`${formik.touched.cashRequired && formik.errors.cashRequired ? 'border-red-500' : ''} p-2 py-1`}
                         />
